@@ -16,9 +16,9 @@ jobs:
     name: 빌드와 링크 무결성
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: 'npm'
@@ -44,7 +44,7 @@ jobs:
           du -h dist/_astro/* | sort -h
 
       - name: 산출물 업로드
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
