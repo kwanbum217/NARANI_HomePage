@@ -19,6 +19,8 @@
 | 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts` |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
 | 검증 파이프라인 | 완료 | `scripts/verify.sh` |
+| CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 빌드, 링크 무결성, 이모지 검사 |
+| 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
 | 폼 백엔드 | 미연결 | `enquiryForm` 이 900ms 지연 시뮬레이션 |
 | 결제 연동 | 미연결 | 주문 확인 다이얼로그까지만 동작 |
