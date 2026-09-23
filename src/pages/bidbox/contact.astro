@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { brand } from '../../data/site';
+---
+
+<BaseLayout
+  title="문의 — BIDBOX"
+  description="AI 기술로 입찰의 미래를 열어드리는 Bidbox입니다. 언제든지 문의해 주세요."
+  variant="bidbox" active="contact"
+>
+<section class="navy-field" x-data="enquiryForm('')">
+        <div class="wrap grid gap-12 pb-[clamp(52px,8vw,96px)] pt-[clamp(52px,8vw,96px)] lg:grid-cols-[1fr_1fr]">
+
+          <div>
+            <p class="eyebrow" style="color:var(--bb-accent)">문의</p>
+            <h1 class="display mt-5 max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.2rem)]">
+              함께 더 나은 결정을 내리세요
+            </h1>
+            <p class="lede mt-6">
+              AI 기술로 입찰의 미래를 열어드리는 Bidbox입니다. 빅데이터 기반의 정밀 분석을 통해
+              당신의 비즈니스가 더 나은 결과를 달성할 수 있도록 전문적인 상담을 제공합니다.
+              언제든지 문의해 주세요.
+            </p>
+
+            <dl class="mt-10 grid gap-6">
+              <div class="card p-6!">
+                <dt class="eyebrow" style="color:var(--bb-muted)">이메일</dt>
+                <dd class="mt-3">
+                  <a class="text-lg font-bold break-all underline underline-offset-4 decoration-[color:var(--bb-accent)]" href={`mailto:${brand.email}`}>
+                    {brand.email}
+                  </a>
+                </dd>
+              </div>
+              <div class="card p-6!">
+                <dt class="eyebrow" style="color:var(--bb-muted)">채팅 상담</dt>
+                <dd class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                  실시간으로 전문가가 상담을 진행합니다. 평일 09:00–18:00에 응답이 가장 빠릅니다.
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="card p-6! sm:p-8!" style="background:rgba(21,24,28,0.9);border-color:var(--bb-border)">
+
+            <!-- 성공 -->
+            <div x-show="status === 'sent'" x-cloak>
+              <span class="flex h-12 w-12 items-center justify-center rounded-full" style="background:rgba(184,221,240,0.15)" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11.5l5 5 9-11" stroke="#B8DDF0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <h2 class="mt-5 text-xl font-black tracking-[-0.02em]">문의가 접수되었습니다</h2>
+              <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                담당자가 <strong style="color:var(--bb-text)" x-text="values.email"></strong> 로 회신드립니다.
+              </p>
+              <button type="button" class="btn btn-ghost mt-6" @click="reset()">새 문의 작성</button>
+            </div>
+
+            <!-- 폼 -->
+            <form x-show="status !== 'sent'" novalidate @submit.prevent="submit()" aria-labelledby="contact-form-title">
+              <h2 id="contact-form-title" class="text-xl font-black tracking-[-0.02em]">문의 남기기</h2>
+              <p class="mt-2 text-[0.8125rem]" style="color:var(--bb-muted)">표시된 항목은 모두 필수입니다.</p>
+
+              <div class="mt-6 grid gap-5">
+                <div class="field" :class="errors.name ? 'is-invalid' : ''">
+                  <label for="c-name">성명</label>
+                  <input id="c-name" name="name" type="text" autocomplete="name"
+                         x-model="values.name" @input="clear('name')" placeholder="이름을 입력하세요" />
+                  <p class="error" x-text="errors.name"></p>
+                </div>
+
+                <div class="field" :class="errors.email ? 'is-invalid' : ''">
+                  <label for="c-email">이메일</label>
+                  <input id="c-email" name="email" type="email" autocomplete="email" inputmode="email"
+                         x-model="values.email" @input="clear('email')" placeholder="이메일을 입력하세요" />
+                  <p class="error" x-text="errors.email"></p>
+                </div>
+
+                <div class="field" :class="errors.message ? 'is-invalid' : ''">
+                  <label for="c-message">문의내용</label>
+                  <textarea id="c-message" name="message" x-model="values.message" @input="clear('message')"
+                            placeholder="문의내용을 입력하세요"></textarea>
+                  <p class="error" x-text="errors.message"></p>
+                </div>
+              </div>
+
+              <p x-show="status === 'error'" x-cloak class="mt-5 rounded-xl p-4 text-[0.8125rem] font-semibold"
+                 style="background:rgba(255,143,143,0.12);color:#ffb4b4" role="alert" x-text="errorMessage"></p>
+
+              <button type="submit" class="btn btn-primary btn-block mt-6" :aria-busy="busy.toString()" :disabled="busy">
+                <span x-text="busy ? '전송 중…' : '문의 보내기'"></span>
+              </button>
+
+              <p class="mt-4 text-[0.75rem] leading-relaxed" style="color:var(--bb-muted)">
+                입력하신 정보는 상담 목적으로만 사용합니다.
+              </p>
+            </form>
+
+          </div>
+        </div>
+      </section>
+</BaseLayout>

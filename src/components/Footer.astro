@@ -1,0 +1,48 @@
+---
+import { brand, productNav } from '../data/site';
+
+interface Props {
+  variant?: 'nani' | 'bidbox';
+}
+
+const { variant = 'nani' } = Astro.props;
+const isBidbox = variant === 'bidbox';
+const year = new Date().getFullYear();
+
+const links = isBidbox
+  ? [
+      { label: '서비스', href: productNav[0].href },
+      { label: '요금', href: productNav[1].href },
+      { label: '회사소개', href: '/company/' },
+    ]
+  : [
+      { label: '회사소개', href: '/company/' },
+      { label: '문의', href: '/bidbox/contact/' },
+    ];
+---
+
+<footer class="border-t" style={`border-color:${isBidbox ? 'var(--bb-border)' : 'var(--nani-border)'}`}>
+  <div
+    class="wrap flex flex-col items-start justify-between gap-4 py-8 text-[0.8125rem] sm:flex-row sm:items-center"
+    style={`color:${isBidbox ? 'var(--bb-muted)' : 'var(--nani-muted)'}`}
+  >
+    {isBidbox ? (
+      <p>
+        {brand.productFooter} · {brand.footerNote} © {year} {brand.company}. All rights reserved.
+      </p>
+    ) : (
+      <p>© {year} {brand.company}. {brand.footerNote}</p>
+    )}
+
+    <div class="flex flex-wrap gap-6">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class={isBidbox ? 'hover:text-[color:var(--bb-text)]' : 'hover:text-[color:var(--nani-ink)]'}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>

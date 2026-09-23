@@ -1,0 +1,59 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { brand } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  variant?: 'nani' | 'bidbox';
+  active?: string;
+}
+
+const { title, description, variant = 'nani', active } = Astro.props;
+const isBidbox = variant === 'bidbox';
+
+const favicon = isBidbox
+  ? "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230073E6'/><rect x='8' y='8' width='16' height='16' rx='4' fill='white'/></svg>"
+  : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23003066'/><rect x='9' y='9' width='5' height='14' rx='2.5' fill='white'/><rect x='18' y='9' width='5' height='14' rx='2.5' fill='%23B8DDF0'/></svg>";
+---
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={brand.company} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="theme-color" content={isBidbox ? '#000000' : '#faf9f7'} />
+    <link rel="icon" href={favicon} />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <slot name="head" />
+  </head>
+  <body class={isBidbox ? 'reg-dark' : undefined}>
+    <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+    <Header variant={variant} active={active} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer variant={variant} />
+
+    <script>
+      import '../scripts/app.js';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { plans, pointRate, POINT_NOTE } from '../../data/pricing';
+
+const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
+
+// Alpine only drives the order dialog; the plan cards are rendered at build time.
+const dialogState = `{
+  plans: ${JSON.stringify(plans)},
+  selected: null,
+  choose(id) {
+    this.selected = this.plans.find((p) => p.id === id) ?? null;
+    if (this.selected) this.$refs.order.showModal();
+  },
+  closeOrder() { this.$refs.order.close(); }
+}`;
+---
+
+<BaseLayout
+  title="요금 — BIDBOX"
+  description={`1포인트 ${won(pointRate)}. 공고·낙찰 탐색 및 AI 예측당 1포인트가 사용됩니다.`}
+  variant="bidbox"
+  active="pricing"
+>
+  <section class="navy-field">
+    <div class="wrap pb-[clamp(36px,5vw,56px)] pt-[clamp(52px,8vw,96px)]">
+      <p class="eyebrow" style="color:var(--bb-accent)">요금</p>
+      <h1 class="display mt-5 max-w-[20ch] text-[clamp(1.9rem,4.6vw,3.4rem)]">
+        기업의 입찰 성공을 지원합니다
+      </h1>
+      <p class="lede mt-6">
+        기업이 비용대비 효율을 체감할 수 있는 비용을 제시합니다.
+        필요한 만큼만 포인트로 구매하고, 조회한 만큼만 사용합니다.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+        <div>
+          <p class="eyebrow" style="color:var(--bb-muted)">포인트 단가</p>
+          <p class="num mt-3 text-[clamp(1.6rem,4vw,2.4rem)] font-black">
+            1포인트 <span style="color:var(--bb-accent)">{won(pointRate)}</span>
+          </p>
+        </div>
+        <p class="max-w-[46ch] text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+          공고 · 낙찰 탐색 및 AI 예측당 1포인트가 사용됩니다.
+          <span class="mt-2 block text-[0.8125rem]">※ {POINT_NOTE}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-[clamp(56px,9vw,96px)]" id="plans" aria-labelledby="plans-title" x-data={dialogState}>
+    <div class="wrap">
+      <h2 id="plans-title" class="eyebrow" style="color:var(--bb-muted)">포인트 구매</h2>
+
+      <ul class="mt-8 grid list-none gap-5 p-0 md:grid-cols-3">
+        {plans.map((plan) => (
+          <li
+            class="card flex flex-col"
+            style={plan.featured ? 'border-color:var(--bb-border-strong)' : undefined}
+          >
+            <div class="flex items-start justify-between gap-3">
+              <p class="text-lg font-black tracking-[-0.02em]">{plan.label}</p>
+              {plan.listPrice && <span class="tag">10% 할인</span>}
+            </div>
+
+            <p class="mt-5 text-[0.8125rem] font-bold" style="color:var(--bb-muted)">
+              {plan.note}
+            </p>
+
+            <p class="mt-4">
+              <span class="num block text-[clamp(1.5rem,3.4vw,2rem)] font-black">
+                {won(plan.price)}
+              </span>
+              {plan.listPrice && (
+                <span class="num mt-1 block text-sm strike">
+                  {won(plan.listPrice)} (10% 할인)
+                </span>
+              )}
+            </p>
+
+            <p class="num mt-5 border-t pt-5 text-sm" style="border-color:var(--bb-border);color:var(--bb-muted)">
+              1포인트당 {won(plan.price / plan.points)}
+            </p>
+
+            <button
+              type="button"
+              class="btn btn-primary btn-block mt-6"
+              @click={`choose('${plan.id}')`}
+              aria-label={`${plan.label} 구매하기`}
+            >
+              {plan.label} 구매
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <p class="mt-6 text-[0.8125rem]" style="color:var(--bb-muted)">
+        포인트는 조회 시 사용되며, 구매 후 환불 정책은
+        <a class="underline underline-offset-4" href="/bidbox/contact/">문의</a>로 안내받을 수 있습니다.
+      </p>
+    </div>
+
+    <!-- 주문 확인 -->
+    <dialog
+      x-ref="order"
+      aria-labelledby="order-title"
+      class="w-[min(480px,92vw)] rounded-2xl border p-0 backdrop:bg-black/70"
+      style="background:var(--bb-surface);border-color:var(--bb-border-strong);color:var(--bb-text)"
+    >
+      <div class="p-7" x-show="selected">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="eyebrow" style="color:var(--bb-muted)">주문 확인</p>
+            <h2
+              id="order-title"
+              class="mt-2 text-xl font-black tracking-[-0.02em]"
+              x-text="selected ? selected.label + ' 구매' : ''"
+            ></h2>
+          </div>
+          <button
+            type="button"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full border"
+            style="border-color:var(--bb-border)"
+            @click="closeOrder()"
+            aria-label="주문 확인 닫기"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+
+        <dl class="mt-6 grid gap-3 text-sm">
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color:var(--bb-border)">
+            <dt style="color:var(--bb-muted)">상품</dt>
+            <dd class="num font-bold" x-text="selected ? selected.label : ''"></dd>
+          </div>
+          <div class="flex justify-between gap-4 border-b pb-3" style="border-color:var(--bb-border)">
+            <dt style="color:var(--bb-muted)">사용 범위</dt>
+            <dd class="text-right">공고 · 낙찰 탐색 및 AI 예측 1회당 1포인트</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt style="color:var(--bb-muted)">결제 금액</dt>
+            <dd
+              class="num text-lg font-black"
+              style="color:var(--bb-accent)"
+              x-text="selected ? '₩' + selected.price.toLocaleString('ko-KR') : ''"
+            ></dd>
+          </div>
+        </dl>
+
+        <p
+          class="mt-6 rounded-xl p-4 text-[0.8125rem] leading-relaxed"
+          style="background:rgba(184,221,240,0.08);color:var(--bb-muted)"
+        >
+          결제 모듈 연동 전입니다. 지금은 <strong style="color:var(--bb-text)">문의로 접수</strong>하면
+          담당자가 포인트 충전과 프로그램 접속을 안내합니다.
+        </p>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a class="btn btn-primary btn-block" href="/bidbox/contact/">문의로 접수</a>
+          <button type="button" class="btn btn-ghost btn-block" @click="closeOrder()">닫기</button>
+        </div>
+      </div>
+    </dialog>
+  </section>
+</BaseLayout>

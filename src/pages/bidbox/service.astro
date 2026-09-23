@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { capabilities } from '../../data/site';
+---
+
+<BaseLayout
+  title="서비스 — BIDBOX"
+  description="공공조달 입찰 데이터를 읽고 AI로 낙찰금액을 예상합니다. 용역 HR 분야에 특화된 입찰 분석 서비스."
+  variant="bidbox" active="service"
+>
+<section class="navy-field">
+        <div class="wrap pb-[clamp(40px,6vw,72px)] pt-[clamp(52px,8vw,96px)]">
+          <p class="eyebrow" style="color:var(--bb-accent)">서비스</p>
+          <h1 class="display mt-5 max-w-[24ch] text-[clamp(1.9rem,4.6vw,3.4rem)]">
+            공공조달 입찰 데이터를 읽고,<br />AI로 낙찰금액을 예상합니다
+          </h1>
+          <p class="lede mt-6">
+            Bidbox는 빅데이터 분석과 AI 기술을 결합하여 입찰 시장의 불확실성을 최소화합니다.
+            단순한 가격 비교를 넘어, 기존 데이터 분석과 시장 동향을 같은 시간으로 분석하여
+            당신의 입찰 전략을 최적화합니다.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="capabilities">
+        <div class="wrap">
+          <h2 id="capabilities" class="eyebrow" style="color:var(--bb-muted)">핵심 기능</h2>
+          <div class="mt-8 grid gap-5 md:grid-cols-3">
+            {capabilities.map((capability) => (
+              <article class="card">
+                <span
+                  class="flex h-12 w-12 items-center justify-center rounded-xl"
+                  style="background:rgba(184,221,240,0.1)"
+                  aria-hidden="true"
+                >
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" set:html={capability.icon}></svg>
+                </span>
+                <h3 class="mt-5 text-xl font-black tracking-[-0.02em]">{capability.title}</h3>
+                <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                  {capability.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section class="section" aria-labelledby="prediction">
+        <div class="wrap">
+          <h2 id="prediction" class="display max-w-[22ch] text-[clamp(1.6rem,3.4vw,2.5rem)]">
+            단순 정보 제공이 아니라,<br />AI가 예측한 결과를 제공합니다
+          </h2>
+          <p class="lede mt-5">
+            빅데이터 기반의 정밀 분석을 통해 최적의 입찰 제안을 도출합니다.
+            HR 분야(근로자파견 · 경비업 · 위생관리용역업 · 직업소개업)에 특화된 서비스로,
+            해당 분야의 데이터만을 학습하여 예측합니다.
+          </p>
+
+          <div class="mt-9 grid gap-5 md:grid-cols-2">
+            <article class="card">
+              <span class="tag">경력 없이도</span>
+              <h3 class="mt-5 text-[1.375rem] font-black tracking-[-0.02em] leading-snug">경력 없이도 손쉬운 입찰</h3>
+              <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                경력이 없는 기업도 예상가격을 분석해, 입찰에 참여할 수 있습니다.
+              </p>
+            </article>
+            <article class="card">
+              <span class="tag">전문가에게는 더</span>
+              <h3 class="mt-5 text-[1.375rem] font-black tracking-[-0.02em] leading-snug">전문가는 더 정확하게</h3>
+              <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                분석한 예상가격을 AI 모델과 인용 근거로 대조해, 정확도를 올립니다.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="reg-dark navy-field">
+        <div class="wrap grid gap-8 py-[clamp(48px,7vw,84px)] md:grid-cols-[1.2fr_0.8fr] md:items-center">
+          <div>
+            <h2 class="display text-[clamp(1.5rem,3vw,2.25rem)]">관심 공고 한 건으로 확인하세요</h2>
+            <p class="lede mt-5">
+              예상 낙찰가와 인용 근거를 같은 화면에서 보여 드립니다.
+            </p>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+            <a class="btn btn-accent" href="/bidbox/demo/">데모 신청</a>
+            <a class="btn btn-ghost" href="/bidbox/pricing/">요금 보기</a>
+          </div>
+        </div>
+      </section>
+</BaseLayout>

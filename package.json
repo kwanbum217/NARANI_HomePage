@@ -1,0 +1,21 @@
+{
+  "name": "narani-homepage",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "verify": "bash scripts/verify.sh",
+    "links": "node scripts/check-links.mjs",
+    "check:emoji": "node scripts/check-no-emoji.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "alpinejs": "^3.17.4",
+    "astro": "^7.3.4",
+    "tailwindcss": "^4.3.3"
+  }
+}

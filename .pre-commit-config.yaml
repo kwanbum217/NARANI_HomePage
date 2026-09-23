@@ -1,0 +1,34 @@
+# 커밋 전 자동 검사.
+# 설치: make hooks
+#   (또는 pre-commit install --install-hooks && pre-commit install --hook-type commit-msg)
+#
+# 규칙 근거: docs/ops/GIT_WORKFLOW.md 4장, 5장
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=512']
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  - repo: local
+    hooks:
+      - id: no-emoji
+        name: 저장소 규칙 - 이모지 금지
+        entry: node scripts/check-no-emoji.mjs
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: commit-message-format
+        name: 커밋 메시지 형식 (type: 한국어 subject)
+        entry: node scripts/validate-commit-message.mjs
+        language: system
+        stages: [commit-msg]
+        always_run: true

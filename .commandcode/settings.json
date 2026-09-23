@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(npm run build)",
+      "Shell(npm run dev)",
+      "Shell(npm run verify)",
+      "Shell(npm run links)",
+      "Shell(npm run preview)",
+      "Shell(npm ci)",
+      "Shell(node scripts/check-links.mjs)",
+      "Shell(node scripts/check-no-emoji.mjs)",
+      "Shell(node scripts/validate-commit-message.mjs:*)",
+      "Shell(swift scripts/audit/:*)",
+      "Shell(python3 -m http.server:*)",
+      "Shell(git status:*)",
+      "Shell(git diff:*)",
+      "Shell(gh:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

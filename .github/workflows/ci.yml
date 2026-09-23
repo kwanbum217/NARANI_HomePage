@@ -1,0 +1,51 @@
+name: ci
+
+# CI 는 빌드와 링크 무결성만 검사합니다.
+# 브라우저 검증(scripts/verify.sh)은 macOS WebKit 을 사용하므로 로컬에서 수행합니다.
+# 근거: docs/spec/QA_AND_A11Y.md 3장
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 빌드와 링크 무결성
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 저장소 규칙 검사 (이모지 금지)
+        run: npm run check:emoji
+
+      - name: 빌드
+        run: npm run build
+
+      - name: 링크 무결성
+        run: npm run links
+
+      - name: 산출물 요약
+        run: |
+          echo "생성된 페이지:"
+          find dist -name '*.html' | sort
+          echo ""
+          echo "번들 크기:"
+          du -h dist/_astro/* | sort -h
+
+      - name: 산출물 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
