@@ -4,7 +4,7 @@ import { plans, pointRate, POINT_NOTE } from '../../data/pricing';
 
 const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
 
-// Alpine only drives the order dialog; the plan cards are rendered at build time.
+// Alpine only drives the order dialog; the plan rows are rendered at build time.
 const dialogState = `{
   plans: ${JSON.stringify(plans)},
   selected: null,
@@ -23,77 +23,73 @@ const dialogState = `{
   active="pricing"
 >
   <section class="navy-field">
-    <div class="wrap pb-[clamp(36px,5vw,56px)] pt-[clamp(52px,8vw,96px)]">
-      <p class="eyebrow" style="color:var(--bb-accent)">요금</p>
-      <h1 class="display mt-5 max-w-[20ch] text-[clamp(1.9rem,4.6vw,3.4rem)]">
-        기업의 입찰 성공을 지원합니다
-      </h1>
-      <p class="lede mt-6">
-        기업이 비용대비 효율을 체감할 수 있는 비용을 제시합니다.
-        필요한 만큼만 포인트로 구매하고, 조회한 만큼만 사용합니다.
-      </p>
-    </div>
-  </section>
+    <div
+      class="wrap grid gap-10 pb-12 pt-[clamp(56px,9vw,104px)] md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:items-end"
+    >
+      <div class="min-w-0">
+        <h1 class="display max-w-[20ch] text-[clamp(2rem,4.6vw,3.25rem)]">
+          기업의 입찰 성공을 지원합니다
+        </h1>
+        <p class="lede mt-6">
+          기업이 비용대비 효율을 체감할 수 있는 비용을 제시합니다.
+          필요한 만큼만 포인트로 구매하고, 조회한 만큼만 사용합니다.
+        </p>
+      </div>
 
-  <section class="section-tight">
-    <div class="wrap">
-      <div class="card flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-        <div>
-          <p class="eyebrow" style="color:var(--bb-muted)">포인트 단가</p>
-          <p class="num mt-3 text-[clamp(1.6rem,4vw,2.4rem)] font-black">
-            1포인트 <span style="color:var(--bb-accent)">{won(pointRate)}</span>
-          </p>
-        </div>
-        <p class="max-w-[46ch] text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+      <div class="min-w-0 md:text-right">
+        <p class="label">포인트 단가</p>
+        <p class="num mt-3 text-[clamp(1.75rem,4vw,2.5rem)] font-bold">
+          1포인트 <span style="color:var(--bb-accent)">{won(pointRate)}</span>
+        </p>
+        <p class="mt-4 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
           공고 · 낙찰 탐색 및 AI 예측당 1포인트가 사용됩니다.
-          <span class="mt-2 block text-[0.8125rem]">※ {POINT_NOTE}</span>
+        </p>
+        <p class="mt-2 text-[0.8125rem] leading-[1.75]" style="color:var(--bb-muted)">
+          ※ {POINT_NOTE}
         </p>
       </div>
     </div>
   </section>
 
-  <section class="pb-[clamp(56px,9vw,96px)]" id="plans" aria-labelledby="plans-title" x-data={dialogState}>
+  <section class="section-tight" id="plans" aria-labelledby="plans-title" x-data={dialogState}>
     <div class="wrap">
-      <h2 id="plans-title" class="eyebrow" style="color:var(--bb-muted)">포인트 구매</h2>
+      <h2 id="plans-title" class="text-[clamp(1.4rem,3vw,2rem)]">포인트 구매</h2>
 
-      <ul class="mt-8 grid list-none gap-5 p-0 md:grid-cols-3">
+      <ul class="rows mt-8 list-none p-0">
         {plans.map((plan) => (
           <li
-            class="card flex flex-col"
-            style={plan.featured ? 'border-color:var(--bb-border-strong)' : undefined}
+            class={`grid min-w-0 gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(0,0.75fr)_minmax(0,auto)] md:items-center ${plan.featured ? 'rate-bar' : ''}`}
           >
-            <div class="flex items-start justify-between gap-3">
-              <p class="text-lg font-black tracking-[-0.02em]">{plan.label}</p>
-              {plan.listPrice && <span class="tag">10% 할인</span>}
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-3">
+                <p class="text-[1.125rem] font-bold tracking-[-0.02em]">{plan.label}</p>
+                {plan.listPrice && <span class="tag">10% 할인</span>}
+              </div>
+              <p class="mt-2 text-[0.8125rem] font-bold" style="color:var(--bb-muted)">
+                {plan.note}
+              </p>
             </div>
 
-            <p class="mt-5 text-[0.8125rem] font-bold" style="color:var(--bb-muted)">
-              {plan.note}
-            </p>
-
-            <p class="mt-4">
-              <span class="num block text-[clamp(1.5rem,3.4vw,2rem)] font-black">
-                {won(plan.price)}
-              </span>
-              {plan.listPrice && (
-                <span class="num mt-1 block text-sm strike">
-                  {won(plan.listPrice)} (10% 할인)
-                </span>
-              )}
-            </p>
-
-            <p class="num mt-5 border-t pt-5 text-sm" style="border-color:var(--bb-border);color:var(--bb-muted)">
+            <p class="num text-[0.875rem]" style="color:var(--bb-muted)">
               1포인트당 {won(plan.price / plan.points)}
             </p>
 
-            <button
-              type="button"
-              class="btn btn-primary btn-block mt-6"
-              @click={`choose('${plan.id}')`}
-              aria-label={`${plan.label} 구매하기`}
-            >
-              {plan.label} 구매
-            </button>
+            <div class="flex min-w-0 flex-col items-start gap-3 md:items-end">
+              <div class="text-left md:text-right">
+                <p class="num text-[clamp(1.35rem,3vw,1.75rem)] font-bold">{won(plan.price)}</p>
+                {plan.listPrice && (
+                  <p class="num mt-1 text-[0.875rem] strike">{won(plan.listPrice)} (10% 할인)</p>
+                )}
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click={`choose('${plan.id}')`}
+                aria-label={`${plan.label} 구매하기`}
+              >
+                {plan.label} 구매
+              </button>
+            </div>
           </li>
         ))}
       </ul>
@@ -111,13 +107,13 @@ const dialogState = `{
       class="w-[min(480px,92vw)] rounded-2xl border p-0 backdrop:bg-black/70"
       style="background:var(--bb-surface);border-color:var(--bb-border-strong);color:var(--bb-text)"
     >
-      <div class="p-7" x-show="selected">
+      <div class="p-6 sm:p-7" x-show="selected">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <p class="eyebrow" style="color:var(--bb-muted)">주문 확인</p>
+            <p class="label">주문 확인</p>
             <h2
               id="order-title"
-              class="mt-2 text-xl font-black tracking-[-0.02em]"
+              class="mt-2 text-[1.25rem] font-bold tracking-[-0.02em]"
               x-text="selected ? selected.label + ' 구매' : ''"
             ></h2>
           </div>
@@ -146,7 +142,7 @@ const dialogState = `{
           <div class="flex justify-between gap-4">
             <dt style="color:var(--bb-muted)">결제 금액</dt>
             <dd
-              class="num text-lg font-black"
+              class="num text-lg font-bold"
               style="color:var(--bb-accent)"
               x-text="selected ? '₩' + selected.price.toLocaleString('ko-KR') : ''"
             ></dd>
@@ -155,7 +151,7 @@ const dialogState = `{
 
         <p
           class="mt-6 rounded-xl p-4 text-[0.8125rem] leading-relaxed"
-          style="background:rgba(184,221,240,0.08);color:var(--bb-muted)"
+          style="background:var(--bb-accent-soft);color:var(--bb-muted)"
         >
           결제 모듈 연동 전입니다. 지금은 <strong style="color:var(--bb-text)">문의로 접수</strong>하면
           담당자가 포인트 충전과 프로그램 접속을 안내합니다.

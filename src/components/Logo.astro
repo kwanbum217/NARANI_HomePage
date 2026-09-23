@@ -13,15 +13,15 @@ const name = brandName ?? (isBidbox ? 'BIDBOX' : 'NARANI');
 <a href={href} class="flex items-center gap-3" aria-label={`${name} 홈`}>
   {isBidbox ? (
     <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
-      <rect x="4" y="4" width="24" height="24" rx="7" fill="#0073E6" />
-      <path d="M16 8l7 4v8l-7 4-7-4v-8z" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round" />
-      <circle cx="16" cy="16" r="2.4" fill="#fff" />
+      <rect x="4" y="4" width="24" height="24" rx="7" style="fill:var(--primary)" />
+      <path d="M16 8l7 4v8l-7 4-7-4v-8z" style="fill:none;stroke:var(--nani-surface)" stroke-width="1.7" stroke-linejoin="round" />
+      <circle cx="16" cy="16" r="2.4" style="fill:var(--nani-surface)" />
     </svg>
   ) : (
     <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="9" fill="#003066" />
-      <rect x="9" y="9" width="5" height="14" rx="2.5" fill="#ffffff" />
-      <rect x="18" y="9" width="5" height="14" rx="2.5" fill="#B8DDF0" />
+      <rect width="32" height="32" rx="9" style="fill:var(--nani-navy)" />
+      <rect x="9" y="9" width="5" height="14" rx="2.5" style="fill:var(--nani-surface)" />
+      <rect x="18" y="9" width="5" height="14" rx="2.5" style="fill:var(--bb-accent)" />
     </svg>
   )}
   {isBidbox ? (

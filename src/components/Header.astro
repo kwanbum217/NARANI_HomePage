@@ -11,38 +11,40 @@ const { variant = 'nani', active } = Astro.props;
 const isBidbox = variant === 'bidbox';
 const items = isBidbox ? productNav : siteNav;
 const cta = isBidbox ? primaryCta.program : primaryCta.demo;
+
 const borderToken = isBidbox ? 'var(--bb-border)' : 'var(--nani-border)';
-const drawerBorder = isBidbox ? 'var(--bb-border)' : 'var(--nani-border)';
+const ctaClass = 'btn btn-primary min-h-[44px]! px-5! py-2! text-sm!';
+const rowClass = `wrap flex items-center justify-between gap-6 ${isBidbox ? 'h-[72px]' : 'py-4'}`;
 ---
 
 <header class="site-nav" x-data="siteNav">
-  <div class="wrap flex h-[72px] items-center justify-between gap-6">
+  <div class={rowClass}>
     <Logo variant={variant} />
 
-    <nav aria-label="주요" class="hidden md:block">
-      <ul class="flex items-center gap-1">
-        {items.map((item) => (
-          <li>
-            <a
-              class="nav-link"
-              href={item.href}
-              aria-current={active === item.key ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-        <li class="ml-2">
-          <a class="btn btn-primary min-h-[44px]! px-5! py-2! text-sm!" href={cta.href}>
-            {cta.label}
-          </a>
-        </li>
-      </ul>
-    </nav>
+    {isBidbox && (
+      <nav aria-label="주요" class="hidden items-center gap-2 md:flex">
+        <ul class="flex items-center gap-1">
+          {items.map((item) => (
+            <li>
+              <a
+                class="nav-link"
+                href={item.href}
+                aria-current={active === item.key ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="ml-2 border-l pl-6" style="border-color:var(--bb-border-strong)">
+          <a class={ctaClass} href={cta.href}>{cta.label}</a>
+        </div>
+      </nav>
+    )}
 
     <button
       type="button"
-      class="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-full border md:hidden"
       style={`border-color:${borderToken}`}
       @click="toggle()"
       :aria-expanded="open.toString()"
@@ -67,12 +69,31 @@ const drawerBorder = isBidbox ? 'var(--bb-border)' : 'var(--nani-border)';
     </button>
   </div>
 
+  {!isBidbox && (
+    <nav aria-label="주요" class="wrap hidden items-center justify-between gap-6 pb-4 md:flex">
+      <ul class="flex items-center gap-1">
+        {items.map((item) => (
+          <li>
+            <a
+              class="nav-link"
+              href={item.href}
+              aria-current={active === item.key ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class={ctaClass} href={cta.href}>{cta.label}</a>
+    </nav>
+  )}
+
   <div
     id="mobile-nav"
     x-show="open"
     x-cloak
-    class="md:hidden border-t"
-    style={`border-color:${drawerBorder}`}
+    class="border-t md:hidden"
+    style={`border-color:${borderToken}`}
   >
     <nav class="wrap py-4" aria-label="모바일">
       <ul class="grid gap-1">

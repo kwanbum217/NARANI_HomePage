@@ -8,12 +8,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   variant="nani" active="company"
 >
 <section class="warm-field">
-          <div class="wrap pb-10 pt-[clamp(52px,8vw,96px)]">
-            <p class="eyebrow" style="color:var(--nani-navy)">회사소개</p>
-            <h1 class="display mt-5 max-w-[22ch] text-[clamp(2rem,5vw,3.5rem)]">
+          <div class="wrap pb-12 pt-[clamp(56px,9vw,104px)]">
+            <h1 class="display max-w-[22ch] text-[clamp(2rem,5vw,3.5rem)]">
               사용자와 소프트웨어는 나란히 일한다
             </h1>
-            <p class="lede mt-6">
+            <p class="lede mt-6 max-w-[52ch]">
               NARANI는 <strong>전문가가 아니어도 소프트웨어와 같은 눈높이에서 일할 수 있게</strong> 만드는
               회사입니다. 어려운 데이터와 판단의 근거를 사용자 곁에 나란히 두고, 처음 쓰는 사람도
               그 자리에서 확인하고 결정하게 합니다.
@@ -21,33 +20,33 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
         </section>
 
-        <section class="section" aria-labelledby="how-we-work">
+        <section class="section-tight" aria-labelledby="how-we-work">
           <div class="wrap">
-            <h2 id="how-we-work" class="eyebrow" style="color:var(--nani-muted)">우리가 일하는 방식</h2>
+            <h2 id="how-we-work" class="text-[clamp(1.4rem,3vw,2rem)]">우리가 일하는 방식</h2>
 
-            <div class="mt-8 grid gap-5 md:grid-cols-3">
-              <article class="card">
-                <p class="num text-[2rem] font-black" style="color:var(--nani-navy)">01</p>
-                <h3 class="mt-4 text-xl font-black tracking-[-0.02em]">같은 눈높이</h3>
-                <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
+            <div class="rows mt-8">
+              <article class="grid min-w-0 gap-4 md:grid-cols-[56px_minmax(0,1fr)_minmax(0,1.3fr)] md:items-baseline">
+                <p class="num text-[1.5rem] font-bold" style="color:var(--nani-navy)">01</p>
+                <h3 class="text-[1.25rem] font-bold tracking-[-0.02em]">같은 눈높이</h3>
+                <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
                   도메인 전문가가 아니어도 도구를 다룰 수 있어야 합니다. 어려운 개념은 화면이
                   대신 설명하고, 사용자는 자기 판단에만 집중합니다.
                 </p>
               </article>
 
-              <article class="card">
-                <p class="num text-[2rem] font-black" style="color:var(--nani-navy)">02</p>
-                <h3 class="mt-4 text-xl font-black tracking-[-0.02em]">근거를 곁에</h3>
-                <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
+              <article class="grid min-w-0 gap-4 md:grid-cols-[56px_minmax(0,1fr)_minmax(0,1.3fr)] md:items-baseline">
+                <p class="num text-[1.5rem] font-bold" style="color:var(--nani-navy)">02</p>
+                <h3 class="text-[1.25rem] font-bold tracking-[-0.02em]">근거를 곁에</h3>
+                <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
                   결론만 던지지 않습니다. 그 결론에 도달한 데이터와 근거를 같은 화면에 나란히
                   두어, 숫자를 그대로 확인할 수 있게 합니다.
                 </p>
               </article>
 
-              <article class="card">
-                <p class="num text-[2rem] font-black" style="color:var(--nani-navy)">03</p>
-                <h3 class="mt-4 text-xl font-black tracking-[-0.02em]">그 자리에서 결정</h3>
-                <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
+              <article class="grid min-w-0 gap-4 md:grid-cols-[56px_minmax(0,1fr)_minmax(0,1.3fr)] md:items-baseline">
+                <p class="num text-[1.5rem] font-bold" style="color:var(--nani-navy)">03</p>
+                <h3 class="text-[1.25rem] font-bold tracking-[-0.02em]">그 자리에서 결정</h3>
+                <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
                   화면을 옮겨 다니며 다시 찾지 않게 합니다. 처음 쓰는 사람도 그 자리에서
                   확인하고 결정을 끝낼 수 있도록 흐름을 줄입니다.
                 </p>
@@ -59,9 +58,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <hr class="rule" />
 
         <section class="section-tight" aria-labelledby="what-we-build">
-          <div class="wrap grid gap-10 md:grid-cols-[1fr_1.1fr] md:items-center">
+          <div class="wrap grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:items-start">
             <div class="min-w-0">
-              <h2 id="what-we-build" class="text-[clamp(1.5rem,3vw,2.25rem)] font-black tracking-[-0.03em]">
+              <h2 id="what-we-build" class="text-[clamp(1.4rem,3vw,2rem)]">
                 우리가 만드는 것
               </h2>
               <p class="lede mt-5">
@@ -70,33 +69,38 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               </p>
               <a class="btn btn-primary mt-8" href="/bidbox/">
                 BIDBOX 살펴보기
-                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               </a>
             </div>
 
-            <div class="card min-w-0 p-6! sm:p-8!" style="background:#0d1013;border-color:transparent">
-              <pre class="max-w-full overflow-x-auto text-[0.8125rem] leading-[1.9]" style="color:#c9d6e0"><code><span style="color:#6d8090"># 같은 화면에서 확인하고 결정합니다</span>
-      입찰 공고  →  <span style="color:#B8DDF0">예상 낙찰금액</span>  →  <span style="color:#B8DDF0">예측 근거</span>
-
-      <span style="color:#6d8090">근거</span>
-        · 10년간의 조달청 나라장터 공고와 결과
-        · HR 분야(근로자파견·경비업·위생관리용역업·직업소개업)
-        · 공고 · 낙찰 탐색 및 AI 예측</code></pre>
-            </div>
+            <aside class="card min-w-0">
+              <p class="label">같은 화면에서 확인하고 결정합니다</p>
+              <p class="num mt-4 text-[0.9375rem] font-bold leading-[1.9]">
+                입찰 공고 → 예상 낙찰금액 → 예측 근거
+              </p>
+              <p class="label mt-6">근거</p>
+              <ul class="mt-3 grid list-disc gap-2 pl-5 text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
+                <li>10년간의 조달청 나라장터 공고와 결과</li>
+                <li>HR 분야(근로자파견·경비업·위생관리용역업·직업소개업)</li>
+                <li>공고 · 낙찰 탐색 및 AI 예측</li>
+              </ul>
+            </aside>
           </div>
         </section>
 
-        <section class="reg-dark navy-field">
-          <div class="wrap grid gap-8 py-[clamp(48px,7vw,84px)] md:grid-cols-[1.2fr_0.8fr] md:items-center">
-            <div>
-              <h2 class="display text-[clamp(1.5rem,3vw,2.25rem)]">함께 더 나은 결정을 내리세요</h2>
+        <hr class="rule" />
+
+        <section class="section-tight" aria-labelledby="company-close">
+          <div class="wrap grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:items-center">
+            <div class="min-w-0">
+              <h2 id="company-close" class="text-[clamp(1.4rem,3vw,2rem)]">함께 더 나은 결정을 내리세요</h2>
               <p class="lede mt-5">
                 빅데이터 기반의 정밀 분석을 통해 당신의 비즈니스가 더 나은 결과를 달성할 수 있도록
                 전문적인 상담을 제공합니다.
               </p>
             </div>
             <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-              <a class="btn btn-accent" href="/bidbox/demo/">데모 신청</a>
+              <a class="btn btn-primary" href="/bidbox/demo/">데모 신청</a>
               <a class="btn btn-ghost" href="/bidbox/contact/">문의하기</a>
             </div>
           </div>

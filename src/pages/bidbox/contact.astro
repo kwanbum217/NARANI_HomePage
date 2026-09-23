@@ -9,45 +9,41 @@ import { brand } from '../../data/site';
   variant="bidbox" active="contact"
 >
 <section class="navy-field" x-data="enquiryForm('')">
-        <div class="wrap grid gap-12 pb-[clamp(52px,8vw,96px)] pt-[clamp(52px,8vw,96px)] lg:grid-cols-[1fr_1fr]">
+        <div class="wrap pb-[clamp(56px,9vw,96px)] pt-[clamp(56px,9vw,104px)]">
+          <h1 class="display max-w-[20ch] text-[clamp(2rem,4.6vw,3.25rem)]">
+            함께 더 나은 결정을 내리세요
+          </h1>
+          <p class="lede mt-6 max-w-[60ch]">
+            AI 기술로 입찰의 미래를 열어드리는 Bidbox입니다. 빅데이터 기반의 정밀 분석을 통해
+            당신의 비즈니스가 더 나은 결과를 달성할 수 있도록 전문적인 상담을 제공합니다.
+            언제든지 문의해 주세요.
+          </p>
 
-          <div>
-            <p class="eyebrow" style="color:var(--bb-accent)">문의</p>
-            <h1 class="display mt-5 max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.2rem)]">
-              함께 더 나은 결정을 내리세요
-            </h1>
-            <p class="lede mt-6">
-              AI 기술로 입찰의 미래를 열어드리는 Bidbox입니다. 빅데이터 기반의 정밀 분석을 통해
-              당신의 비즈니스가 더 나은 결과를 달성할 수 있도록 전문적인 상담을 제공합니다.
-              언제든지 문의해 주세요.
-            </p>
-
-            <dl class="mt-10 grid gap-6">
-              <div class="card p-6!">
-                <dt class="eyebrow" style="color:var(--bb-muted)">이메일</dt>
-                <dd class="mt-3">
-                  <a class="text-lg font-bold break-all underline underline-offset-4 decoration-[color:var(--bb-accent)]" href={`mailto:${brand.email}`}>
-                    {brand.email}
-                  </a>
-                </dd>
-              </div>
-              <div class="card p-6!">
-                <dt class="eyebrow" style="color:var(--bb-muted)">채팅 상담</dt>
-                <dd class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
-                  실시간으로 전문가가 상담을 진행합니다. 평일 09:00–18:00에 응답이 가장 빠릅니다.
-                </dd>
-              </div>
-            </dl>
+          <div class="rows mt-10 max-w-[720px]">
+            <div class="grid min-w-0 gap-3 md:grid-cols-[minmax(0,0.5fr)_minmax(0,1.5fr)] md:items-baseline">
+              <p class="label">이메일</p>
+              <p class="min-w-0">
+                <a class="font-bold break-all underline underline-offset-4" style="color:var(--bb-accent)" href={`mailto:${brand.email}`}>
+                  {brand.email}
+                </a>
+              </p>
+            </div>
+            <div class="grid min-w-0 gap-3 md:grid-cols-[minmax(0,0.5fr)_minmax(0,1.5fr)] md:items-baseline">
+              <p class="label">채팅 상담</p>
+              <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+                실시간으로 전문가가 상담을 진행합니다. 평일 09:00–18:00에 응답이 가장 빠릅니다.
+              </p>
+            </div>
           </div>
 
-          <div class="card p-6! sm:p-8!" style="background:rgba(21,24,28,0.9);border-color:var(--bb-border)">
+          <div class="card mt-10 max-w-[560px] sm:p-8!">
 
             <!-- 성공 -->
             <div x-show="status === 'sent'" x-cloak>
-              <span class="flex h-12 w-12 items-center justify-center rounded-full" style="background:rgba(184,221,240,0.15)" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11.5l5 5 9-11" stroke="#B8DDF0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="flex h-12 w-12 items-center justify-center rounded-full" style="background:var(--bb-accent-soft)" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="color:var(--bb-accent)"><path d="M4 11.5l5 5 9-11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               </span>
-              <h2 class="mt-5 text-xl font-black tracking-[-0.02em]">문의가 접수되었습니다</h2>
+              <h2 class="mt-5 text-[1.25rem] font-bold tracking-[-0.02em]">문의가 접수되었습니다</h2>
               <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
                 담당자가 <strong style="color:var(--bb-text)" x-text="values.email"></strong> 로 회신드립니다.
               </p>
@@ -56,7 +52,7 @@ import { brand } from '../../data/site';
 
             <!-- 폼 -->
             <form x-show="status !== 'sent'" novalidate @submit.prevent="submit()" aria-labelledby="contact-form-title">
-              <h2 id="contact-form-title" class="text-xl font-black tracking-[-0.02em]">문의 남기기</h2>
+              <h2 id="contact-form-title" class="text-[1.25rem] font-bold tracking-[-0.02em]">문의 남기기</h2>
               <p class="mt-2 text-[0.8125rem]" style="color:var(--bb-muted)">표시된 항목은 모두 필수입니다.</p>
 
               <div class="mt-6 grid gap-5">
@@ -83,7 +79,7 @@ import { brand } from '../../data/site';
               </div>
 
               <p x-show="status === 'error'" x-cloak class="mt-5 rounded-xl p-4 text-[0.8125rem] font-semibold"
-                 style="background:rgba(255,143,143,0.12);color:#ffb4b4" role="alert" x-text="errorMessage"></p>
+                 style="border:1px solid var(--danger);color:var(--danger-ink)" role="alert" x-text="errorMessage"></p>
 
               <button type="submit" class="btn btn-primary btn-block mt-6" :aria-busy="busy.toString()" :disabled="busy">
                 <span x-text="busy ? '전송 중…' : '문의 보내기'"></span>

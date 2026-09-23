@@ -4,6 +4,7 @@
    NARANI / BIDBOX — design system
    Tokens are sampled from the source deck ("홈페이지 구성안").
    Light register = Narani company surfaces. Dark register = BIDBOX product.
+   This file is the only token source. Do not add a second tokens file.
    ========================================================================== */
 
 :root {
@@ -24,6 +25,8 @@
   --bb-navy: #042b4e;
   --bb-navy-2: #094579;
   --bb-accent: #b8ddf0;
+  --bb-accent-hover: #d3ecf8;
+  --bb-accent-soft: rgba(184, 221, 240, 0.08);
   --bb-text: #f2f7fa;
   --bb-muted: #8fa3b3;
   --bb-border: rgba(184, 221, 240, 0.14);
@@ -34,6 +37,17 @@
   --primary-hover: #005bb3;
   --primary-press: #004a94;
   --accent-ink: #042b4e;
+
+  /* Feedback */
+  --danger: #ff8f8f;
+  --danger-ink: #ffb4b4;
+
+  /* Type roles: display is a Korean serif stack, body is Pretendard. */
+  --font-display: "Apple Myungjo", "Nanum Myeongjo", Batang, "Pretendard Variable",
+    Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo",
+    "Malgun Gothic", serif;
+  --font-body: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 
   /* Rhythm: 1 / 4 / 9 units (4px base) */
   --u1: 4px;
@@ -59,8 +73,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.5;
   word-break: keep-all;
@@ -86,33 +99,33 @@ button { font: inherit; color: inherit; }
 
 .reg-dark ::selection { background: var(--bb-accent); color: var(--accent-ink); }
 
-.navy-field {
-  background:
-    radial-gradient(120% 90% at 8% 0%, rgba(9, 69, 121, 0.55) 0%, transparent 58%),
-    radial-gradient(90% 80% at 96% 12%, rgba(184, 221, 240, 0.16) 0%, transparent 52%),
-    linear-gradient(168deg, var(--bb-navy) 0%, #021423 62%, #000000 100%);
-}
-
-.warm-field {
-  background:
-    radial-gradient(80% 70% at 88% 6%, rgba(0, 115, 230, 0.08) 0%, transparent 60%),
-    linear-gradient(180deg, #ffffff 0%, var(--nani-bg) 100%);
-}
+/* Flat hero surfaces. The register colour is already the page colour. */
+.navy-field { background: var(--bb-bg); }
+.warm-field { background: var(--nani-bg); }
 
 /* ---------------------------------------------------------------- type -- */
-.eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
+h1,
+h2,
+.display { font-family: var(--font-display); }
+
+h1,
+h2 { font-weight: 700; }
 
 .display {
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  text-wrap: balance;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
+
+/* Small, non-uppercase label. Korean copy stays case-correct. */
+.label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--nani-muted);
+}
+
+.reg-dark .label { color: var(--bb-muted); }
 
 .lede {
   font-size: 1.0625rem;
@@ -126,7 +139,7 @@ button { font: inherit; color: inherit; }
 .measure { max-width: 68ch; }
 
 /* Light type on dark reads thinner: compensate. */
-.reg-dark .display { letter-spacing: -0.02em; line-height: 1.12; }
+.reg-dark .display { letter-spacing: -0.015em; line-height: 1.2; }
 .reg-dark p { line-height: 1.72; }
 
 /* -------------------------------------------------------------- layout -- */
@@ -134,7 +147,7 @@ button { font: inherit; color: inherit; }
   width: 100%;
   max-width: 1180px;
   margin-inline: auto;
-  padding-inline: 20px;
+  padding-inline: 24px;
 }
 
 .section { padding-block: clamp(56px, 9vw, 108px); }
@@ -143,12 +156,26 @@ button { font: inherit; color: inherit; }
 .rule { height: 1px; background: var(--nani-border); border: 0; }
 .reg-dark .rule { background: var(--bb-border); }
 
+/* Stacked rows separated by a horizontal rule: long-document, catalogue,
+   specimen, rate-sheet, directory. */
+.rows { border-top: 1px solid var(--nani-border); }
+.rows > * {
+  padding-block: 24px;
+  border-bottom: 1px solid var(--nani-border);
+}
+.reg-dark .rows { border-top-color: var(--bb-border); }
+.reg-dark .rows > * { border-bottom-color: var(--bb-border); }
+
+/* Rate-sheet emphasis: a left bar. Never a filled panel. */
+.rate-bar { border-left: 4px solid var(--primary); padding-left: 24px; }
+.reg-dark .rate-bar { border-left-color: var(--bb-accent); }
+
 /* ------------------------------------------------------------- controls -- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   min-height: 48px;
   padding: 12px 24px;
   border: 1px solid transparent;
@@ -179,10 +206,10 @@ button { font: inherit; color: inherit; }
   border-color: var(--bb-border-strong);
   color: var(--bb-text);
 }
-.reg-dark .btn-ghost:hover { background: rgba(184, 221, 240, 0.1); border-color: var(--bb-accent); }
+.reg-dark .btn-ghost:hover { background: var(--bb-accent-soft); border-color: var(--bb-accent); }
 
 .btn-accent { background: var(--bb-accent); color: var(--accent-ink); }
-.btn-accent:hover { background: #d3ecf8; }
+.btn-accent:hover { background: var(--bb-accent-hover); }
 
 .btn-block { width: 100%; }
 
@@ -198,34 +225,30 @@ button { font: inherit; color: inherit; }
 
 .skip-link {
   position: absolute;
-  left: 12px;
-  top: -60px;
+  left: 16px;
+  top: -64px;
   z-index: 100;
-  padding: 10px 18px;
+  padding: 12px 20px;
   background: var(--primary);
   color: #fff;
   border-radius: 10px;
   font-weight: 700;
   transition: top 0.2s var(--ease-out);
 }
-.skip-link:focus { top: 12px; }
+.skip-link:focus { top: 16px; }
 
 /* ---------------------------------------------------------------- cards -- */
 .card {
   background: var(--nani-surface);
   border: 1px solid var(--nani-border);
   border-radius: var(--radius-lg);
-  padding: 28px;
+  padding: 24px;
 }
 
 .reg-dark .card {
   background: var(--bb-surface);
   border-color: var(--bb-border);
 }
-
-.card-lift { transition: transform 0.3s var(--ease-out), border-color 0.3s var(--ease-out); }
-.card-lift:hover { transform: translateY(-4px); border-color: var(--primary); }
-.reg-dark .card-lift:hover { border-color: var(--bb-border-strong); }
 
 /* ------------------------------------------------------------ nav / site -- */
 .site-nav {
@@ -242,24 +265,30 @@ button { font: inherit; color: inherit; }
   border-bottom-color: var(--bb-border);
 }
 
+/* Text link, not a pill. The current page is marked with a bottom rule. */
 .nav-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   min-height: 44px;
-  padding: 12px 14px;
-  border-radius: 999px;
+  padding: 12px;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--nani-muted);
-  transition: color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+  box-shadow: inset 0 -2px 0 transparent;
+  transition: color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
-.nav-link:hover { color: var(--nani-ink); background: rgba(10, 31, 51, 0.05); }
-.nav-link[aria-current="page"] { color: var(--nani-ink); background: var(--nani-tint); }
+.nav-link:hover { color: var(--nani-ink); }
+.nav-link[aria-current="page"] {
+  color: var(--nani-ink);
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
 
 .reg-dark .nav-link { color: var(--bb-muted); }
-.reg-dark .nav-link:hover { color: var(--bb-text); background: rgba(184, 221, 240, 0.08); }
-.reg-dark .nav-link[aria-current="page"] { color: var(--bb-text); background: rgba(184, 221, 240, 0.12); }
+.reg-dark .nav-link:hover { color: var(--bb-text); }
+.reg-dark .nav-link[aria-current="page"] {
+  color: var(--bb-text);
+  box-shadow: inset 0 -2px 0 var(--bb-accent);
+}
 
 /* full-width variant used inside the mobile drawer */
 .nav-link--block {
@@ -277,13 +306,13 @@ button { font: inherit; color: inherit; }
   letter-spacing: -0.01em;
 }
 
-.field .hint { font-size: 0.8125rem; color: var(--nani-muted); }
+.field .hint { font-size: 0.8125rem; color: var(--bb-muted); }
 
 .field input,
 .field textarea {
   width: 100%;
-  min-height: 50px;
-  padding: 13px 16px;
+  min-height: 48px;
+  padding: 12px 16px;
   font-size: 1rem; /* >=16px keeps iOS Safari from zooming */
   font-family: inherit;
   color: var(--bb-text);
@@ -295,38 +324,39 @@ button { font: inherit; color: inherit; }
 .field textarea { min-height: 148px; resize: vertical; }
 
 .field input::placeholder,
-.field textarea::placeholder { color: #6d8090; }
+.field textarea::placeholder { color: var(--bb-muted); }
 
 .field input:hover,
 .field textarea:hover { border-color: var(--bb-border-strong); }
 
 .field.is-invalid input,
-.field.is-invalid textarea { border-color: #ff8f8f; }
+.field.is-invalid textarea { border-color: var(--danger); }
 
 .field .error {
   display: none;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #ff9b9b;
+  color: var(--danger-ink);
 }
 .field.is-invalid .error { display: block; }
 
+/* ---------------------------------------------------------- data table -- */
+.data-table { width: 100%; border-collapse: collapse; }
+
+.data-table th,
+.data-table td {
+  padding-block: 16px;
+  border-bottom: 1px solid var(--nani-border);
+  text-align: left;
+  vertical-align: baseline;
+}
+.data-table th { font-weight: 600; padding-right: 16px; }
+.data-table td { font-weight: 700; }
+
+.reg-dark .data-table th,
+.reg-dark .data-table td { border-bottom-color: var(--bb-border); }
+
 /* -------------------------------------------------------------- motion -- */
-@media (prefers-reduced-motion: no-preference) {
-  .rise {
-    opacity: 0;
-    transform: translateY(18px);
-    animation: rise 0.7s var(--ease-out) forwards;
-  }
-  .rise-2 { animation-delay: 0.08s; }
-  .rise-3 { animation-delay: 0.16s; }
-  .rise-4 { animation-delay: 0.24s; }
-}
-
-@keyframes rise {
-  to { opacity: 1; transform: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -341,16 +371,15 @@ button { font: inherit; color: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: 999px;
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .reg-dark .tag {
-  background: rgba(184, 221, 240, 0.1);
+  background: var(--bb-accent-soft);
   border: 1px solid var(--bb-border);
   color: var(--bb-accent);
 }
@@ -358,7 +387,7 @@ button { font: inherit; color: inherit; }
 .tag-light {
   background: var(--nani-tint);
   color: var(--nani-navy);
-  border: 1px solid #d8e6f5;
+  border: 1px solid var(--nani-border);
 }
 
 .num {
