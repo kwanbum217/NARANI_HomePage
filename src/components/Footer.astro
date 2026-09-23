@@ -21,28 +21,33 @@ const links = isBidbox
     ];
 ---
 
-<footer class="border-t" style={`border-color:${isBidbox ? 'var(--bb-border)' : 'var(--nani-border)'}`}>
-  <div
-    class="wrap flex flex-col items-start justify-between gap-4 py-8 text-[0.8125rem] sm:flex-row sm:items-center"
-    style={`color:${isBidbox ? 'var(--bb-muted)' : 'var(--nani-muted)'}`}
-  >
-    {isBidbox ? (
+{isBidbox ? (
+  <footer class="border-t" style="border-color:var(--bb-border)">
+    <div class="wrap flex flex-col items-start justify-between gap-4 py-8 text-[0.8125rem] sm:flex-row sm:items-center" style="color:var(--bb-muted)">
       <p>
         {brand.productFooter} · {brand.footerNote} © {year} {brand.company}. All rights reserved.
       </p>
-    ) : (
-      <p>© {year} {brand.company}. {brand.footerNote}</p>
-    )}
-
-    <div class="flex flex-wrap gap-6">
-      {links.map((link) => (
-        <a
-          href={link.href}
-          class={isBidbox ? 'hover:text-[color:var(--bb-text)]' : 'hover:text-[color:var(--nani-ink)]'}
-        >
-          {link.label}
-        </a>
-      ))}
+      <nav aria-label="푸터" class="flex flex-wrap gap-1">
+        {links.map((link) => (
+          <a href={link.href} class="inline-flex min-h-[44px] items-center px-3 hover:text-[color:var(--bb-text)]">{link.label}</a>
+        ))}
+      </nav>
     </div>
-  </div>
-</footer>
+  </footer>
+) : (
+  <footer class="border-t" style="border-color:var(--nani-border)">
+    <div class="wrap grid gap-6 py-10 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div>
+        <p class="display text-[1.5rem]">{brand.company}</p>
+        <p class="mt-3 text-[0.8125rem]" style="color:var(--nani-muted)">
+          © {year} {brand.company}. {brand.footerNote}
+        </p>
+      </div>
+      <nav aria-label="푸터" class="flex flex-wrap gap-1 text-[0.8125rem]" style="color:var(--nani-muted)">
+        {links.map((link) => (
+          <a href={link.href} class="inline-flex min-h-[44px] items-center px-3 hover:text-[color:var(--nani-ink)]">{link.label}</a>
+        ))}
+      </nav>
+    </div>
+  </footer>
+)}

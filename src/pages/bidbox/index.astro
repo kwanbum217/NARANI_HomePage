@@ -9,70 +9,85 @@ import { capabilities } from '../../data/site';
   variant="bidbox" active="bidbox"
 >
 <section class="navy-field">
-        <div class="wrap grid items-center gap-12 pb-[clamp(48px,7vw,88px)] pt-[clamp(56px,9vw,110px)] lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <span class="tag rise">용역 분야 전문</span>
-            <h1 class="display rise rise-2 mt-6 text-[clamp(2.1rem,5.2vw,4rem)]">
+        <div class="wrap pb-[clamp(40px,6vw,72px)] pt-[clamp(56px,9vw,104px)]">
+          <div class="max-w-[46ch]">
+            <p class="label">용역 분야 전문</p>
+            <h1 class="display mt-5 text-[clamp(2rem,5.2vw,3.75rem)]">
               용역분야에 전문화된<br />입찰서비스
             </h1>
-            <p class="lede rise rise-3 mt-6">
+            <p class="lede mt-6">
               정보 나열이 아니라, AI로 <strong style="color:var(--bb-accent)">예상 입찰가까지</strong> 제시합니다.
               근로자파견 · 경비업 · 위생관리용역업 · 직업소개업에 특화된 데이터로 예측합니다.
             </p>
-            <div class="rise rise-4 mt-9 flex flex-col gap-3 sm:flex-row">
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
               <a class="btn btn-primary" href="/bidbox/pricing/">프로그램 접속</a>
               <a class="btn btn-ghost" href="/bidbox/demo/">데모 신청</a>
-            </div>
-          </div>
-
-          <div class="card p-6! sm:p-8!" style="background:rgba(21,24,28,0.86);border-color:var(--bb-border)">
-            <p class="eyebrow" style="color:var(--bb-muted)">예측 결과</p>
-            <div class="mt-5 grid gap-4">
-              <div class="flex items-end justify-between gap-4 border-b pb-4" style="border-color:var(--bb-border)">
-                <div>
-                  <p class="text-sm" style="color:var(--bb-muted)">공고</p>
-                  <p class="mt-1 font-bold">2026년 시설 경비 용역</p>
-                </div>
-                <p class="num text-sm" style="color:var(--bb-muted)">용역 · 서울</p>
-              </div>
-              <div>
-                <p class="text-sm" style="color:var(--bb-muted)">AI 예상 낙찰금액</p>
-                <p class="num mt-2 text-[clamp(1.8rem,4vw,2.6rem)] font-black" style="color:var(--bb-accent)">₩418,200,000</p>
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="rounded-xl p-4" style="background:rgba(184,221,240,0.07)">
-                  <p class="text-xs font-bold" style="color:var(--bb-muted)">기초금액</p>
-                  <p class="num mt-1 font-bold">₩452,000,000</p>
-                </div>
-                <div class="rounded-xl p-4" style="background:rgba(184,221,240,0.07)">
-                  <p class="text-xs font-bold" style="color:var(--bb-muted)">예상 낙찰률</p>
-                  <p class="num mt-1 font-bold">92.5%</p>
-                </div>
-              </div>
-              <p class="text-xs leading-relaxed" style="color:var(--bb-muted)">
-                예측값은 공고 · 낙찰 이력과 시장 동향을 함께 분석한 결과이며, 산출 근거를 같은 화면에서 확인할 수 있습니다.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="highlights">
+      <section class="section-tight" aria-labelledby="specimen">
+        <div class="wrap grid gap-10 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-start">
+          <div class="min-w-0">
+            <h2 id="specimen" class="text-[clamp(1.4rem,3vw,2rem)]">예측 결과</h2>
+            <p class="label mt-3">예시</p>
+            <p class="lede mt-5">
+              예측값은 공고 · 낙찰 이력과 시장 동향을 함께 분석한 결과이며, 산출 근거를 같은 화면에서
+              확인할 수 있습니다.
+            </p>
+          </div>
+
+          <div class="min-w-0 overflow-x-auto">
+            <table class="data-table">
+              <caption class="sr-only">예시 예측 결과</caption>
+              <tbody>
+                <tr>
+                  <th scope="row">공고</th>
+                  <td>2026년 시설 경비 용역</td>
+                </tr>
+                <tr>
+                  <th scope="row">구분</th>
+                  <td>용역 · 서울</td>
+                </tr>
+                <tr>
+                  <th scope="row">AI 예상 낙찰금액</th>
+                  <td class="num text-[clamp(1.25rem,3vw,1.75rem)]" style="color:var(--bb-accent)">
+                    ₩418,200,000
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">기초금액</th>
+                  <td class="num">₩452,000,000</td>
+                </tr>
+                <tr>
+                  <th scope="row">예상 낙찰률</th>
+                  <td class="num">92.5%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-tight" aria-labelledby="highlights">
         <div class="wrap">
-          <h2 id="highlights" class="eyebrow" style="color:var(--bb-muted)">BIDBOX가 하는 일</h2>
-          <div class="mt-8 grid gap-5 md:grid-cols-3">
+          <h2 id="highlights" class="text-[clamp(1.4rem,3vw,2rem)]">BIDBOX가 하는 일</h2>
+
+          <div class="rows mt-8">
             {capabilities.map((capability) => (
-              <article class="card card-lift">
-                <h3 class="text-xl font-black tracking-[-0.02em]">{capability.title}</h3>
-                <p class="mt-3 text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
+              <article class="grid min-w-0 gap-3 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] md:items-baseline">
+                <h3 class="text-[1.25rem] font-bold tracking-[-0.02em]">{capability.title}</h3>
+                <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
                   {capability.body}
                 </p>
               </article>
             ))}
           </div>
+
           <a class="mt-8 inline-flex items-center gap-2 font-bold" style="color:var(--bb-accent)" href="/bidbox/service/">
             서비스 자세히 보기
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           </a>
         </div>
       </section>
