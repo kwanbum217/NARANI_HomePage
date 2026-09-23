@@ -135,3 +135,22 @@ X-Frame-Options: SAMEORIGIN
 | OG 이미지 | 미추가. `public/` 에 이미지를 두고 `BaseLayout` 에 메타 추가 필요 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
 | 분석 도구 | 미도입 |
+
+---
+
+## 8. CI
+
+`.github/workflows/ci.yml` 이 `main` 푸시와 `main` 대상 PR 에서 실행됩니다.
+
+| 단계 | 내용 |
+| --- | --- |
+| 저장소 규칙 | 이모지 금지 검사 |
+| 빌드 | `astro build` |
+| 링크 무결성 | `dist/` 내부 참조 검사 |
+| 산출물 | 페이지 목록과 번들 크기 요약, `dist/` 아티팩트 업로드 |
+
+브라우저 검증(`scripts/verify.sh`)은 macOS WebKit 을 사용하므로 CI 에서 실행하지
+않습니다. 배포 전 로컬에서 수행합니다.
+
+CI 는 배포를 수행하지 않습니다. 산출물을 아티팩트로만 남기며, 호스팅 연결 후 배포
+단계를 추가합니다.

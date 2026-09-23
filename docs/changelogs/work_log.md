@@ -65,3 +65,35 @@ Google Slides 구성안 9장을 7페이지 정적 사이트로 옮기고, 에이
 - 도메인 연결 및 첫 배포
 
 목록의 정본은 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 4장입니다.
+
+---
+
+## 2026-09-23 — 원격 연결과 CI 구성
+
+### 범위
+
+GitHub 원격 저장소 연결, CI 워크플로우 구성, CI 액션 버전 상향.
+
+### 변경
+
+| 항목 | 내용 |
+| --- | --- |
+| 원격 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
+| 브랜치 | 최초 부트스트랩 커밋만 `main` 직접. 이후는 작업 브랜치 후 `--no-ff` 병합 |
+| CI | `.github/workflows/ci.yml`. 이모지 검사, 빌드, 링크 무결성, 산출물 업로드 |
+| 액션 | `actions/checkout`, `setup-node`, `upload-artifact` 를 v7 로 상향 |
+
+### 경위
+
+1. 최초 커밋 푸시 후 CI 가 통과했으나 Node 20 deprecation 경고가 발생했습니다.
+2. 액션 v7 이 존재하는 것을 확인하고 상향했습니다. 경고가 사라졌습니다.
+3. 이 커밋은 `chore/ci-action-versions` 브랜치에서 작업 후 `--no-ff` 로 병합해
+   [`../ops/GIT_WORKFLOW.md`](../ops/GIT_WORKFLOW.md) 의 절차를 실제로 검증했습니다.
+
+### 검증
+
+| 항목 | 결과 |
+| --- | --- |
+| CI 실행 | 성공 (약 17초) |
+| Node 20 deprecation 경고 | 해소 |
+| 남은 경고 | `ubuntu-latest` 라벨 마이그레이션 안내(정보성) |
