@@ -32,6 +32,7 @@
 | 접근성·반응형 수정 | [`docs/spec/QA_AND_A11Y.md`](docs/spec/QA_AND_A11Y.md), `.agents/skills/a11y-audit/SKILL.md` |
 | 빌드·배포 | [`docs/ops/BUILD_AND_DEPLOY.md`](docs/ops/BUILD_AND_DEPLOY.md) |
 | 브랜치·커밋 | [`docs/ops/GIT_WORKFLOW.md`](docs/ops/GIT_WORKFLOW.md) |
+| Orca 워커 병렬 작업 | [`docs/ops/ORCA_WORKERS.md`](docs/ops/ORCA_WORKERS.md) |
 | 슬라이드 원본 대조 | [`docs/design/DECK_TO_SITE_MAP.md`](docs/design/DECK_TO_SITE_MAP.md) |
 | 기술 선택 근거 | [`docs/design/ADR-0001-astro-static-marketing-site.md`](docs/design/ADR-0001-astro-static-marketing-site.md) |
 | 세션 인수인계 | [`docs/handoff/`](docs/handoff/) |

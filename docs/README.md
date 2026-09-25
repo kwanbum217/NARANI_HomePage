@@ -22,6 +22,7 @@
 | 검증·접근성 | [`spec/QA_AND_A11Y.md`](spec/QA_AND_A11Y.md) | 검증 단계, 접근성 하한, 도구 사용법 |
 | 빌드·배포 | [`ops/BUILD_AND_DEPLOY.md`](ops/BUILD_AND_DEPLOY.md) | 빌드, 정적 배포, 도메인, 캐시 |
 | Git 워크플로우 | [`ops/GIT_WORKFLOW.md`](ops/GIT_WORKFLOW.md) | 브랜치, 커밋, 병합, 훅 |
+| Orca 워커 운용 | [`ops/ORCA_WORKERS.md`](ops/ORCA_WORKERS.md) | cmd 주력 워커 기동·감시·회수, 멈춤 원인 |
 | 인수인계 | [`handoff/`](handoff/) | 세션 단위 인수인계 기록 |
 | 작업 일지 | [`changelogs/work_log.md`](changelogs/work_log.md) | 누적 작업 기록 |
 
@@ -78,6 +79,7 @@ docs/
 | --- | --- | --- |
 | 빌드·배포 | [`BUILD_AND_DEPLOY.md`](ops/BUILD_AND_DEPLOY.md) | 로컬 실행, 빌드 산출물, 배포 대상, 도메인 전환 |
 | Git 워크플로우 | [`GIT_WORKFLOW.md`](ops/GIT_WORKFLOW.md) | 브랜치 모델, 커밋 규칙, 훅, 병합 절차 |
+| Orca 워커 운용 | [`ORCA_WORKERS.md`](ops/ORCA_WORKERS.md) | cmd 워커 기동 절차, 권한 사전 조건, 리뷰어 기동 |
 | 기각·반복 금지 | [`DO_NOT_REPEAT.md`](ops/DO_NOT_REPEAT.md) | 실패한 접근, 금지 패턴, 환경 함정 |
 
 ---
