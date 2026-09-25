@@ -163,3 +163,26 @@ ERE 에서 `[a-zA-Z0-9_\[\]...]` 처럼 브래킷 안에 `\]` 를 쓰면 브래�
 
 오류를 다음 제출까지 남겨 두면, 사용자가 이미 고친 필드에 빨간 표시가 남아 혼란을
 줍니다. `enquiryForm.clear(field)` 가 입력 이벤트에서 해당 오류를 제거합니다.
+
+---
+
+## 8. Orca 워커
+
+### 8.1 cmd 워커를 `worker-start` 로 띄우지 않습니다
+
+**증상**: `--agent cmd` 는 `agent_unconfigured`, `--agent command-code` 는 `agent_readiness`
+시간 초과로 실패했습니다. 같은 Task 가 세 번 실패해 circuit-break 되었습니다.
+
+**원인**: Orca 가 command-code 에 기동 시 준비 신호를 보내는 훅을 설치하지 않습니다.
+
+**대응**: `terminal create` + `dispatch --inject` 경로만 씁니다. 절차는
+[`ORCA_WORKERS.md`](ORCA_WORKERS.md) 3장입니다.
+
+### 8.2 cmd 워커 명령에 파이프를 붙이지 않습니다
+
+**증상**: 허용 규칙을 넣은 뒤에도 `orca terminal wait ... | python3 -c ...` 가
+`Create Unsafe Agents` 로 거부되었습니다. `orca` 단독 명령은 통과했습니다.
+
+**원인**: 명령 일부가 허용 규칙을 벗어나면 전체가 자동 모드 분류기로 넘어갑니다.
+
+**대응**: [`ORCA_WORKERS.md`](ORCA_WORKERS.md) 4.1 을 따릅니다.

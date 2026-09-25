@@ -31,8 +31,13 @@
 
 ## 현재 기록
 
-아직 없습니다. 1차 구현의 검증 결과는
-[`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 3장에 정리되어 있습니다.
+| 문서 | 주제 |
+| --- | --- |
+| [`번들_20260925.md`](번들_20260925.md) | 번들 크기 기준선 |
+| [`브라우저_렌더_비교_20260925.md`](브라우저_렌더_비교_20260925.md) | 3종 브라우저 렌더 비교. Firefox 미설치로 Chrome 과 WebKit 만 측정 |
+
+1차 구현의 검증 결과는 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 3장에
+정리되어 있습니다.
 
 ---
 
