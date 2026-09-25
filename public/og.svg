@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="NARANI — 사용자와 소프트웨어는 나란히 일한다 — BIDBOX">
+  <rect width="1200" height="630" fill="#faf9f7"/>
+  <g font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', Helvetica, Arial, sans-serif">
+    <text x="88" y="152" font-size="40" font-weight="700" letter-spacing="8" fill="#003066">NARANI</text>
+    <text x="88" y="344" font-size="50" font-weight="700" fill="#0a1f33">사용자와 소프트웨어는 나란히 일한다</text>
+    <text x="88" y="540" font-size="44" font-weight="700" letter-spacing="4" fill="#0073E6">BIDBOX</text>
+  </g>
+  <rect x="88" y="180" width="120" height="3" fill="#5a6b7b"/>
+  <rect x="1020" y="380" width="64" height="176" rx="32" fill="#003066"/>
+  <rect x="1100" y="380" width="64" height="176" rx="32" fill="#B8DDF0"/>
+</svg>

@@ -25,7 +25,7 @@
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
 | 폼 백엔드 | 미연결 | `enquiryForm` 이 900ms 지연 시뮬레이션 |
 | 결제 연동 | 미연결 | 주문 확인 다이얼로그까지만 동작 |
-| sitemap / robots / OG 이미지 | 미추가 | Astro 통합으로 추가 예정 |
+| sitemap / robots / OG | 완료 | prerendered 엔드포인트(`src/pages/sitemap.xml.ts`, `src/pages/robots.txt.ts`)와 `public/og.svg`, `og.png`. 새 패키지 추가 없이 정적 생성 |
 | 다국어 | 미착수 | 한국어 단일 |
 
 ### 페이지 라우트
@@ -39,6 +39,7 @@
 | `/bidbox/pricing/` | `src/pages/bidbox/pricing.astro` | Alpine (메뉴 + 주문 다이얼로그) |
 | `/bidbox/demo/` | `src/pages/bidbox/demo.astro` | Alpine (메뉴 + 폼 상태) |
 | `/bidbox/contact/` | `src/pages/bidbox/contact.astro` | Alpine (메뉴 + 폼 상태) |
+| `/404` | `src/pages/404.astro` | 없음 |
 
 ---
 
@@ -109,7 +110,6 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 | 테마 시각 미확정 | 라이트/다크 배분이 실제 구성안과 다를 수 있음 | 추출 세션에서 이미지를 볼 수 없어 픽셀 통계로 추론함. `npm run dev` 로 육안 확인 후 필요 시 레지스터 조정 | 담당자 확인 필요 |
 | 결제 미연결 | 요금 페이지에서 구매 완결 불가 | 결제는 이 저장소가 아니라 제품 본체(`refac_bid_box`)의 PG 라우트로 이동시킴 | 미정 |
 | 폼 백엔드 미연결 | 데모·문의 접수가 실제로 전달되지 않음 | 폼 서비스 또는 제품 본체 엔드포인트 결정 후 `enquiryForm(endpoint)` 에 주입 | 미정 |
-| sitemap / robots / OG | 검색 노출과 공유 카드 없음 | Astro sitemap 통합과 OG 이미지 추가 | 미정 |
 | 배포 미수행 | 공개 URL 없음 | `dist/` 를 정적 호스팅에 업로드. `astro.config.mjs` 의 `site` 값을 실제 도메인으로 교체 | 미정 |
 
 ---
@@ -121,8 +121,7 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 3. 이메일 표기 확정 (열린 항목 1번)
 4. 폼 엔드포인트 연결
 5. 요금 결제를 제품 본체 라우트로 딥링크
-6. sitemap / robots / OG 이미지
-7. 도메인 연결 및 첫 배포
+6. 도메인 연결 및 첫 배포
 
 ---
 
