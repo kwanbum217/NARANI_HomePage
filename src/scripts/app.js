@@ -14,7 +14,7 @@ Alpine.data('siteNav', () => ({
 }));
 
 // Contact / demo enquiry form: idle → validating → submitting → sent | error
-Alpine.data('enquiryForm', (endpoint = '') => ({
+Alpine.data('enquiryForm', (endpoint = '', options = {}) => ({
   status: 'idle', // idle | submitting | sent | error
   errorMessage: '',
   values: { name: '', email: '', topic: '', message: '', consent: false },
@@ -34,7 +34,11 @@ Alpine.data('enquiryForm', (endpoint = '') => ({
 
   validate() {
     const e = {};
-    if (!this.values.name.trim()) e.name = '성함을 입력해 주세요.';
+    const nameError =
+      typeof options.nameError === 'string' && options.nameError !== ''
+        ? options.nameError
+        : '성함을 입력해 주세요.';
+    if (!this.values.name.trim()) e.name = nameError;
     if (!this.values.email.trim()) e.email = '이메일을 입력해 주세요.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.values.email))
       e.email = '이메일 형식이 올바르지 않습니다.';
