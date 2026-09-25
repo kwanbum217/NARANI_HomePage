@@ -7,7 +7,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   description="관심 공고 한 건을 알려 주시면, 예상 낙찰가와 인용 근거를 같은 화면에서 보여 드립니다."
   variant="bidbox" active="demo"
 >
-<section class="navy-field" x-data="enquiryForm('')">
+<section class="navy-field" x-data="enquiryForm('', { nameError: '회사명을 입력해 주세요.' })">
         <div
           class="wrap grid gap-12 pb-[clamp(56px,9vw,96px)] pt-[clamp(56px,9vw,104px)] md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start"
         >
@@ -52,7 +52,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                          x-model="values.name" @input="clear('name')" placeholder="예) 나란히물류"
                          :aria-invalid="Boolean(errors.name).toString()"
                          :aria-describedby="errors.name ? 'd-company-error' : null" />
-                  <p class="error" id="d-company-error" x-text="errors.name"></p>
+                  <p class="error" id="d-company-error" aria-live="polite" x-text="errors.name"></p>
                 </div>
 
                 <div class="field" :class="errors.email ? 'is-invalid' : ''">
@@ -61,7 +61,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                          x-model="values.email" @input="clear('email')" placeholder="name@company.co.kr"
                          :aria-invalid="Boolean(errors.email).toString()"
                          :aria-describedby="errors.email ? 'd-email-error' : null" />
-                  <p class="error" id="d-email-error" x-text="errors.email"></p>
+                  <p class="error" id="d-email-error" aria-live="polite" x-text="errors.email"></p>
                 </div>
 
                 <div class="field">
@@ -77,7 +77,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                             :aria-invalid="Boolean(errors.message).toString()"
                             :aria-describedby="errors.message ? 'd-message-error' : null"
                             placeholder="예) 경비 용역 입찰의 예상 낙찰가와 근거를 보고 싶습니다."></textarea>
-                  <p class="error" id="d-message-error" x-text="errors.message"></p>
+                  <p class="error" id="d-message-error" aria-live="polite" x-text="errors.message"></p>
                 </div>
               </div>
 

@@ -23,6 +23,7 @@ const ogImage = new URL(
 ).href;
 
 const favicon = isBidbox ? '/favicon-bidbox.svg' : '/favicon-nani.svg';
+const logo = new URL('/favicon-nani.svg', Astro.site).href;
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -31,6 +32,7 @@ const structuredData = {
       '@type': 'Organization',
       name: brand.company,
       url: Astro.site,
+      logo,
       description: '사용자와 소프트웨어는 나란히 일한다.',
     },
     {
