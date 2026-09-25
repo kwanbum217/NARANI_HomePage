@@ -40,6 +40,9 @@ dist/
 ├── company/index.html
 ├── bidbox/index.html
 ├── bidbox/{service,pricing,demo,contact}/index.html
+├── robots.txt          prerendered 엔드포인트
+├── sitemap.xml         prerendered 엔드포인트 (7개 경로)
+├── og.svg, og.png      공유 이미지 (public/ 에서 복사)
 └── _astro/            번들된 CSS 와 JS (해시 파일명)
 ```
 
@@ -126,15 +129,18 @@ X-Frame-Options: SAMEORIGIN
 
 ---
 
-## 7. 미구현
+## 7. 구현 상태
 
 | 항목 | 상태 |
 | --- | --- |
-| `sitemap.xml` | 미추가. Astro sitemap 통합으로 추가 예정 |
-| `robots.txt` | 미추가 |
-| OG 이미지 | 미추가. `public/` 에 이미지를 두고 `BaseLayout` 에 메타 추가 필요 |
+| `sitemap.xml` | 추가. `src/pages/sitemap.xml.ts` prerendered 엔드포인트가 7개 경로를 생성 |
+| `robots.txt` | 추가. `src/pages/robots.txt.ts` prerendered 엔드포인트가 sitemap URL 을 안내 |
+| OG 이미지 | 추가. `public/og.svg`(1200x630)와 `og.png`, `BaseLayout` 에 og/twitter 메타 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
 | 분석 도구 | 미도입 |
+
+`sitemap.xml` 과 `robots.txt` 는 새 패키지를 추가하지 않고 prerendered 엔드포인트로
+생성합니다. OG 이미지는 `public/` 에 두고 빌드 시 `dist/` 로 복사합니다.
 
 ---
 

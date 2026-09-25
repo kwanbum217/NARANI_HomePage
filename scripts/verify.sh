@@ -22,6 +22,7 @@ PAGES=(
   "/bidbox/pricing/|1440x1700"
   "/bidbox/demo/|1440x1700"
   "/bidbox/contact/|1440x1700"
+  "/404.html|1440x1700"
 )
 
 NARROW=(
@@ -32,6 +33,7 @@ NARROW=(
   "/bidbox/pricing/|320x900"
   "/bidbox/demo/|320x900"
   "/bidbox/contact/|320x900"
+  "/404.html|320x900"
 )
 
 cd "$ROOT"

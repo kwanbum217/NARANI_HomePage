@@ -57,7 +57,7 @@
 유틸리티가 생성되지 않아 조용히 무시됩니다.
 변형 접두사가 붙은 형태(`sm:!p-8`)는 `sm:p-8!` 로 변환해야 합니다.
 
-**검증**: `render.swift` 가 내비 CTA 높이 44px, 허브 카드 패딩 0px 를 측정합니다.
+**검증**: `render.swift` 가 내비 CTA 높이 44px 를 측정하며, 허브 카드 패딩은 허브가 카드를 쓰지 않으므로([`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md)) 측정하지 않습니다.
 
 ### 2.2 Tailwind CDN 금지
 

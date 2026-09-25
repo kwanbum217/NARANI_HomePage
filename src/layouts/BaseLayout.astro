@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -14,6 +16,12 @@ interface Props {
 const { title, description, variant = 'nani', active } = Astro.props;
 const isBidbox = variant === 'bidbox';
 
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(
+  existsSync(join(process.cwd(), 'public/og.png')) ? '/og.png' : '/og.svg',
+  Astro.site,
+).href;
+
 const favicon = isBidbox
   ? "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230073E6'/><rect x='8' y='8' width='16' height='16' rx='4' fill='white'/></svg>"
   : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23003066'/><rect x='9' y='9' width='5' height='14' rx='2.5' fill='white'/><rect x='18' y='9' width='5' height='14' rx='2.5' fill='%23B8DDF0'/></svg>";
@@ -26,13 +34,21 @@ const favicon = isBidbox
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={brand.company} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="NARANI. 사용자와 소프트웨어는 나란히 일한다." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content={isBidbox ? '#000000' : '#faf9f7'} />
     <link rel="icon" href={favicon} />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="stylesheet"
       as="style"
