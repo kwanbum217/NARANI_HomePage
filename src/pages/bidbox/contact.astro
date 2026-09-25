@@ -59,22 +59,29 @@ import { brand } from '../../data/site';
                 <div class="field" :class="errors.name ? 'is-invalid' : ''">
                   <label for="c-name">성명</label>
                   <input id="c-name" name="name" type="text" autocomplete="name"
+                         :aria-invalid="errors.name ? 'true' : 'false'"
+                         :aria-describedby="errors.name ? 'c-name-error' : null"
                          x-model="values.name" @input="clear('name')" placeholder="이름을 입력하세요" />
-                  <p class="error" x-text="errors.name"></p>
+                  <p class="error" id="c-name-error" x-text="errors.name"></p>
                 </div>
 
                 <div class="field" :class="errors.email ? 'is-invalid' : ''">
                   <label for="c-email">이메일</label>
                   <input id="c-email" name="email" type="email" autocomplete="email" inputmode="email"
+                         :aria-invalid="errors.email ? 'true' : 'false'"
+                         :aria-describedby="errors.email ? 'c-email-error' : null"
                          x-model="values.email" @input="clear('email')" placeholder="이메일을 입력하세요" />
-                  <p class="error" x-text="errors.email"></p>
+                  <p class="error" id="c-email-error" x-text="errors.email"></p>
                 </div>
 
                 <div class="field" :class="errors.message ? 'is-invalid' : ''">
                   <label for="c-message">문의내용</label>
-                  <textarea id="c-message" name="message" x-model="values.message" @input="clear('message')"
+                  <textarea id="c-message" name="message"
+                            :aria-invalid="errors.message ? 'true' : 'false'"
+                            :aria-describedby="errors.message ? 'c-message-error' : null"
+                            x-model="values.message" @input="clear('message')"
                             placeholder="문의내용을 입력하세요"></textarea>
-                  <p class="error" x-text="errors.message"></p>
+                  <p class="error" id="c-message-error" x-text="errors.message"></p>
                 </div>
               </div>
 

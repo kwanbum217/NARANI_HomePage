@@ -22,9 +22,24 @@ const ogImage = new URL(
   Astro.site,
 ).href;
 
-const favicon = isBidbox
-  ? "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230073E6'/><rect x='8' y='8' width='16' height='16' rx='4' fill='white'/></svg>"
-  : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23003066'/><rect x='9' y='9' width='5' height='14' rx='2.5' fill='white'/><rect x='18' y='9' width='5' height='14' rx='2.5' fill='%23B8DDF0'/></svg>";
+const favicon = isBidbox ? '/favicon-bidbox.svg' : '/favicon-nani.svg';
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: brand.company,
+      url: Astro.site,
+      description: '사용자와 소프트웨어는 나란히 일한다.',
+    },
+    {
+      '@type': 'WebSite',
+      name: brand.company,
+      url: Astro.site,
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
@@ -48,6 +63,7 @@ const favicon = isBidbox
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content={isBidbox ? '#000000' : '#faf9f7'} />
     <link rel="icon" href={favicon} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="stylesheet"

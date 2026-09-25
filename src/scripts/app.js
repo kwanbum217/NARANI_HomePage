@@ -47,6 +47,10 @@ Alpine.data('enquiryForm', (endpoint = '') => ({
     this.errorMessage = '';
     if (!this.validate()) {
       this.status = 'idle';
+      this.$nextTick(() => {
+        const control = this.$root.querySelector('.field.is-invalid input, .field.is-invalid textarea');
+        if (control) control.focus();
+      });
       return;
     }
     this.status = 'submitting';
