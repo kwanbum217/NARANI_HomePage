@@ -87,6 +87,7 @@ docs/
 | 문서 | 파일 | 설명 |
 | --- | --- | --- |
 | 최초 인수인계 | [`handoff/2026-09-23_bootstrap.md`](handoff/2026-09-23_bootstrap.md) | 저장소 구성과 1차 구현 인계 |
+| 다음 과업 | [`handoff/2026-09-25_next.md`](handoff/2026-09-25_next.md) | 접수 안내 반영 이후, 3종 브라우저 비교 |
 | 작업 일지 | [`changelogs/work_log.md`](changelogs/work_log.md) | 누적 기록 |
 
 ---

@@ -27,7 +27,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <div class="card min-w-0 sm:p-8!">
 
             <!-- 성공 -->
-            <div x-show="status === 'sent'" x-cloak>
+            <div x-show="status === 'sent'" x-cloak role="status">
               <span class="flex h-12 w-12 items-center justify-center rounded-full" style="background:var(--bb-accent-soft)" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style="color:var(--bb-accent)"><path d="M4 11.5l5 5 9-11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               </span>
