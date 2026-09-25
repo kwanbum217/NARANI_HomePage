@@ -49,15 +49,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 <div class="field" :class="errors.name ? 'is-invalid' : ''">
                   <label for="d-company">회사명</label>
                   <input id="d-company" name="company" type="text" autocomplete="organization"
-                         x-model="values.name" @input="clear('name')" placeholder="예) 나란히물류" />
-                  <p class="error" x-text="errors.name"></p>
+                         x-model="values.name" @input="clear('name')" placeholder="예) 나란히물류"
+                         :aria-invalid="Boolean(errors.name).toString()"
+                         :aria-describedby="errors.name ? 'd-company-error' : null" />
+                  <p class="error" id="d-company-error" x-text="errors.name"></p>
                 </div>
 
                 <div class="field" :class="errors.email ? 'is-invalid' : ''">
                   <label for="d-email">이메일</label>
                   <input id="d-email" name="email" type="email" autocomplete="email" inputmode="email"
-                         x-model="values.email" @input="clear('email')" placeholder="name@company.co.kr" />
-                  <p class="error" x-text="errors.email"></p>
+                         x-model="values.email" @input="clear('email')" placeholder="name@company.co.kr"
+                         :aria-invalid="Boolean(errors.email).toString()"
+                         :aria-describedby="errors.email ? 'd-email-error' : null" />
+                  <p class="error" id="d-email-error" x-text="errors.email"></p>
                 </div>
 
                 <div class="field">
@@ -70,8 +74,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 <div class="field" :class="errors.message ? 'is-invalid' : ''">
                   <label for="d-message">확인하고 싶은 내용</label>
                   <textarea id="d-message" name="message" x-model="values.message" @input="clear('message')"
+                            :aria-invalid="Boolean(errors.message).toString()"
+                            :aria-describedby="errors.message ? 'd-message-error' : null"
                             placeholder="예) 경비 용역 입찰의 예상 낙찰가와 근거를 보고 싶습니다."></textarea>
-                  <p class="error" x-text="errors.message"></p>
+                  <p class="error" id="d-message-error" x-text="errors.message"></p>
                 </div>
               </div>
 
