@@ -26,6 +26,7 @@
 | 폼 백엔드 | 미연결 | `enquiryForm` 이 900ms 지연 시뮬레이션 |
 | 결제 연동 | 미연결 | 주문 확인 다이얼로그까지만 동작 |
 | sitemap / robots / OG | 완료 | prerendered 엔드포인트(`src/pages/sitemap.xml.ts`, `src/pages/robots.txt.ts`)와 `public/og.svg`, `og.png`. 새 패키지 추가 없이 정적 생성 |
+| 구조화 데이터 | 완료 | `src/layouts/BaseLayout.astro` 가 head 에 Organization·WebSite JSON-LD 를 출력 |
 | 다국어 | 미착수 | 한국어 단일 |
 
 ### 페이지 라우트
