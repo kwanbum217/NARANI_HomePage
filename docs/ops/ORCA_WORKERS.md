@@ -1,8 +1,10 @@
 # Orca 워커 운용 명세 (cmd 주력)
 
 > **작성일**: 2026-09-25
-> **버전**: v1.0.0
-> **상태**: 확정. 2026-09-25 브라우저 비교 세션에서 cmd 워커가 멈춘 원인을 근거로 작성
+> **수정일**: 2026-09-26
+> **버전**: v1.1.0
+> **상태**: 확정. 2026-09-25 브라우저 비교 세션에서 cmd 워커가 멈춘 원인을 근거로 작성.
+> 2026-09-26 세션에서 cmd 자체 플래그(`--model`, `--skip-onboarding`, `--no-auto-update`) 사용법을 반영
 > **목적**: Claude 코디네이터가 Command Code(cmd) 워커를 멈춤 없이 띄우고 회수하는 절차를
 > 고정합니다. 이 문서의 절차에서 벗어나면 워커가 기동 단계에서 멈춥니다.
 
@@ -12,8 +14,8 @@
 
 | 역할 | 에이전트 | 모델 | 모델 지정 위치 |
 | --- | --- | --- | --- |
-| 코디네이터 | Claude Code | 세션 모델 | 해당 없음 |
-| 주력 워커 | Command Code (`cmd`) | `deepseek/deepseek-v4.1-flash` | `~/.commandcode/config.json` 의 `model` |
+| 코디네이터 | Claude Code 또는 Command Code (2026-09-26 세션은 Command Code) | 세션 모델 | 해당 없음 |
+| 주력 워커 | Command Code (`cmd`) | 세션마다 지정 (2026-09-26 은 `z-ai/glm-5.3-flash`) | 기동 명령의 `--model` 인자 |
 | 리뷰어 | opencode | `opencode/muse-spark-1.3-contributor-free` | 기동 명령의 `-m` 인자 |
 
 워커와 리뷰어를 서로 다른 모델 계열로 둡니다. 리뷰는 구현 워커가 `worker_done` 을 보낸 뒤에만
@@ -26,7 +28,7 @@
 | 항목 | 확인 방법 | 기대값 |
 | --- | --- | --- |
 | Claude Code 허용 규칙 | `.claude/settings.local.json` | `allow` 에 `Bash(orca terminal *)`, `Bash(orca orchestration *)` |
-| cmd 기본 모델 | `~/.commandcode/config.json` 의 `model` | `deepseek/deepseek-v4.1-flash` |
+| cmd 워커 모델 | 기동 명령의 `--model` 인자 | 세션마다 지정한 모델. `~/.commandcode/config.json` 의 `model` 은 그 파일으로 직접 띄운 세션의 기본값이므로 워커 모델과 무관하게 둔다 |
 | Orca 기동 | `orca status --json` | `runtime.state` 가 `ready` |
 
 `.claude/settings.local.json` 은 개인 설정이므로 커밋하지 않습니다. 내용은 다음과 같습니다.
@@ -64,7 +66,7 @@ flowchart TD
 | 단계 | 명령 | 비고 |
 | --- | --- | --- |
 | 1 | `orca orchestration task-create --spec "<명세>" --task-title "<제목>" --run <run_id> --json` | 명세는 5장 형식을 따릅니다 |
-| 2 | `orca terminal create --worktree active --title "<제목>" --command "cmd --trust --permission-mode yolo" --json` | `--trust` 는 프로젝트 신뢰 확인을, yolo 는 명령 승인 창을 없앱니다 |
+| 2 | `orca terminal create --worktree active --title "<제목>" --command "cmd --trust --permission-mode yolo --model <모델> --skip-onboarding --no-auto-update" --json` | `--trust` 는 프로젝트 신뢰 확인을, yolo 는 명령 승인 창을 없앱니다. `--model` 은 그 세션의 모델을 지정합니다. `--skip-onboarding` 은 4.3 의 취향 창을 띄우지 않는 예방 조치, `--no-auto-update` 는 자동 업데이트를 꺼 4.4 의 codex 사례처럼 업데이트 안내가 주입된 입력을 소모하는 여지를 줄이는 예방 조치입니다(cmd 자체에서의 실측은 아님) |
 | 3 | `orca terminal read --terminal <handle>` | 입력란 `Ask your question...` 이 보일 때까지 확인합니다 |
 | 4 | `orca orchestration dispatch --task <task_id> --to <handle> --run <run_id> --inject --json` | 응답의 `injected` 가 `true` 인지 봅니다 |
 | 5 | `orca terminal read --terminal <handle>` | 화면에 `=== TASK ===` 와 첫 도구 호출이 보이면 착수한 것입니다 |
@@ -96,7 +98,7 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | 증상 | 원인 | 규칙 |
 | --- | --- | --- |
 | `worker-start --agent cmd` 가 `agent_unconfigured` | Orca 의 에이전트 id 는 `command-code` | cmd 에 `worker-start` 를 쓰지 않습니다 |
-| `worker-start --agent command-code --model ...` 가 `invalid_argument` | command-code 는 기동 시 모델 선택을 지원하지 않음 | 모델은 `~/.commandcode/config.json` 에서 정합니다 |
+| `worker-start --agent command-code --model ...` 가 `invalid_argument` | Orca 의 worker-start 는 command-code 에 모델 선택을 지원하지 않음 | 모델은 3장처럼 `terminal create` 로 띄울 때 cmd 자체의 `--model` 인자로 정합니다 |
 | `worker-start --agent command-code` 가 `agent_readiness` 시간 초과 | Orca 가 command-code 에 `PreToolUse`, `PostToolUse`, `Stop` 훅만 설치. 기동 시 준비 신호가 없음 | 3장의 `terminal create` + `dispatch --inject` 경로만 씁니다 |
 | `terminal wait --for tui-idle` 시간 초과 | 위와 같은 이유 | 기다리지 말고 `terminal read` 로 화면을 봅니다 |
 | 같은 Task 3회 실패 후 `failed` | Orca 의 circuit-break | 새 Task 로 우회하려면 사용자 승인을 받습니다 |
@@ -105,7 +107,7 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 
 | 증상 | 원인 | 규칙 |
 | --- | --- | --- |
-| "Build Your Coding Taste" 선택 창 | 같은 프로젝트에 Codex 세션 기록이 있음 | 아래 화살표로 `2. Skip` 을 고른 뒤 Enter 를 보냅니다. `n`(never)은 사용자 설정이므로 누르지 않습니다 |
+| "Build Your Coding Taste" 선택 창 | 같은 프로젝트에 Codex 세션 기록이 있음 | 기동 명령에 `--skip-onboarding` 을 붙인 2026-09-26 세션에서는 창이 뜨지 않았습니다(1회 관찰). 창이 뜨면 아래 화살표로 `2. Skip` 을 고른 뒤 Enter 를 보냅니다. `n`(never)은 사용자 설정이므로 누르지 않습니다 |
 | 명령마다 승인 창 | yolo 없이 기동 | 구현 워커는 반드시 yolo 로 기동합니다 |
 
 ### 4.4 다른 워커 에이전트
@@ -127,7 +129,7 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | 대상 | 저장소 절대 경로, 브랜치, 대상 파일 또는 페이지 |
 | 변경 | 만들어야 할 결과물과 경로 |
 | 제약 | `AGENTS.md` 준수, 패키지 설치 금지, 수정 금지 경로, 커밋 금지 여부 |
-| 소유 | 워커가 쓸 수 있는 경로. 병렬 워커끼리 겹치지 않게 나눕니다 |
+| 소유 | 워커가 쓸 수 있는 경로. 병렬 워커끼리 겹치지 않게 나눕니다. 서버나 브라우저를 띄우는 워커에는 HTTP 포트와 디버깅 포트 번호도 명세에 지정해 겹치지 않게 합니다 |
 | 수용 기준 | 완료를 증명하는 출력. 두 번 실행해 같은 값인지 등 |
 
 병렬 워커가 `npm run build` 를 돌리면 `dist/` 가 바뀝니다. 측정 워커에게는 `dist/` 의 복사본을
