@@ -54,9 +54,9 @@ Firefox 값은 정본으로 승격하지 않았습니다. 분석 문서에만 �
 
 | 우선 | 과업 | 비고 |
 | --- | --- | --- |
-| 1 | Firefox 측정값을 정본으로 승격할지 결정 | 담당자 결정 없이 승격하지 않습니다 |
+| 1 | Firefox 측정값을 정본으로 승격할지 결정 | 완료. 담당자 결정에 따라 정본 3장 "Firefox 추가 실측" 절로 승격했습니다 |
 | 2 | 체크 스크립트의 기대 문구 관리 | 게이트 검토 권고 1. 카피나 요금 표시를 바꾸면 `scripts/audit/checks/` 도 함께 고칩니다 |
-| 3 | 정본 2장 환경 표의 Node 버전 재확인 | 이번 세션의 `node` 는 v26.10.0 이었고 정본은 v26.9.0 입니다. 정본 갱신은 담당자 확인 후 합니다 |
+| 3 | 정본 2장 환경 표의 Node 버전 재확인 | 완료. [`../analysis/환경_버전_20260927.md`](../analysis/환경_버전_20260927.md) 실측으로 Node 와 npm 을 갱신했습니다 |
 
 테마 확정, 이메일 표기, 폼 엔드포인트, 결제 딥링크, 배포는
 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 4장과 5장이 정본입니다.
@@ -82,3 +82,20 @@ Firefox 값은 정본으로 승격하지 않았습니다. 분석 문서에만 �
   않았습니다.
 - Orca 런타임은 `ready` 였고 89xx, 99xx 포트에 리스너가 없었습니다. 앞 세션의 Run
   과 워커 터미널 목록은 확인하지 않았습니다.
+
+---
+
+## 7. 후속 작업 (같은 날)
+
+위 4장의 1번과 3번을 Orca Run `run_6ff3a2b1f394` 의 병렬 워커로 처리했습니다.
+
+| 워커 | 에이전트 | 과업 | 결과 |
+| --- | --- | --- | --- |
+| W1 | cmd (`deepseek/deepseek-v4.1-flash`, yolo) | Firefox 측정 정본 승격 | 완료. Task `task_2c1e50948caa`, Dispatch `ctx_9dc65033b701` |
+| W2 | cmd (`deepseek/deepseek-v4.1-flash`, yolo) | 환경 버전 실측 문서 | 완료. Task `task_e4444d31088b`, Dispatch `ctx_45fc27df0e4d` |
+| R1 | opencode (Muse Spark 1.3) | 위 둘과 정본 2장 갱신 검토 | 차단 0건, 권고 1건 반영. Task `task_af7bd01c35a0`, Dispatch `ctx_462d03ac7d2a` |
+
+정본 2장 표는 W2 문서를 근거로 코디네이터가 고쳤습니다. 코디네이터는 W1 의 표를 원시
+JSON 과 따로 대조했습니다. 워커 터미널 3개는 모두 닫았고(`ptyKilled`), 수락한 뒤
+`npm run verify` 가 종료 코드 0 으로 통과했습니다. 환경 원시값은 저장소에 넣지 않고
+`/tmp/narani-env-20260927/` 에 두었습니다.
