@@ -11,6 +11,16 @@ func pump(timeout: Double, until: () -> Bool) {
     }
 }
 
+// 체크 스크립트는 JSON 하나를 출력하고 기대 위반 이유를 fail 에 담습니다.
+// fail 이 null 이면 통과이며, 결과가 없거나 JSON 이 아니면 실패로 봅니다.
+func isPass(_ out: String?) -> Bool {
+    guard let out = out,
+          let data = out.data(using: .utf8),
+          let obj = try? JSONSerialization.jsonObject(with: data),
+          let dict = obj as? [String: Any] else { return false }
+    return dict["fail"] is NSNull
+}
+
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
 
@@ -20,6 +30,8 @@ class Nav: NSObject, WKNavigationDelegate {
     func webView(_ w: WKWebView, didFail n: WKNavigation!, withError e: Error) { finished = true }
     func webView(_ w: WKWebView, didFailProvisionalNavigation n: WKNavigation!, withError e: Error) { finished = true }
 }
+
+var failed = false
 
 for spec in args.dropFirst(2) {
     let parts = spec.split(separator: "|").map(String.init)
@@ -46,6 +58,11 @@ for spec in args.dropFirst(2) {
     }
     print("\n== \(rel) @\(wh[0])x\(wh[1])  [\(parts[2])]")
     print(out ?? "  <no result / timed out>")
+    if !isPass(out) { failed = true }
 }
 
-exit(0)
+if failed {
+    FileHandle.standardError.write(Data("인터랙션 검증 실패: 위 항목의 fail 을 확인하세요.\n".utf8))
+}
+
+exit(failed ? 1 : 0)
