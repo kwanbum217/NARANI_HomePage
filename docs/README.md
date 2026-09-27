@@ -92,7 +92,8 @@ docs/
 | 다음 과업 | [`handoff/2026-09-25_next.md`](handoff/2026-09-25_next.md) | 접수 안내 반영 이후, 3종 브라우저 비교 |
 | 브라우저 비교 | [`handoff/2026-09-25_browser_compare.md`](handoff/2026-09-25_browser_compare.md) | Chrome 과 WebKit 렌더 비교 세션 |
 | 크롬 후속 | [`handoff/2026-09-26_chrome_followup.md`](handoff/2026-09-26_chrome_followup.md) | 인터랙션 3종과 스크롤바 원인 |
-| 최신 인수인계 | [`handoff/2026-09-27_chrome_contrast_cta.md`](handoff/2026-09-27_chrome_contrast_cta.md) | Chrome 대비와 CTA 치수. 다음 세션은 여기서 시작 |
+| 크롬 대비·치수 | [`handoff/2026-09-27_chrome_contrast_cta.md`](handoff/2026-09-27_chrome_contrast_cta.md) | Chrome 대비와 CTA 치수 |
+| 최신 인수인계 | [`handoff/2026-09-27_gate_and_promotion.md`](handoff/2026-09-27_gate_and_promotion.md) | 정본 승격, Firefox 측정, 검증 게이트. 다음 세션은 여기서 시작 |
 | 작업 일지 | [`changelogs/work_log.md`](changelogs/work_log.md) | 누적 기록 |
 
 ---
