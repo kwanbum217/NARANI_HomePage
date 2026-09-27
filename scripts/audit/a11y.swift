@@ -130,14 +130,22 @@ for page in pages {
         let over = d["overflowing"] as? [String] ?? []
         let unl = d["unlabeled"] as? [String] ?? []
         let small = d["smallTargets"] as? [String] ?? []
-        if !over.isEmpty { print("   OVERFLOW: \(over)") ; issues += 1 }
-        if !unl.isEmpty { print("   UNLABELED: \(unl)"); issues += 1 }
-        if !small.isEmpty { print("   SMALL TARGETS: \(small)") }
-        if over.isEmpty && unl.isEmpty { print("   clean") }
+        let h1 = d["h1count"] as? Int
+        let lang = d["lang"] as? String
+        let imgNoAlt = d["imgNoAlt"] as? Int
+        var clean = true
+        if !over.isEmpty { print("   OVERFLOW: \(over)"); issues += 1; clean = false }
+        if !unl.isEmpty { print("   UNLABELED: \(unl)"); issues += 1; clean = false }
+        if !small.isEmpty { print("   SMALL TARGETS: \(small)"); issues += 1; clean = false }
+        if h1 != 1 { print("   H1 COUNT: \(h1 ?? -1)"); issues += 1; clean = false }
+        if lang != "ko" { print("   LANG: \(lang ?? "-")"); issues += 1; clean = false }
+        if imgNoAlt != 0 { print("   IMG WITHOUT ALT: \(imgNoAlt ?? -1)"); issues += 1; clean = false }
+        if clean { print("   clean") }
     } else {
         print("   \(res ?? "no result")")
+        issues += 1
     }
 }
 
 print("\n\(issues) issue group(s)")
-exit(0)
+exit(issues > 0 ? 1 : 0)

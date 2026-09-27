@@ -71,9 +71,11 @@ if ! grep -q "^0 page(s) with JS errors" <<<"$RENDER_OUT"; then
 fi
 
 echo "== 5/6 반응형 / 접근성 =="
-A11Y_OUT="$(swift scripts/audit/a11y.swift "$BASE" "${NARROW[@]}")"
+# a11y.swift 는 이슈가 있으면 1 로 끝납니다. set -e 에 걸려 출력 없이 멈추지 않도록 상태를 따로 받습니다.
+A11Y_STATUS=0
+A11Y_OUT="$(swift scripts/audit/a11y.swift "$BASE" "${NARROW[@]}")" || A11Y_STATUS=$?
 echo "$A11Y_OUT"
-if ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; then
+if [ "$A11Y_STATUS" -ne 0 ] || ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; then
   echo "반응형 또는 접근성 이슈가 있습니다." >&2
   exit 1
 fi

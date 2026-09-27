@@ -1,6 +1,9 @@
 (async () => {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const rep = {};
+  const fails = [];
+  const check = (ok, reason) => { if (!ok) fails.push(reason); };
+
   const btns = Array.from(document.querySelectorAll('#plans button'));
   rep.planButtons = btns.length;
   rep.dialogOpenInitially = document.querySelector('dialog').open;
@@ -11,5 +14,13 @@
   rep.dialogPrice = (dlg.querySelectorAll('dd')[2] || {}).textContent || null;
   const closeBtn = dlg.querySelector('button[aria-label]');
   if (closeBtn) { closeBtn.click(); await sleep(300); rep.dialogOpenAfterClose = dlg.open; }
+
+  check(rep.planButtons === 5, `요금 구매 버튼이 5개가 아닙니다 (${rep.planButtons}개).`);
+  check(rep.dialogOpenInitially === false, '다이얼로그가 처음부터 열려 있습니다.');
+  check(rep.dialogOpenAfterClick === true, '구매 버튼을 눌러도 다이얼로그가 열리지 않습니다.');
+  check(rep.dialogTitle === '500포인트 구매', `다이얼로그 제목이 다릅니다 (${rep.dialogTitle}).`);
+  check(rep.dialogPrice === '₩450,000', `다이얼로그 금액이 다릅니다 (${rep.dialogPrice}).`);
+  check(rep.dialogOpenAfterClose === false, '닫기 후에도 다이얼로그가 열려 있습니다.');
+  rep.fail = fails.length ? fails.join(' ') : null;
   window.__it = JSON.stringify(rep);
 })();
