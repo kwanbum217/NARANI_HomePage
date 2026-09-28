@@ -81,6 +81,7 @@ if [ "$A11Y_STATUS" -ne 0 ] || ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; the
 fi
 
 echo "== 6/6 인터랙션 =="
+# 이 단계는 .ts 직접 import 때문에 Node v22.18.0 이상이 필요합니다(scripts/audit/expected.mjs).
 # 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
 node scripts/audit/expected.mjs > "$OUT/expected.js"
 EXPECT_JS="$OUT/expected.js" swift scripts/audit/interact.swift "$BASE" \

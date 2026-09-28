@@ -14,6 +14,15 @@
   const form = document.querySelector('main form');
   const submit = form.querySelector('button[type=submit]');
   rep.submitDisabledAtRest = submit.disabled;
+  // 접수 완료 h2 와 폼 제목 h2 는 x-show 로 표시만 바뀌고 DOM 에 항상 존재합니다.
+  // 그래서 존재 여부가 아니라 실제로 렌더된 사각형이 있는지로 가시성을 판정합니다.
+  const successHeading = () =>
+    Array.from(document.querySelectorAll('main h2')).find(h => h.textContent.includes(E.successText)) || null;
+  const isVisible = el => {
+    if (!el) return false;
+    const rect = el.getBoundingClientRect();
+    return el.getClientRects().length > 0 && rect.width > 0 && rect.height > 0;
+  };
   // 1) invalid submit
   submit.click(); await sleep(300);
   rep.invalidFields = document.querySelectorAll('.field.is-invalid').length;
@@ -30,8 +39,10 @@
   await sleep(200);
   rep.labelWhileBusy = submit.textContent.trim().replace(/\s+/g, ' ');
   rep.ariaBusyWhileBusy = submit.getAttribute('aria-busy');
+  // 전송이 아직 끝나지 않은 시점에는 성공 패널이 숨겨져 있어야 합니다.
+  rep.successVisibleWhileBusy = isVisible(successHeading());
   await sleep(1800);
-  rep.successVisible = !!Array.from(document.querySelectorAll('main h2')).find(h => h.textContent.includes(E.successText));
+  rep.successVisible = isVisible(successHeading());
 
   check(rep.submitDisabledAtRest === false, '전송 버튼이 처음부터 비활성입니다.');
   check(rep.invalidFields === 3, `빈 제출 시 무효 필드가 3개가 아닙니다 (${rep.invalidFields}개).`);
@@ -40,6 +51,7 @@
   check(rep.invalidAfterFill === 0, `정상 입력 후에도 무효 필드가 남아 있습니다 (${rep.invalidAfterFill}개).`);
   check(rep.labelWhileBusy === E.busyLabel, `전송 중 라벨이 다릅니다 (${rep.labelWhileBusy}).`);
   check(rep.ariaBusyWhileBusy === 'true', `전송 중 aria-busy 가 true 가 아닙니다 (${rep.ariaBusyWhileBusy}).`);
+  check(rep.successVisibleWhileBusy === false, '전송이 끝나기 전인데 접수 완료 표시가 이미 보입니다.');
   check(rep.successVisible === true, '접수 완료 표시가 보이지 않습니다.');
   rep.fail = fails.length ? fails.join(' ') : null;
   window.__it = JSON.stringify(rep);
