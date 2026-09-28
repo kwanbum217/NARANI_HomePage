@@ -18,7 +18,7 @@ npm run verify
 ```mermaid
 flowchart LR
   A["1 타입 체크<br/>astro check"] --> B["2 빌드<br/>astro build"]
-  B --> C["3 서빙<br/>dist, 127.0.0.1:4322"]
+  B --> C["3 서빙<br/>dist, 127.0.0.1 (자동 배정 포트)"]
   C --> D["4 링크 무결성<br/>check-links.mjs"]
   D --> E["5 렌더<br/>render.swift"]
   E --> F["6 폰트 서브셋<br/>check-font-subset.swift"]
