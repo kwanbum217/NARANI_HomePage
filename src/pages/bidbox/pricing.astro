@@ -5,8 +5,10 @@ import { plans, pointRate, POINT_NOTE } from '../../data/pricing';
 const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
 
 // Alpine only drives the order dialog; the plan rows are rendered at build time.
+// 다이얼로그 금액도 서버에서 won 으로 미리 만들어 넘기므로 통화 규칙은 5행 한 곳에만 있습니다.
+const dialogPlans = plans.map((plan) => ({ ...plan, priceText: won(plan.price) }));
 const dialogState = `{
-  plans: ${JSON.stringify(plans)},
+  plans: ${JSON.stringify(dialogPlans)},
   selected: null,
   choose(id) {
     this.selected = this.plans.find((p) => p.id === id) ?? null;
@@ -84,6 +86,7 @@ const dialogState = `{
               <button
                 type="button"
                 class="btn btn-primary"
+                data-plan-id={plan.id}
                 @click={`choose('${plan.id}')`}
                 aria-label={`${plan.label} 구매하기`}
               >
@@ -144,7 +147,7 @@ const dialogState = `{
             <dd
               class="num text-lg font-bold"
               style="color:var(--bb-accent)"
-              x-text="selected ? '₩' + selected.price.toLocaleString('ko-KR') : ''"
+              x-text="selected ? selected.priceText : ''"
             ></dd>
           </div>
         </dl>

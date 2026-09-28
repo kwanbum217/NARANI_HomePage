@@ -11,10 +11,14 @@
     return;
   }
 
-  const btns = Array.from(document.querySelectorAll('#plans button'));
+  const btns = Array.from(document.querySelectorAll('#plans li button'));
   rep.planButtons = btns.length;
   rep.dialogOpenInitially = document.querySelector('dialog').open;
-  btns[E.planIndex].click(); await sleep(300);
+  // 클릭 대상은 나열 순서가 아니라 featured 플랜 id 로 찾습니다.
+  const planIndex = btns.findIndex((btn) => btn.dataset.planId === E.planId);
+  rep.planIndex = planIndex;
+  check(planIndex >= 0, `featured 플랜(${E.planId}) 구매 버튼을 찾지 못했습니다.`);
+  if (planIndex >= 0) { btns[planIndex].click(); await sleep(300); }
   const dlg = document.querySelector('dialog');
   rep.dialogOpenAfterClick = dlg.open;
   rep.dialogTitle = (dlg.querySelector('h2') || {}).textContent || null;
@@ -22,7 +26,8 @@
   const closeBtn = dlg.querySelector('button[aria-label]');
   if (closeBtn) { closeBtn.click(); await sleep(300); rep.dialogOpenAfterClose = dlg.open; }
 
-  check(rep.planButtons === 5, `요금 구매 버튼이 5개가 아닙니다 (${rep.planButtons}개).`);
+  check(rep.planButtons === E.planCount, `요금 구매 버튼이 ${E.planCount}개가 아닙니다 (${rep.planButtons}개).`);
+  check(rep.planIndex === E.planIndex, `featured 플랜 행 위치가 다릅니다 (${rep.planIndex}).`);
   check(rep.dialogOpenInitially === false, '다이얼로그가 처음부터 열려 있습니다.');
   check(rep.dialogOpenAfterClick === true, '구매 버튼을 눌러도 다이얼로그가 열리지 않습니다.');
   check(rep.dialogTitle === E.title, `다이얼로그 제목이 다릅니다 (${rep.dialogTitle}).`);

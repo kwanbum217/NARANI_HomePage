@@ -7,7 +7,7 @@
  * 정본만 고쳐도 게이트가 따라갑니다.
  *
  * 파생 출처:
- * - 다이얼로그 제목/금액  : src/data/pricing.ts 의 plans + src/pages/bidbox/pricing.astro 의 표기 규칙
+ * - 다이얼로그 제목/금액  : src/data/pricing.ts 의 featured 플랜 + src/pages/bidbox/pricing.astro 의 표기 규칙
  * - 폼 첫 오류 문구       : src/scripts/app.js 의 nameError 기본값
  * - 폼 전송 중 라벨/접수 표시 : src/pages/bidbox/contact.astro
  *
@@ -39,9 +39,6 @@ function pick(source, regex, label, rel) {
   }
   return m[1];
 }
-
-// 다이얼로그 검사가 누르는 요금 행(0-based). pricing.astro 는 같은 순서로 렌더합니다.
-const DIALOG_PLAN_INDEX = 1;
 
 const appJs = readSource('src/scripts/app.js');
 const contactAstro = readSource('src/pages/bidbox/contact.astro');
@@ -79,16 +76,24 @@ if (!currency) {
   throw new Error('src/pages/bidbox/pricing.astro 에서 통화 표기 규칙을 찾지 못했습니다.');
 }
 
-const plan = plans[DIALOG_PLAN_INDEX];
-if (!plan) {
-  throw new Error(`src/data/pricing.ts 의 plans[${DIALOG_PLAN_INDEX}] 가 없습니다.`);
+// 다이얼로그 검사가 누르는 요금 행은 나열 순서가 아니라 featured 플랜으로 정합니다.
+// featured 가 없거나 둘 이상이면 조용히 통과시키지 않고 파생 단계에서 예외로 멈춥니다.
+const featuredPlans = plans.filter((plan) => plan.featured);
+if (featuredPlans.length !== 1) {
+  throw new Error(
+    `src/data/pricing.ts 의 featured 플랜이 정확히 하나여야 합니다 (현재 ${featuredPlans.length}개).`,
+  );
 }
+const dialogPlan = featuredPlans[0];
+const dialogPlanIndex = plans.indexOf(dialogPlan);
 
 const expected = {
   dialog: {
-    planIndex: DIALOG_PLAN_INDEX,
-    title: plan.label + dialogSuffix,
-    price: currency[1] + plan.price.toLocaleString(currency[2]),
+    planId: dialogPlan.id,
+    planIndex: dialogPlanIndex,
+    planCount: plans.length,
+    title: dialogPlan.label + dialogSuffix,
+    price: currency[1] + dialogPlan.price.toLocaleString(currency[2]),
   },
   form: { nameError, busyLabel, successText },
 };
