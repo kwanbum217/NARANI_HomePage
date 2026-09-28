@@ -5,16 +5,25 @@ import { enquiryForms, networkError } from '../data/enquiry';
 /* NARANI / BIDBOX — shared client behaviour, bundled by Astro. */
 
 /**
- * GA4 이벤트를 dataLayer 로 보냅니다.
+ * GA4 이벤트를 보냅니다.
  *
- * GA4 태그는 BaseLayout.astro 가 측정 ID가 있을 때만 삽입하므로, 이 함수는
- * dataLayer만 만들어 두고 태그가 없으면 아무 일도 하지 않습니다. 태그가 없을 때
- *도 호출해도 콘솔 에러가 나지 않아야 하므로 방어적으로 씁니다.
+ * 반드시 gtag() 로 호출해야 합니다. dataLayer 에 plain object 를 push 하면
+ * GA4 라이브러리가 그 항목을 무시합니다. gtag 는 같은 배열에 `arguments` 객체를
+ * push 하고, GA4 라이브러리가 그 형식만 인식해 네트워크로 보냅니다.
+ * (dataLayer.push({event:...}) 로 넣으면 콘솔 에러도 없이 조용히 유실됩니다.)
+ *
+ * GA4 태그는 BaseLayout.astro 가 측정 ID가 있을 때만 삽입하므로, 태그가 없으면
+ * gtag 가 undefined 여서 아무 일도 하지 않습니다. 그 경우에도 콘솔 에러가 나지
+ * 않아야 하므로 방어적으로 씁니다.
  */
 const track = (name, params = {}) => {
-  if (typeof window === 'undefined') return;
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: name, ...params });
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+  // transport_type: 'beacon' 로 즉시 전송을 강제합니다.
+  // GA4 는 기본적으로 이벤트를 배치로 모아 보내는데, 초기 페이지뷰 직후 약 30초 동안
+  // 커스텀 이벤트를 유실합니다(콘솔 오류 없이 조용히 사라집니다). 사용자는 페이지
+  // 열자마자 폼을 작성해 보내므로, 전환 이벤트가 바로 이 시간대에 들어옵니다.
+  // 전환 데이터가 유실되면 의미가 없으므로 매번 beacon 으로 보냅니다.
+  window.gtag('event', name, { transport_type: 'beacon', ...params });
 };
 
 Alpine.data('siteNav', () => ({

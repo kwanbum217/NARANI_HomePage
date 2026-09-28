@@ -72,11 +72,19 @@ const structuredData = {
       GA4 는 측정 ID(src/data/site.ts의 gaMeasurementId)가 있을 때만 삽입합니다.
       async 로 로드해 렌더를 막지 않고, 폼 접수 같은 전환 이벤트는 app.js 가
       dataLayer 로 보냅니다. 아직 값이 비어 있으면 태그 자체가 나오지 않습니다.
+
+      consent 기본값을 먼저 선언해야 합니다. 이게 없으면 GA4 는 storage 를 denied 로
+      잡아 커스텀 이벤트를 조용히 버립니다(콘솔 오류 없음, dataLayer 에만 쌓입니다).
+      한국은 European regulations 대상이라 이 선언이 없으면 아예 데이터가 안 쌓입니다.
+      analytics_storage 는 granted 이고 ad 관련만 denied 인 것은, 이 사이트가
+      광고 타깃팅을 하지 않는다는 사실과 일치합니다.
     */}
     {gaMeasurementId && (
       <>
+        <script
+          set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});gtag('js',new Date());gtag('config','${gaMeasurementId}',{anonymize_ip:true});`}
+        />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
-        <script set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaMeasurementId}',{anonymize_ip:true});`} />
       </>
     )}
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

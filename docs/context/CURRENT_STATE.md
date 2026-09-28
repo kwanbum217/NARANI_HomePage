@@ -303,10 +303,22 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
    variant 조용히 contact 로 떨어지던 것을 2026-09-28에 콘솔 에러로 바꿨습니다. 데모
    페이지에 `'demmo'` 오타를 심어 게이트가 종료 코드 1 로 멈추는 것을 확인한 뒤 되돌렸습니다.
 12. 고도화 1차(2026-09-28): 이메일을 `support@narani.my` 로 확정했습니다. `enquiryEndpoint` 와
-   `gaMeasurementId` 를 `src/data/site.ts` 에 빈 값으로 추가해 배선 지점을 만들었고,
-   엔드포인트가 비어 있을 때 두 폼에 "전송되지 않습니다" 안내가 자동으로 보이게 했습니다.
-   GA4 는 측정 ID가 있을 때만 태그가 삽입되며, 폼 전환 이벤트는 `src/scripts/app.js` 의
-   `track()` 이 dataLayer 로 보냅니다. 서비스 페이지 시각 자료는 이번 회차 보류로 결정했습니다.
+   `gaMeasurementId` 를 `src/data/site.ts` 에 추가해 배선 지점을 만들었고(`G-R7CBGGMDFF` 로
+   2026-09-28에 채움), 엔드포인트가 비어 있을 때 두 폼에 "전송되지 않습니다" 안내가
+   자동으로 보이게 했습니다. 서비스 페이지 시각 자료는 이번 회차 보류로 결정했습니다.
+   GA4 는 두 가지 gotcha 가 있어 `src/scripts/app.js` 에 주석으로 남겼습니다.
+   첫째, 반드시 `gtag('event', ...)` 로 보내야 합니다. `dataLayer.push({event:...})` 로
+   plain object 를 넣으면 gtag.js 가 그 항목을 무시합니다(콘솔 오류 없음, dataLayer 에만
+   쌓입니다). gtag 는 같은 배열에 `arguments` 객체를 push 하고 그 형식만 인식합니다.
+   둘째, consent 기본값 선언이 없으면 storage 가 denied 로 잡혀 커스텀 이벤트가
+   버려집니다. `BaseLayout.astro` 가 `gtag('consent','default',...)` 를 gtag.js 보다
+   먼저 내보내도록 했습니다. analytics_storage 만 granted 인 것은 이 사이트가
+   광고 타깃팅을 하지 않는다는 사실과 일치합니다.
+   실측: WKWebView(macOS, verify.sh 와 같은 엔진)에서 consent·js·config 3개가 순서대로
+   dataLayer 에 들어가고 `_ga` 쿠키가 설정되는 것을 확인했습니다.
+   headless Chrome 에서 커스텀 이벤트가 전송되지 않는 것은 gtag.js 의 이벤트 배치 전송
+   주기(초기 페이지뷰 직후 약 10초) 때문입니다. 실사용 데이터는 GA4 Realtime 에서
+   확인하는 것이 확실하며, 로컬 네트워크 탭만으로 판정하지 않습니다.
    폰트 CDN 의존 제거도 2026-09-28에 끝냈습니다. Pretendard Variable 서브셋을
    `public/fonts/` 로 내려 jsDelivr 의존을 없앴고, `preload` 로 바꿔 렌더 블로킹을
    해제했습니다. 요청 10건이 1건으로 줄었고 용량은 58.9KB 에서 81.7KB 로 늘었습니다.
