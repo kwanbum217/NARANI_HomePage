@@ -4,6 +4,20 @@ import WebKit
 let args = CommandLine.arguments
 let base = args[1]
 // each arg: page|WxH|jsFile
+//
+// 기대값 스크립트(scripts/audit/expected.mjs 산출물)를 EXPECT_JS 환경변수로 받아
+// 체크 스크립트 앞에 주입합니다. 체크 스크립트 로딩과 같은 방식으로 파일을 읽습니다.
+// 경로가 주어졌는데 읽지 못하면 조용히 넘어가지 않고 종료 코드 1 로 멈춥니다.
+let expectPath = ProcessInfo.processInfo.environment["EXPECT_JS"] ?? ""
+var expectJs = ""
+if !expectPath.isEmpty {
+    guard let loaded = try? String(contentsOfFile: expectPath, encoding: .utf8) else {
+        FileHandle.standardError.write(Data("기대값 스크립트를 읽지 못했습니다: \(expectPath)\n".utf8))
+        exit(1)
+    }
+    expectJs = loaded
+}
+
 func pump(timeout: Double, until: () -> Bool) {
     let deadline = Date().addingTimeInterval(timeout)
     while !until() && Date() < deadline {
@@ -37,7 +51,7 @@ for spec in args.dropFirst(2) {
     let parts = spec.split(separator: "|").map(String.init)
     let rel = parts[0]
     let wh = parts[1].split(separator: "x").map { Int($0) ?? 390 }
-    let script = try! String(contentsOfFile: parts[2], encoding: .utf8)
+    let script = expectJs + "\n" + (try! String(contentsOfFile: parts[2], encoding: .utf8))
 
     let web = WKWebView(frame: NSRect(x: 0, y: 0, width: wh[0], height: wh[1]))
     let nav = Nav()

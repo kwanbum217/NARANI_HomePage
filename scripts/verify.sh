@@ -81,7 +81,9 @@ if [ "$A11Y_STATUS" -ne 0 ] || ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; the
 fi
 
 echo "== 6/6 인터랙션 =="
-swift scripts/audit/interact.swift "$BASE" \
+# 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
+node scripts/audit/expected.mjs > "$OUT/expected.js"
+EXPECT_JS="$OUT/expected.js" swift scripts/audit/interact.swift "$BASE" \
   "/company/|390x900|scripts/audit/checks/nav.js" \
   "/bidbox/contact/|390x1400|scripts/audit/checks/form.js" \
   "/bidbox/pricing/|1440x1200|scripts/audit/checks/dialog.js"
