@@ -16,11 +16,14 @@ npm run verify
 8단계 중 7단계(반응형·접근성)가 이 스킬의 대상입니다. 실패 시 출력에서 문제 요소와
 좌표를 확인할 수 있습니다.
 
-개별 페이지만 보려면 도구를 직접 호출합니다.
+개별 페이지만 보려면 도구를 직접 호출합니다. 포트를 비워 두면 `verify.sh` 와 같은 방식으로
+빈 포트를 자동으로 고르므로, 8단계를 돌리는 중이어도 충돌하지 않습니다.
 
 ```bash
-python3 -m http.server 4322 --bind 127.0.0.1 --directory dist &
-swift scripts/audit/a11y.swift http://127.0.0.1:4322 "/company/|320x900"
+PORT=() ; PORT[0]=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
+python3 -m http.server "${PORT[0]}" --bind 127.0.0.1 --directory dist &
+SERVER_PID=$! ; trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+swift scripts/audit/a11y.swift "http://127.0.0.1:${PORT[0]}" "/company/|320x900"
 ```
 
 ## 도구가 검사하는 것
