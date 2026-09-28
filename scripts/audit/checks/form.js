@@ -18,6 +18,8 @@
   // 그래서 존재 여부가 아니라 실제로 렌더된 사각형이 있는지로 가시성을 판정합니다.
   const successHeading = () =>
     Array.from(document.querySelectorAll('main h2')).find(h => h.textContent.includes(E.successText)) || null;
+  // 전제: 은닉 방식이 display:none 일 때만 사각형 기준으로 구분됩니다.
+  // visibility:hidden 이나 opacity:0 은 구분하지 못합니다.
   const isVisible = el => {
     if (!el) return false;
     const rect = el.getBoundingClientRect();
