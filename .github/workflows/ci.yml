@@ -1,6 +1,6 @@
 name: ci
 
-# CI 는 타입 체크, 빌드, 링크 무결성만 검사합니다.
+# CI 는 타입 체크, 빌드, 링크 무결성을 검사합니다.
 # 브라우저 검증(scripts/verify.sh)은 macOS WebKit 을 사용하므로 로컬에서 수행합니다.
 # 근거: docs/spec/QA_AND_A11Y.md 3장
 
