@@ -8,7 +8,7 @@ export const brand = {
   product: 'BIDBOX',
   productFooter: 'BIDBOX Intelligence',
   footerNote: '고성능 입찰 분석을 위해 설계되었습니다.',
-  email: 'surport@narani.my', // TODO: confirm — likely support@narani.my
+  email: 'support@narani.my',
 };
 
 export type NavItem = {
@@ -35,6 +35,25 @@ export const primaryCta = {
   demo: { label: '데모 신청', href: '/bidbox/demo/' },
   program: { label: '프로그램 접속', href: '/bidbox/pricing/' },
 };
+
+/**
+ * 폼 접수 엔드포인트. 제품 본체(refac_bid_box)의 문의·데모 접수 API 주소입니다.
+ *
+ * 값이 빈 문자열이면 `enquiryForm` 은 900ms 지연 시뮬레이션으로만 동작하고 실제로는
+ * 아무것도 보내지 않습니다. 주소를 지우지 마세요. 본체에 접수 API 가 생기면 이 한 곳만
+ * 채우면 됩니다. 아무 주소도 없는 상태에서 존재하지 않는 경로로 보내면 사용자는 접수에
+ * 성공한 화면을 보면서 문의를 잃습니다.
+ */
+export const enquiryEndpoint = '';
+
+/**
+ * Google Analytics 4 측정 ID (예: G-XXXXXXXXXX).
+ *
+ * 빈 문자열이면 GA4 태그를 아예 삽입하지 않습니다. 태그를 넣지 않은 상태로 두고
+ * 실사용 데이터가 없다고 "|ga| null" 로 오해하는 일을 막기 위해 값이 있는 경우에만
+ * 스크립트를 내보냅니다.
+ */
+export const gaMeasurementId = '';
 
 /**
  * Shared capability list. The `icon` markup is kept for future use but is not

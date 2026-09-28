@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { brand } from '../data/site';
+import { brand, gaMeasurementId } from '../data/site';
 
 interface Props {
   title: string;
@@ -68,6 +68,17 @@ const structuredData = {
     <meta name="twitter:image:alt" content="NARANI. 사용자와 소프트웨어는 나란히 일한다." />
     <meta name="theme-color" content={isBidbox ? '#000000' : '#faf9f7'} />
     <link rel="icon" href={favicon} />
+    {/*
+      GA4 는 측정 ID(src/data/site.ts의 gaMeasurementId)가 있을 때만 삽입합니다.
+      async 로 로드해 렌더를 막지 않고, 폼 접수 같은 전환 이벤트는 app.js 가
+      dataLayer 로 보냅니다. 아직 값이 비어 있으면 태그 자체가 나오지 않습니다.
+    */}
+    {gaMeasurementId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
+        <script set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${gaMeasurementId}',{anonymize_ip:true});`} />
+      </>
+    )}
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link

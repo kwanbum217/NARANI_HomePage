@@ -4,6 +4,19 @@ import { enquiryForms, networkError } from '../data/enquiry';
 
 /* NARANI / BIDBOX — shared client behaviour, bundled by Astro. */
 
+/**
+ * GA4 이벤트를 dataLayer 로 보냅니다.
+ *
+ * GA4 태그는 BaseLayout.astro 가 측정 ID가 있을 때만 삽입하므로, 이 함수는
+ * dataLayer만 만들어 두고 태그가 없으면 아무 일도 하지 않습니다. 태그가 없을 때
+ *도 호출해도 콘솔 에러가 나지 않아야 하므로 방어적으로 씁니다.
+ */
+const track = (name, params = {}) => {
+  if (typeof window === 'undefined') return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: name, ...params });
+};
+
 Alpine.data('siteNav', () => ({
   open: false,
   toggle() {
@@ -67,6 +80,7 @@ Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
         return;
       }
       this.status = 'submitting';
+      track('enquiry_submit_start', { form_variant: variant, has_endpoint: Boolean(endpoint) });
       try {
         if (endpoint) {
           const res = await fetch(endpoint, {
@@ -79,9 +93,15 @@ Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
           await new Promise((r) => setTimeout(r, 900));
         }
         this.status = 'sent';
+        // 시뮬레이션 접수도 이벤트로 남깁니다. 단, 엔드포인트가 없으면 실제로는
+        // 접수되지 않았으므로 분석에서 시뮬레이션임을 구분할 수 있게 표시합니다.
+        track(endpoint ? 'enquiry_submit_success' : 'enquiry_submit_simulated', {
+          form_variant: variant,
+        });
       } catch (err) {
         this.status = 'error';
         this.errorMessage = networkError(brand.email);
+        track('enquiry_submit_error', { form_variant: variant });
       }
     },
 
