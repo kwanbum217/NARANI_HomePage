@@ -134,7 +134,10 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 
 echo "== 4/8 링크 무결성 =="
-node scripts/check-links.mjs "$ROOT/dist"
+node scripts/check-links.mjs
+# sitemap 은 손으로 유지되는 경로 목록입니다. 새 페이지를 넣고 목록을 잊어도
+# 링크 검사는 통과합니다. 여기서 색인 누락과 죽은 주소를 막습니다.
+node scripts/check-sitemap.mjs "$ROOT/dist"
 
 echo "== 5/8 렌더 / 콘솔 오류 / 스타일 실측 =="
 RENDER_OUT="$(swift scripts/audit/render.swift "$BASE" "$OUT" "${PAGES[@]}")"

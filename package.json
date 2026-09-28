@@ -13,6 +13,7 @@
     "check": "astro check --tsconfig tsconfig.json --minimumFailingSeverity error --minimumSeverity hint",
     "verify": "bash scripts/verify.sh",
     "links": "node scripts/check-links.mjs",
+    "check:sitemap": "node scripts/check-sitemap.mjs",
     "check:emoji": "node scripts/check-no-emoji.mjs"
   },
   "dependencies": {

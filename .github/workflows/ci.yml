@@ -42,6 +42,9 @@ jobs:
       - name: 링크 무결성
         run: npm run links
 
+      - name: sitemap 무결성
+        run: npm run check:sitemap
+
       - name: 산출물 요약
         run: |
           echo "생성된 페이지:"
