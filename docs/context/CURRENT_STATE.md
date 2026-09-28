@@ -18,6 +18,8 @@
 | 디자인 토큰 | 완료 | `src/styles/global.css` `:root` 단일 소스 |
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
 | 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts` |
+| 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
+| 분석 도구 | 미연결 | `src/data/site.ts` 의 `gaMeasurementId` (빈 값). 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 dataLayer 로 보냅니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
 | 검증 파이프라인 | 완료 | `scripts/verify.sh`. 7단계 |
 | 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 29파일, 에러 0 |
@@ -25,7 +27,7 @@
 | CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성 |
 | 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
-| 폼 백엔드 | 미연결 | `enquiryForm` 이 900ms 지연 시뮬레이션 |
+| 폼 백엔드 | 미연결 | `src/data/site.ts` 의 `enquiryEndpoint` 가 빈 값이라 900ms 지연 시뮬레이션. 문의·데모 접수 API 가 제품 본체(`refac_bid_box`)에 없으므로 이 저장소에서 만들지 않고 위임합니다 |
 | 결제 연동 | 미연결 | 주문 확인 다이얼로그까지만 동작 |
 | sitemap / robots / OG | 완료 | prerendered 엔드포인트(`src/pages/sitemap.xml.ts`, `src/pages/robots.txt.ts`)와 `public/og.svg`, `og.png`. 새 패키지 추가 없이 정적 생성 |
 | 구조화 데이터 | 완료 | `src/layouts/BaseLayout.astro` 가 head 에 Organization·WebSite JSON-LD 를 출력 |
@@ -262,22 +264,22 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 
 | 항목 | 영향 | 다음 행동 | 담당 |
 | --- | --- | --- | --- |
-| 연락처 이메일 오타 의심 | 문의가 도달하지 않음 | 원본 구성안은 `surport@narani.my` 표기. `support@` 여부 확인 후 `src/data/site.ts` 한 곳만 수정 | 담당자 확인 필요 |
+| 문의·데모 접수 API 부재 | 폼이 실제로 아무것도 보내지 않음 | `refac_bid_box` 에 접수 API 를 만들고 `src/data/site.ts` 의 `enquiryEndpoint` 한 곳만 채웁니다. 2026-09-28에 본체 라우터(accounts·automation·bids·chatbot·evaluations·health·predictions)에 접수 엔드포인트가 없음을 확인했습니다 | 미정 |
 | 테마 시각 미확정 | 라이트/다크 배분이 실제 구성안과 다를 수 있음 | 추출 세션에서 이미지를 볼 수 없어 픽셀 통계로 추론함. `npm run dev` 로 육안 확인 후 필요 시 레지스터 조정 | 담당자 확인 필요 |
 | 결제 미연결 | 요금 페이지에서 구매 완결 불가 | 결제는 이 저장소가 아니라 제품 본체(`refac_bid_box`)의 PG 라우트로 이동시킴 | 미정 |
-| 폼 백엔드 미연결 | 데모·문의 접수가 실제로 전달되지 않음 | 폼 서비스 또는 제품 본체 엔드포인트 결정 후 `enquiryForm(endpoint)` 에 주입 | 미정 |
+| 폼 백엔드 미연결 | 데모·문의 접수가 실제로 전달되지 않음 | 위 문의·데모 접수 API 항목과 같습니다 | 미정 |
 | 배포 미수행 | 공개 URL 없음 | `dist/` 를 정적 호스팅에 업로드. `astro.config.mjs` 의 `site` 값을 실제 도메인으로 교체 | 미정 |
 
 ---
 
 ## 5. 다음 착수 목록 (우선순위)
 
-1. `git init` 완료분에 대한 원격 푸시 확인, 이후 작업은 브랜치 → `main` 병합
-2. 테마 육안 확정 (열린 항목 2번)
-3. 이메일 표기 확정 (열린 항목 1번)
-4. 폼 엔드포인트 연결
-5. 요금 결제를 제품 본체 라우트로 딥링크
-6. 도메인 연결 및 첫 배포
+1. 테마 육안 확정 (열린 항목)
+2. `refac_bid_box` 에 문의·데모 접수 API 추가 후 `enquiryEndpoint` 연결
+3. GA4 측정 ID 를 만들어 `gaMeasurementId` 에 넣기
+4. 요금 결제를 제품 본체 라우트로 딥링크
+5. 도메인 연결 및 첫 배포
+6. 서비스 페이지 시각 자료 (2026-09-28에 사용자가 이번 회차에서는 보류를 결정)
 7. 검증 게이트 검토 권고 5건 중 2·3·4·5번은 2026-09-28에 반영했습니다
    ([`../analysis/검토_요금순서통화_20260928.md`](../analysis/검토_요금순서통화_20260928.md),
    [`../analysis/검토_접수완료가시성_20260928.md`](../analysis/검토_접수완료가시성_20260928.md)).
@@ -299,6 +301,12 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 11. 폼 variant 는 `x-data` 인라인 문자열이라 `astro check` 가 걸지 않습니다. 알 수 없는
    variant 조용히 contact 로 떨어지던 것을 2026-09-28에 콘솔 에러로 바꿨습니다. 데모
    페이지에 `'demmo'` 오타를 심어 게이트가 종료 코드 1 로 멈추는 것을 확인한 뒤 되돌렸습니다.
+12. 고도화 1차(2026-09-28): 이메일을 `support@narani.my` 로 확정했습니다. `enquiryEndpoint` 와
+   `gaMeasurementId` 를 `src/data/site.ts` 에 빈 값으로 추가해 배선 지점을 만들었고,
+   엔드포인트가 비어 있을 때 두 폼에 "전송되지 않습니다" 안내가 자동으로 보이게 했습니다.
+   GA4 는 측정 ID가 있을 때만 태그가 삽입되며, 폼 전환 이벤트는 `src/scripts/app.js` 의
+   `track()` 이 dataLayer 로 보냅니다. 서비스 페이지 시각 자료는 이번 회차 보류로 결정했습니다.
+   폰트 CDN 의존 제거는 별도 과업으로 진행 중입니다.
 Chrome 인터랙션, 스크롤바 원인, 본문 대비, CTA 치수는 2026-09-27에 이 문서의 Chrome 추가 실측 절로 승격했다.
 Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은 2026-09-27에 이 문서의 Firefox 추가 실측 절로 승격했다.
 
