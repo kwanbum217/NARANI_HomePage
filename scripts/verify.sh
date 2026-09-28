@@ -65,6 +65,36 @@ NARROW=(
 
 cd "$ROOT"
 
+# Node 전제를 여기서 확인합니다. package.json 의 engines 는 npm install 시 경고로만
+# 나오므로, 요구 버전보다 낮은 Node 로 그대로 진행됩니다. 그 상태에서 8단계가
+# .ts 직접 import(타입 스트리핑)를 만나면, 에러 메시지가 Node 버전 문제인지
+# 스크립트 문제인지 구분되지 않습니다. 그래서 시작 전에 명시적으로 막습니다.
+# 버전은 package.json 의 engines.node 를 정본으로 읽습니다. 두 곳에 적으면
+# 한쪽만 바뀌어 조용히 어긋납니다.
+node -e "
+const fs = require('node:fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const want = pkg.engines && pkg.engines.node;
+if (!want) {
+  console.error('package.json 에 engines.node 가 없습니다. Node 전제를 알 수 없습니다.');
+  process.exit(1);
+}
+const m = want.match(/>=\s*(\d+)\.(\d+)/);
+if (!m) {
+  console.error('engines.node 를 해석하지 못했습니다: ' + want);
+  process.exit(1);
+}
+const [maj, min] = process.versions.node.split('.').map(Number);
+const ok = maj > Number(m[1]) || (maj === Number(m[1]) && min >= Number(m[2]));
+if (ok) {
+  console.log('Node ' + process.versions.node + ' (요구 ' + want + ') 확인');
+  process.exit(0);
+}
+console.error('Node ' + want + ' 이상이 필요합니다. 현재 ' + process.versions.node);
+console.error('8단계가 src/data/*.ts 를 직접 import 하므로 타입 스트리핑이 필요합니다.');
+process.exit(1);
+"
+
 echo "== 1/8 타입 체크 =="
 # astro check 는 typescript(@astrojs/check) 가 vite 번들 타입을 참조하므로 devDependencies 에 고정되어 있습니다.
 # tsconfig.json 과 --tsconfig 플래그를 명시해 대화형 프롬프트가 뜨지 않게 합니다.
@@ -132,6 +162,8 @@ fi
 
 echo "== 8/8 인터랙션 =="
 # 이 단계는 .ts 직접 import(타입 스트리핑)에 Node v22.18.0 이상이 필요합니다(scripts/audit/expected.mjs).
+# 스크립트 시작 시 package.json 의 engines.node 를 읽어 버전을 확인하므로, 낮은 버전에서
+# 실행하면 8단계에 도달하기 전에 멈춥니다.
 # 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
 # 다이얼로그 기대값은 featured 플랜에서 파생하며, featured 가 정확히 하나가 아니면 여기서 종료 코드 1 로 멈춥니다.
 node scripts/audit/expected.mjs > "$OUT/expected.js"

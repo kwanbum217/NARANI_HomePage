@@ -20,7 +20,11 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          # scripts/verify.sh 8단계가 src/data/*.ts 를 직접 import 하므로
+          # 타입 스트리핑이 필요합니다(Node 22.18.0 이상). package.json 의
+          # engines.node 와 같은 하한을 씁니다. '22' 로 두면 부동 소수 버전이라
+          # 하한을 충족하지 않는 러너에서 조용히 실패할 수 있습니다.
+          node-version: '22.18.0'
           cache: 'npm'
 
       - name: 의존성 설치

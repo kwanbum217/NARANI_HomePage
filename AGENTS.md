@@ -160,6 +160,13 @@ npm run verify
 `--tsconfig` 을 명시합니다. `dist/` 와 브라우저에 의존하지 않으므로 CI 에서도 돌 수
 있습니다.
 
+**Node 전제**: `scripts/verify.sh` 8단계가 `src/data/*.ts` 를 직접 import 하므로
+타입 스트리핑이 필요해 Node 22.18.0 이상이어야 합니다. `package.json` 의 `engines.node`
+가 정본이며 스크립트 시작 시 그 값을 읽어 확인합니다. 낮으면 8단계에 도달하기 전에
+종료 코드 1 로 멈춥니다. `engines` 는 `npm install` 시 경고로만 나오므로 그 자체로는
+차단하지 않는다는 점에 유의하십시오. CI 는 `.github/workflows/ci.yml` 에서 같은
+하한을 고정합니다.
+
 폰트는 `public/fonts/pretendard-variable-subset.woff2` 로 self-host 합니다. 이 서브셋은
 빌드가 실제로 그리는 문자만 담습니다. **새 한국어 카피를 추가하면 서브셋을 다시 만들어야
 합니다.** 그래야 6단계가 서브셋 밖의 글자를 잡아냅니다.
