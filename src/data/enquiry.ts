@@ -45,6 +45,43 @@ export const enquiryForms: Record<EnquiryFormKey, EnquiryFormCopy> = {
   },
 };
 
-/** Network failure notice, appended with the brand support address. */
+/**
+ * Recovery copy for the row that appears under a failed submit.
+ *
+ * 문장 안에 이메일을 박아넣지 않습니다. 주소, 복사 버튼, mailto 링크를 각각
+ * 마크업에서 그릴 수 있어야 복사 실패 시 mailto 로 내려가는 경로가 남기 때문입니다.
+ * 두 폼(contact, demo)이 같은 값을 쓰므로 한 곳에 둡니다.
+ */
+export type EnquiryFallbackCopy = {
+  /** 주소 위 안내 문장. */
+  lead: string;
+  /** 주소를 클립보드에 넣는 버튼의 기본 라벨. */
+  copyLabel: string;
+  /** 클립보드 쓰기가 끝나기 전의 라벨. */
+  copyingLabel: string;
+  /** 주소를 클립보드에 넣은 뒤 잠깐 보이는 라벨. */
+  copiedLabel: string;
+  /** 클립보드를 쓸 수 없을 때(보안 컨텍스트 아님) 안내 문구. */
+  copyFailedLabel: string;
+  /** 메일 클라이언트를 여는 링크의 라벨. */
+  mailtoLabel: string;
+};
+
+export const enquiryFallback: EnquiryFallbackCopy = {
+  lead: '이 주소로 직접 보내 주세요.',
+  copyLabel: '주소 담기',
+  copyingLabel: '담는 중',
+  copiedLabel: '담기 성공',
+  copyFailedLabel: '직접 열어 주세요',
+  mailtoLabel: '메일 열기',
+};
+
+/**
+ * Network failure notice, appended with the brand support address.
+ *
+ * src/scripts/app.js 가 이 값을 errorMessage 에 넣고 x-text 로 그립니다.
+ * x-text 는 텍스트만 그릴 수 있으므로 이 값은 평문 문장으로 남깁니다.
+ * 복사 버튼과 mailto 링크는 enquiryFallback 과 페이지 마크업이 맡습니다.
+ */
 export const networkError = (email: string) =>
   `전송에 실패했습니다. 잠시 후 다시 시도하거나 ${email} 로 보내 주세요.`;
