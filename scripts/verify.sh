@@ -81,6 +81,7 @@ if [ "$A11Y_STATUS" -ne 0 ] || ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; the
 fi
 
 echo "== 6/6 인터랙션 =="
+# 이 단계는 .ts 직접 import 때문에 Node v22.18.0 이상이 필요합니다(scripts/audit/expected.mjs).
 # 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
 # 다이얼로그 기대값은 featured 플랜에서 파생하며, featured 가 정확히 하나가 아니면 여기서 종료 코드 1 로 멈춥니다.
 node scripts/audit/expected.mjs > "$OUT/expected.js"
