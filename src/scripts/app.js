@@ -16,7 +16,15 @@ Alpine.data('siteNav', () => ({
 
 // Contact / demo enquiry form: idle → validating → submitting → sent | error
 // variant picks the copy set in src/data/enquiry.ts ('contact' | 'demo').
+// x-data 는 인라인 문자열이라 빌드 타임에 타입 검사가 걸리지 않습니다.
+// 오타난 variant 를 조용히 contact 로 흘려보내지 않고 콘솔 에러로 올려
+// verify.sh 5단계(렌더·콘솔 오류 수집)가 잡아내게 합니다.
 Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
+  if (!Object.hasOwn(enquiryForms, variant)) {
+    console.error(
+      `enquiryForm: 알 수 없는 variant "${variant}". 사용 가능한 값은 ${Object.keys(enquiryForms).join(', ')} 입니다.`,
+    );
+  }
   const copy = enquiryForms[variant] ?? enquiryForms.contact;
   return {
     status: 'idle', // idle | submitting | sent | error
