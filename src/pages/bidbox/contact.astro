@@ -62,6 +62,20 @@ const copy = enquiryForms.contact;
               <h2 id="contact-form-title" class="text-[1.25rem] font-bold tracking-[-0.02em]">문의 남기기</h2>
               <p class="mt-2 text-[0.8125rem]" style="color:var(--bb-muted)">표시된 항목은 모두 필수입니다.</p>
 
+              {/*
+                요금 다이얼로그에서 넘어온 주문 내용 표시입니다. 쿼리(plan)가 있을
+                때만 나타나므로, 직접 문의 폼에 들어온 사람에게는 보이지 않습니다.
+                입력이 아니라 읽기 전용 표시라서 필드 개수도 필수 검증 개수(3)도
+                늘지 않습니다. 항목 이름(라벨)을 함께 두어 색만으로 구분되지 않게
+                합니다(4장).
+              */}
+              <p class="mt-4 flex flex-wrap items-baseline gap-2 rounded-xl p-4 text-[0.8125rem] leading-relaxed"
+                 style="background:var(--bb-accent-soft);color:var(--bb-muted)"
+                 x-show="values.topic" x-cloak role="status">
+                <span class="label">주문 상품</span>
+                <strong class="text-[0.9375rem]" style="color:var(--bb-text)" x-text="values.topic"></strong>
+              </p>
+
               <div class="mt-6 grid gap-5">
                 <div class="field" :class="errors.name ? 'is-invalid' : ''">
                   <label for="c-name">성명</label>
