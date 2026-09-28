@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # narani_homepage 정적 사이트 검증.
-# 빌드 -> dist 로컬 서빙 -> 링크 무결성 / 렌더 / 접근성 / 인터랙션 감사.
+# 타입 체크 -> 빌드 -> dist 로컬 서빙 -> 링크 무결성 / 렌더 / 접근성 / 인터랙션 감사.
 # 실패 시 종료 코드 1 을 반환하므로 CI 에서 그대로 사용할 수 있습니다.
 #
 # 사용법: scripts/verify.sh
@@ -38,10 +38,16 @@ NARROW=(
 
 cd "$ROOT"
 
-echo "== 1/6 빌드 =="
+echo "== 1/7 타입 체크 =="
+# astro check 는 typescript(@astrojs/check) 가 vite 번들 타입을 참조하므로 devDependencies 에 고정되어 있습니다.
+# tsconfig.json 과 --tsconfig 플래그를 명시해 대화형 프롬프트가 뜨지 않게 합니다.
+# 대화형 입력 없이 끝나므로 set -e 로 종료 코드 1 이 그대로 전파됩니다.
+npm run check
+
+echo "== 2/7 빌드 =="
 npm run build
 
-echo "== 2/6 dist 서빙 =="
+echo "== 3/7 dist 서빙 =="
 python3 -m http.server "$PORT" --bind 127.0.0.1 --directory "$ROOT/dist" >/dev/null 2>&1 &
 SERVER_PID=$!
 trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
@@ -59,10 +65,10 @@ fi
 rm -rf "$OUT"
 mkdir -p "$OUT"
 
-echo "== 3/6 링크 무결성 =="
+echo "== 4/7 링크 무결성 =="
 node scripts/check-links.mjs "$ROOT/dist"
 
-echo "== 4/6 렌더 / 콘솔 오류 / 스타일 실측 =="
+echo "== 5/7 렌더 / 콘솔 오류 / 스타일 실측 =="
 RENDER_OUT="$(swift scripts/audit/render.swift "$BASE" "$OUT" "${PAGES[@]}")"
 echo "$RENDER_OUT"
 if ! grep -q "^0 page(s) with JS errors" <<<"$RENDER_OUT"; then
@@ -70,7 +76,7 @@ if ! grep -q "^0 page(s) with JS errors" <<<"$RENDER_OUT"; then
   exit 1
 fi
 
-echo "== 5/6 반응형 / 접근성 =="
+echo "== 6/7 반응형 / 접근성 =="
 # a11y.swift 는 이슈가 있으면 1 로 끝납니다. set -e 에 걸려 출력 없이 멈추지 않도록 상태를 따로 받습니다.
 A11Y_STATUS=0
 A11Y_OUT="$(swift scripts/audit/a11y.swift "$BASE" "${NARROW[@]}")" || A11Y_STATUS=$?
@@ -80,7 +86,7 @@ if [ "$A11Y_STATUS" -ne 0 ] || ! grep -q "^0 issue group(s)" <<<"$A11Y_OUT"; the
   exit 1
 fi
 
-echo "== 6/6 인터랙션 =="
+echo "== 7/7 인터랙션 =="
 # 이 단계는 .ts 직접 import(타입 스트리핑)에 Node v22.18.0 이상이 필요합니다(scripts/audit/expected.mjs).
 # 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
 # 다이얼로그 기대값은 featured 플랜에서 파생하며, featured 가 정확히 하나가 아니면 여기서 종료 코드 1 로 멈춥니다.
