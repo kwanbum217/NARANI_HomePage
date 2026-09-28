@@ -22,6 +22,10 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
+from fontTools import subset
+from fontTools.ttLib import TTFont
+from fontTools.varLib import instancer
+
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 OUT = ROOT / "public" / "fonts" / "pretendard-variable-subset.woff2"
@@ -36,6 +40,24 @@ ATTR_PATTERNS = (
     r'\b(?:alt|placeholder|aria-label|title)="([^"]*)"',
     r'<meta[^>]*content="([^"]*)"',
 )
+
+# 이 사이트가 실제로 그리는 가중치 범위. global.css 의 @font-face 와 맞췄습니다.
+# 본문 400, 강조 600/700, b/strong(bolder), 로고 font-black 900.
+# 45-930 을 그대로 두면 400 미만 구간의 델리터만 남고 파일이 29KB 커집니다.
+WGHT_RANGE = (400.0, 900.0)
+
+# 남길 OpenType 기능. 브라우저가 기본으로 켜는 자간·리겨·위치변형·기호치환과,
+# global.css 의 .num 이 실제로 요청하는 tabular-nums(tnum)입니다.
+# cv01~cv13, ss01~ss08, salt, pwid, subs, sups 같은 예체는 이 사이트가 쓰지
+# 않으므로 제외합니다. 특히 fontTools 기본값만 쓰면 tnum 이 사라져
+# 데이터 테이블 숫자가 정렬되지 않으므로 반드시 명시해야 합니다.
+LAYOUT_FEATURES = [
+    "ccmp", "locl", "kern", "liga", "clig", "calt", "rlig",
+    "mark", "mkmk", "frac", "numr", "dnom", "case", "pnum", "tnum",
+]
+# 폰트 이름 테이블. family(1), subfamily(2), full(4), version(5), PS name(6) 만
+# 남깁니다. 예체 이름(17)은 이 사이트가 쓰지 않습니다.
+NAME_IDS = [0, 1, 2, 3, 4, 5, 6]
 
 
 def collect_chars() -> str:
@@ -79,23 +101,27 @@ def main() -> None:
             sys.exit(f"원본 크기가 비정상입니다 ({source.stat().st_size}바이트). URL 을 확인하세요.")
 
         OUT.parent.mkdir(parents=True, exist_ok=True)
-        # --text 로 서브셋, --flavor=woff2 로 압축 포맷 지정.
-        # --layout-features 로 가변 축 값을 보존합니다.
-        subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "fontTools.subset",
-                str(source),
-                f"--text={chars}",
-                "--flavor=woff2",
-                "--layout-features=*",
-                "--notdef-outline",
-                "--name-IDs=*",
-                f"--output-file={OUT}",
-            ],
-            check=True,
+        # 순서: 문자 서브셋 -> 가중치 축 좁히기 -> woff2 압축.
+        # 축 좁히기를 먼저 하면 gvar 인스턴싱이 서브셋 글리프와 어긋나 실패하므로
+        # 이 순서를 지킵니다.
+        font = TTFont(str(source))
+        font.flavor = None
+
+        options = subset.Options()
+        options.layout_features = LAYOUT_FEATURES
+        options.name_IDs = NAME_IDS
+        options.name_languages = ["*"]
+        options.notdef_outline = True
+        subsetter = subset.Subsetter(options=options)
+        subsetter.populate(text=chars)
+        subsetter.subset(font)
+
+        font = instancer.instantiateVariableFont(
+            font, {"wght": WGHT_RANGE}, inplace=True, updateFontNames=False
         )
+        font.flavor = "woff2"
+        font.save(str(OUT))
+        font.close()
 
     size = OUT.stat().st_size
     print(f"생성: {OUT.relative_to(ROOT)} ({size:,}바이트)")
