@@ -12,10 +12,13 @@ const copy = enquiryForms.contact;
   variant="bidbox" active="contact"
 >
 <section class="navy-field" x-data={`enquiryForm('${enquiryEndpoint}')`}>
-        <div class="wrap pb-[clamp(56px,9vw,96px)] pt-[clamp(56px,9vw,104px)]">
-          <h1 class="display max-w-[20ch] text-[clamp(2rem,4.6vw,3.25rem)]">
-            함께 더 나은 결정을 내리세요
-          </h1>
+        <div
+          class="wrap grid gap-12 pb-[clamp(56px,9vw,96px)] pt-[clamp(56px,9vw,104px)] md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start"
+        >
+          <div>
+            <h1 class="display max-w-[20ch] text-[clamp(2rem,4.6vw,3.25rem)]">
+              함께 더 나은 결정을 내리세요
+            </h1>
           <p class="lede mt-6 max-w-[60ch]">
             AI 기술로 입찰의 미래를 열어드리는 Bidbox입니다. 빅데이터 기반의 정밀 분석을 통해
             당신의 비즈니스가 더 나은 결과를 달성할 수 있도록 전문적인 상담을 제공합니다.
@@ -38,8 +41,9 @@ const copy = enquiryForms.contact;
               </p>
             </div>
           </div>
+          </div>
 
-          <div class="card mt-10 max-w-[560px] sm:p-8!">
+          <div class="card min-w-0 sm:p-8!">
 
             <!-- 성공 -->
             <div x-show="status === 'sent'" x-cloak role="status">
