@@ -146,6 +146,7 @@ npm run verify
 
 | 단계 | 내용 | 실패 기준 |
 | --- | --- | --- |
+| 타입 체크 | `astro check` | 에러 1건 이상 |
 | 빌드 | `astro build` | 빌드 오류 |
 | 링크 무결성 | `dist/` 내 모든 `href`/`src` 실존 확인 | 깨진 참조 1건 이상 |
 | 렌더 | 7개 페이지 WebKit 렌더, 콘솔 오류 수집 | 콘솔 오류 1건 이상 |
@@ -153,8 +154,13 @@ npm run verify
 | 반응형·접근성 | 320px 오버플로우, 라벨 누락, 터치 타겟 | 문서 오버플로우 또는 라벨 누락 |
 | 인터랙션 | 메뉴 토글, 폼 검증·전송, 요금 다이얼로그 | 기대 상태 불일치 |
 
+타입 체크는 `devDependencies` 의 `@astrojs/check` 와 `typescript` 를 씁니다.
+설정 파일은 `tsconfig.json` 이며 `astro check` 가 대화형으로 멈추지 않도록
+`--tsconfig` 을 명시합니다. `dist/` 와 브라우저에 의존하지 않으므로 CI 에서도 돌 수
+있습니다.
+
 `scripts/verify.sh` 는 macOS WebKit 을 사용하므로 macOS 또는 macOS 러너에서만 동작합니다.
-CI 에서는 빌드와 링크 무결성만 검사합니다.
+CI 에서는 타입 체크, 빌드, 링크 무결성을 검사합니다.
 
 ---
 

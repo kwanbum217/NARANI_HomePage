@@ -2,8 +2,8 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-09-28
-> **버전**: v1.1.0
-> **상태**: Hallmark 재구성 적용 및 검증 통과. 결제·폼 백엔드 미연결
+> **버전**: v1.2.0
+> **상태**: Hallmark 재구성 적용 및 검증 통과. 7단계 게이트(타입 체크 포함). 결제·폼 백엔드 미연결
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -17,11 +17,12 @@
 | Hallmark 섹션 리듬 재구성 | 완료 | [`../design/HALLMARK_REDESIGN.md`](../design/HALLMARK_REDESIGN.md). 7개 라우트가 각기 다른 구조 |
 | 디자인 토큰 | 완료 | `src/styles/global.css` `:root` 단일 소스 |
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
-| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts` |
+| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts` |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
-| 검증 파이프라인 | 완료 | `scripts/verify.sh` |
+| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 7단계 |
+| 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 29파일, 에러 0 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
-| CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 빌드, 링크 무결성, 이모지 검사 |
+| CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성 |
 | 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
 | 폼 백엔드 | 미연결 | `enquiryForm` 이 900ms 지연 시뮬레이션 |
@@ -285,8 +286,15 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
    후속 권고 5건은 위 두 검토 문서 4장에 있습니다
    ([`../analysis/검토_체크기대값_파생_20260928.md`](../analysis/검토_체크기대값_파생_20260928.md) 4장)
 8. `#plans` 구매 버튼 수는 `src/data/pricing.ts` 의 `plans` 개수와 같습니다.
-   위 Chrome·Firefox 실측 절의 "버튼 5개"는 구 셀렉러가 다이얼로그 버튼까지 센 값이며
+   위 Chrome·Firefox 실측 절의 "버튼 5개"는 구 셀렉터가 다이얼로그 버튼까지 센 값이며
    그 시점 측정값입니다. 현재 게이트는 `plans` 개수와 비교합니다
+9. 권고 1번(폼 카피를 데이터 모듈로)은 2026-09-28에 반영했습니다. `src/data/enquiry.ts`
+   가 contact·demo 두 폼의 라벨과 오류 문구를 정의하고, `scripts/audit/expected.mjs` 가
+   이 모듈을 직접 import 합니다. 이전의 정규식 파생 경로는 없어졌습니다. 기대값 문자열은
+   이전과 동일해 3장 기준선과 일치합니다.
+10. `npm run check` 편입은 2026-09-28에 반영했습니다. 게이트는 6단계에서 7단계로
+   늘었고 1단계가 타입 체크입니다. 패키지 3개(`@astrojs/check`, `typescript`,
+   `@types/node`)는 사용자가 승인과 함께 지정했습니다.
 Chrome 인터랙션, 스크롤바 원인, 본문 대비, CTA 치수는 2026-09-27에 이 문서의 Chrome 추가 실측 절로 승격했다.
 Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은 2026-09-27에 이 문서의 Firefox 추가 실측 절로 승격했다.
 
@@ -302,6 +310,7 @@ npm run verify
 
 `scripts/verify.sh` 는 다음 조건에서 실패합니다.
 
+- `astro check` 타입 에러
 - 빌드 실패
 - 깨진 참조 1건 이상
 - 콘솔 오류가 발생한 페이지 1개 이상
