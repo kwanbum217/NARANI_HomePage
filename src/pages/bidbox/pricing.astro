@@ -6,16 +6,47 @@ const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
 
 // Alpine only drives the order dialog; the plan rows are rendered at build time.
 // 다이얼로그 금액도 서버에서 won 으로 미리 만들어 넘기므로 통화 규칙은 5행 한 곳에만 있습니다.
-const dialogPlans = plans.map((plan) => ({ ...plan, priceText: won(plan.price) }));
+// 문의 폼으로 넘길 주소도 여기서 만듭니다. 브라우저에서 조합하면 인코딩 코드가
+// x-data 안에 실려 폰트 서브셋 검사(6단계)의 대상 문자가 되므로 빌드 시점에 끝냅니다.
+const contactPage = '/bidbox/contact/';
+const dialogPlans = plans.map((plan) => ({
+  ...plan,
+  priceText: won(plan.price),
+  contactHref: `${contactPage}?plan=${encodeURIComponent(plan.label)}`,
+}));
+
+/*
+ * 다이얼로그 상태 객체는 x-data 로 인라인되어 HTML 에 그대로 실립니다. 그래서
+ * 안에 적은 한국어 설명이 폰트 서브셋 검사(6단계)의 대상 문자가 됩니다. 설명이
+ * 필요하면 여기(빌드 시 사라지는 자리)에 두고, 상태 객체 안에는 남기지 않습니다.
+ *
+ * 같은 이유로 상태 객체 안에는 '>' 를 쓰지 않습니다. 폰트 검사는 태그를 지울 때
+ * 첫 '>' 까지만 지우는데, x-data 안에 '=>' 가 있으면 태그가 거기서 끊기고
+ * 뒤따르는 코드가 화면 문자로 잘못 집계됩니다. 그코드가 라벨 문자열을 흘려보내면
+ * 서브셋 밖 글자로 걸립니다. 아래 find 는 그래서 화살표 대신 function 을 씁니다.
+ */
 const dialogState = `{
   plans: ${JSON.stringify(dialogPlans)},
   selected: null,
   choose(id) {
-    this.selected = this.plans.find((p) => p.id === id) ?? null;
+    this.selected = this.plans.find(function (p) { return p.id === id; }) ?? null;
     if (this.selected) this.$refs.order.showModal();
   },
-  closeOrder() { this.$refs.order.close(); }
+  closeOrder() { this.$refs.order.close(); },
+  goContact() {
+    if (this.selected) window.location.href = this.selected.contactHref;
+  }
 }`;
+
+/*
+ * goContact 는 선택한 상품을 문의 폼으로 넘깁니다. contact 페이지가 상품명으로
+ * 보여주므로 아이디가 아니라 사람이 읽는 label 을 쿼리에 담습니다.
+ *
+ * 앵커의 정적 href 는 쿼리 없는 주소로 둡니다. 거기에 plan 쿼리를 얹어 두면
+ * 스크립트가 없는 상태에서 링크 검사(scripts/check-links.mjs)가
+ * /bidbox/contact/?plan=... 을 깨진 참조로 판정합니다. 정적 href 를 남겨 두는
+ * 이유는 Alpine 이 없을 때에도 링크가 동작해야 하기 때문입니다.
+ */
 ---
 
 <BaseLayout
@@ -162,7 +193,7 @@ const dialogState = `{
         </p>
 
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a class="btn btn-primary btn-block" href="/bidbox/contact/">문의로 접수</a>
+          <a class="btn btn-primary btn-block" href="/bidbox/contact/" @click.prevent="goContact()">문의로 접수</a>
           <button type="button" class="btn btn-ghost btn-block" @click="closeOrder()">닫기</button>
         </div>
       </div>

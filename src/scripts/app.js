@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import { brand } from '../data/site';
 import { enquiryForms, networkError } from '../data/enquiry';
+import { plans } from '../data/pricing';
 
 /* NARANI / BIDBOX — shared client behaviour, bundled by Astro. */
 
@@ -41,6 +42,35 @@ Alpine.data('siteNav', () => ({
 // x-data 는 인라인 문자열이라 빌드 타임에 타입 검사가 걸리지 않습니다.
 // 오타난 variant 를 조용히 contact 로 흘려보내지 않고 콘솔 에러로 올려
 // verify.sh 5단계(렌더·콘솔 오류 수집)가 잡아내게 합니다.
+
+/**
+ * 주문 가능한 상품 라벨 목록입니다. src/data/pricing.ts 의 plans 에서 직접
+ * 뽑으므로 라벨 문구를 두 곳에 적지 않습니다. 값이 바뀌면 자동을 따라갑니다.
+ */
+const PLAN_LABELS = plans.map((plan) => plan.label);
+
+/**
+ * URL 의 plan 쿼리를 읽습니다. 요금 다이얼로그에서 넘어온 주문 컨텍스트이며
+ * 없으면 빈 문자열입니다.
+ *
+ * 화이트리스트 대조를 하는 이유는 값이 주소창에서 조작될 수 있기 때문입니다.
+ * URLSearchParams 는 application/x-www-form-urlencoded 규칙으로 파싱하므로
+ * '?plan=a b&c=d' 에서 plan 은 'a b' 까지만 읽힙니다. 그 값을 그대로 내보내면
+ * 잘린 문자열이 상품명처럼 보이고, '&' 뒤의 내용이 조용히 사라집니다.
+ * 실제로 존재하는 라벨과 정확히 일치할 때만 받아들이면 잘린 값과 임의 값이
+ * 모두 빈 문자열로 떨어집니다. 라벨이 순수 텍스트여서 화면에 새는 일은 없습니다.
+ *
+ * '+' 는 폼 인코딩에서 공백이므로 '500+포인트' 처럼 오면 공백으로 되돌린 뒤
+ * 대조합니다. 라벨에 공백이 없기 때문에 이 길이에서 걸러집니다.
+ */
+const readPlanQuery = () => {
+  if (typeof window === 'undefined') return '';
+  const raw = new URLSearchParams(window.location.search).get('plan');
+  if (!raw) return '';
+  const decoded = raw.replace(/\+/g, ' ');
+  return PLAN_LABELS.includes(decoded) ? decoded : '';
+};
+
 Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
   if (!Object.hasOwn(enquiryForms, variant)) {
     console.error(
@@ -48,10 +78,15 @@ Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
     );
   }
   const copy = enquiryForms[variant] ?? enquiryForms.contact;
+  // 요금 다이얼로그가 넘겨준 상품 컨텍스트입니다. pricing.astro 의 contactHref 가
+  // /bidbox/contact/?plan=500포인트 처럼 심습니다. 폼에 새 필드를 만들지 않고
+  // values.topic 에만 내려주므로 필수 검증 개수(3)는 그대로입니다.
+  // 데모 폼은 location.search 를 보지 않습니다(파라미터가 없으므로 빈 문자열).
+  const plan = readPlanQuery();
   return {
     status: 'idle', // idle | submitting | sent | error
     errorMessage: '',
-    values: { name: '', email: '', topic: '', message: '', consent: false },
+    values: { name: '', email: '', topic: plan, message: '', consent: false },
     errors: {},
     copy,
 
