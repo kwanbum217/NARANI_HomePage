@@ -102,11 +102,13 @@ Alpine.data('enquiryForm', (endpoint = '', variant = 'contact') => {
           await new Promise((r) => setTimeout(r, 900));
         }
         this.status = 'sent';
-        // 시뮬레이션 접수도 이벤트로 남깁니다. 단, 엔드포인트가 없으면 실제로는
-        // 접수되지 않았으므로 분석에서 시뮬레이션임을 구분할 수 있게 표시합니다.
-        track(endpoint ? 'enquiry_submit_success' : 'enquiry_submit_simulated', {
-          form_variant: variant,
-        });
+        // 실제 접수된 경우에만 전환 이벤트를 보냅니다. 엔드포인트가 없을 때는
+        // 폼에도 "전송되지 않습니다" 안내가 보이므로, 가짜 전환을 남기지
+        // 않으면 화면과 데이터가 어긋나지 않습니다. 엔드포인트 유무는
+        // enquiry_submit_start 의 has_endpoint 에서 알 수 있습니다.
+        if (endpoint) {
+          track('enquiry_submit_success', { form_variant: variant });
+        }
       } catch (err) {
         this.status = 'error';
         this.errorMessage = networkError(brand.email);
