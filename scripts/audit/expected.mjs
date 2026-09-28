@@ -18,7 +18,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { plans } from '../../src/data/pricing.ts';
-import { enquiryForms } from '../../src/data/enquiry.ts';
+import { enquiryForms, enquiryFallback } from '../../src/data/enquiry.ts';
+import { brand } from '../../src/data/site.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
@@ -60,6 +61,15 @@ const dialogSuffix = pick(
   'src/pages/bidbox/pricing.astro',
 );
 
+// prefill 검사는 '주문 상품' 라벨 옆에 상품명이 보이는지 봅니다.
+// 라벨 문구는 contact.astro 의 정본 마크업에서 읽습니다.
+const topicPrefix = pick(
+  readSource('src/pages/bidbox/contact.astro'),
+  /<span class="label">([^<]*)<\/span>/,
+  '문의 폼 주문 상품 라벨',
+  'src/pages/bidbox/contact.astro',
+);
+
 const currency = pricingAstro.match(
   /const won = \(n: number\) => '([^']*)' \+ n\.toLocaleString\('([^']*)'\)/,
 );
@@ -86,7 +96,32 @@ const expected = {
     title: dialogPlan.label + dialogSuffix,
     price: currency[1] + dialogPlan.price.toLocaleString(currency[2]),
   },
+  prefill: {
+    planLabel: dialogPlan.label,
+    planLabelAlt: plans.find((plan) => !plan.featured)?.label ?? dialogPlan.label,
+    topicPrefix,
+    // 검사할 plan 쿼리 URL 을 셸이 아니라 여기서 만듭니다.
+    // 셸로 만들면 '+' 가 공백으로 바뀌어 한글 라벨이 깨지거나 파생 규칙이
+    // 스크립트에 흩어집니다. URL 은 이 한 곳에서 인코딩합니다.
+    // 거절 케이스 세 개는 URLSearchParams 규칙을 그대로 씁니다.
+    //   'a b&c=d' 는 form-urlencoded 규칙에서 plan 이 'a b' 까지만 잘립니다.
+    //   숫자만 있는 값은 실제 라벨이 아니므로 거절되어야 합니다.
+    acceptQuery: '?plan=' + encodeURIComponent(dialogPlan.label),
+    rejectTruncatedQuery: '?' + new URLSearchParams({ plan: 'a b&c=d' }).toString(),
+    rejectScriptQuery: '?plan=' + encodeURIComponent('<script>alert(1)</script>'),
+    rejectBareNumberQuery: '?plan=' + encodeURIComponent(String(dialogPlan.price)),
+  },
   form: { nameError, busyLabel, successText },
+  // 폼 실패 시 degrade 경로 카피. 주소는 brand 정본에서, 라벨은 enquiryFallback
+  // 정본에서 읽습니다. 검사에 카피를 하드코딩하면 정본이 바뀌어도 옛 문구를 검사해
+  // 조용히 통과합니다.
+  fallback: {
+    brandEmail: brand.email,
+    copyLabel: enquiryFallback.copyLabel,
+    copyingLabel: enquiryFallback.copyingLabel,
+    copiedLabel: enquiryFallback.copiedLabel,
+    copyFailedLabel: enquiryFallback.copyFailedLabel,
+  },
 };
 
 process.stdout.write(`window.__expected = ${JSON.stringify(expected)};\n`);

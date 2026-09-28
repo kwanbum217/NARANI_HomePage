@@ -167,10 +167,37 @@ echo "== 8/8 인터랙션 =="
 # 기대 카피를 정본에서 파생해 체크 스크립트에 주입합니다. 파생에 실패하면 set -e 로 멈춥니다.
 # 다이얼로그 기대값은 featured 플랜에서 파생하며, featured 가 정확히 하나가 아니면 여기서 종료 코드 1 로 멈춥니다.
 node scripts/audit/expected.mjs > "$OUT/expected.js"
+# 검사할 plan 쿼리는 expected.mjs 가 인코딩해 기대값 안에 넣어 줍니다.
+# 셸에서 URL 을 만들지 않는 이유는 두 가지입니다. '+' 가 공백으로 바뀌어
+# 한글 라벨이 깨질 수 있고, 파생 규칙이 셸과 스크립트 두 곳에 흩어집니다.
+# 여기서는 기대값 JSON 을 읽어 쿼리만 꺼냅니다.
+read_query() {
+  node -e "
+    const fs = require('node:fs');
+    const raw = fs.readFileSync('$OUT/expected.js', 'utf8');
+    const obj = JSON.parse(raw.replace(/^window\.__expected\s*=\s*/, '').replace(/;\s*$/, ''));
+    const v = obj.prefill && obj.prefill['$1'];
+    if (typeof v !== 'string' || v === '') {
+      console.error('기대값 prefill.$1 을 읽지 못했습니다.');
+      process.exit(1);
+    }
+    process.stdout.write(v);
+  "
+}
+Q_ACCEPT="$(read_query acceptQuery)"
+Q_REJECT_TRUNCATED="$(read_query rejectTruncatedQuery)"
+Q_REJECT_SCRIPT="$(read_query rejectScriptQuery)"
+Q_REJECT_BARE="$(read_query rejectBareNumberQuery)"
 EXPECT_JS="$OUT/expected.js" swift scripts/audit/interact.swift "$BASE" \
   "/company/|390x900|scripts/audit/checks/nav.js" \
   "/bidbox/contact/|390x1400|scripts/audit/checks/form.js" \
-  "/bidbox/pricing/|1440x1200|scripts/audit/checks/dialog.js"
+  "/bidbox/pricing/|1440x1200|scripts/audit/checks/dialog.js" \
+  "/bidbox/contact/${Q_ACCEPT}|390x1400|scripts/audit/checks/prefill.js" \
+  "/bidbox/contact/${Q_REJECT_TRUNCATED}|390x1400|scripts/audit/checks/prefill-reject.js" \
+  "/bidbox/contact/${Q_REJECT_SCRIPT}|390x1400|scripts/audit/checks/prefill-reject.js" \
+  "/bidbox/contact/${Q_REJECT_BARE}|390x1400|scripts/audit/checks/prefill-reject.js" \
+  "/bidbox/contact/|390x1400|scripts/audit/checks/fallback.js" \
+  "/bidbox/demo/|1400x1400|scripts/audit/checks/fallback.js"
 
 echo
 echo "검증 통과. 스크린샷: $OUT"
