@@ -19,7 +19,7 @@
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
 | 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts` |
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
-| 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 dataLayer 로 보냅니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
+| 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 `gtag('event', ...)` 로 보냅니다. 일반 객체로 `dataLayer.push` 하면 gtag.js 가 콘솔 오류 없이 조용히 무시하므로 형식이 고정되어 있습니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
 | 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계 |
 | 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift` |
@@ -90,7 +90,7 @@ WKWebView 에서 다음 뷰포트로 렌더. 스크린샷은 `.verify/` 에 생�
 | `#plans li.card` 개수 | 0 | 요금이 가로 행으로 바뀜. `.card` 를 쓰지 않음 |
 | 요금 다이얼로그 존재 | true | Alpine 이 다이얼로그를 제어 |
 
-반응형·접근성 (320px, 7개 페이지 전부):
+반응형·접근성 (320px, 8개 페이지 전부. 404 포함):
 
 | 측정 대상 | 실측값 |
 | --- | --- |
@@ -152,7 +152,7 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 | 데스크톱 내비 CTA 높이 | 44px (8개 페이지 모두) |
 | 허브 `main a.card` padding-top | `null` (8개 페이지 모두) |
 | `#plans li.card` 개수 | 0 (8개 페이지 모두) |
-| 요금 다이얼로그 존재 | `/bidbox/pricing/`만 true, 나머지 7개 페이지 false |
+| 요금 다이얼로그 존재 | 8개 페이지 중 `/bidbox/pricing/`만 true, 나머지 7개 false |
 
 #### 인터랙션
 
@@ -320,6 +320,9 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
    문의 폼 전송 실패 시 주소·mailto 링크·"주소 담기" 버튼이 함께 보입니다.
    폰트 서브셋은 81,696 → 52,176 바이트로 줄었고 8개 페이지 육안 확인으로
    깨진 글자와 숫자 정렬이 유지됨을 확인했습니다.
+   게이트 공백: 위 3건 중 prefill 과 degrade 경로는 자동 게이트가 검사하지
+   않습니다(`dialog.js`·`form.js` 에 해당 항목 0건). 통과는 다른 항목의 결과이며,
+   두 경로는 WKWebView 수동 실측으로만 검증했습니다.
 9. `#plans` 구매 버튼 수는 `src/data/pricing.ts` 의 `plans` 개수와 같습니다.
    위 Chrome·Firefox 실측 절의 "버튼 5개"는 구 셀렉터가 다이얼로그 버튼까지 센 값이며
    그 시점 측정값입니다. 현재 게이트는 `plans` 개수와 비교합니다

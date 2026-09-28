@@ -63,11 +63,12 @@
 
 | 경로 | 역할 |
 | --- | --- |
-| `src/pages/` | 7개 페이지. 라우트 생성의 유일한 위치 |
+| `src/pages/` | 8개 페이지(404 포함). 라우트 생성의 유일한 위치 |
 | `src/layouts/BaseLayout.astro` | head, canonical, OG, 헤더, 푸터, 스크립트 |
 | `src/components/` | Logo, Header, Footer. 내비와 브랜드 마크의 단일 구현 |
-| `src/data/site.ts` | 브랜드명, 이메일, 내비 2종, CTA, 핵심 기능 목록 |
-| `src/data/pricing.ts` | 포인트 단가, 요금제 3종, 유의 문구 |
+| `src/data/site.ts` | 브랜드명, 이메일, 내비 2종, CTA, 핵심 기능 목록, GA4 측정 ID, 문의 엔드포인트 |
+| `src/data/pricing.ts` | 포인트 단가, 요금제 3종, 유의 문구. 문의 폼의 상품 라벨 화이트리스트 정본 |
+| `src/data/enquiry.ts` | 문의·데모 폼 라벨과 오류 문구, 접수 완료 문구, 실패 시 degrade 카피 |
 | `src/styles/global.css` | 디자인 토큰과 컴포넌트 클래스 |
 | `src/scripts/app.js` | Alpine 컴포넌트 3종 |
 | `scripts/verify.sh` | 빌드 + 링크 + 렌더 + 접근성 + 인터랙션 검증 |
