@@ -74,7 +74,7 @@
 | `scripts/verify.sh` | 8단계. 실제 검사 항목은 9개(4단계 2개, 5단계 2개, 8단계 3개) |
 | `scripts/check-links.mjs` | dist 내 href/src 실존 확인 |
 | `scripts/check-sitemap.mjs` | sitemap.xml 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
-| `AGENTS.md` | **보호 파일.** 에이전트가 스스로 고치지 못합니다. 수정이 필요하면 사람이 직접 고칩니다([`docs/ops/DO_NOT_REPEAT.md`](docs/ops/DO_NOT_REPEAT.md) 9.1) |
+| `AGENTS.md` | **보호 파일.** Hermes 세션의 어떤 에이전트로도 고칠 수 없습니다. 수정이 필요하면 Hermes 밖의 에이전트에게 편집할 문장을 diff 형태로 넘깁니다([`docs/ops/DO_NOT_REPEAT.md`](docs/ops/DO_NOT_REPEAT.md) 9.1) |
 | `scripts/audit/` | WebKit 기반 감사 도구 (macOS) |
 
 비협상 원칙:

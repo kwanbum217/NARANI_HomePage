@@ -1,8 +1,8 @@
 # narani_homepage — Agent Guidelines (정본)
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-23
-> **버전**: v1.0.0
+> **수정일**: 2026-09-28
+> **버전**: v1.1.0
 > 본 파일은 모든 AI 코딩 에이전트가 공유하는 **단일 진실 원천(Single Source of Truth)** 입니다.
 > 규칙을 바꿀 때는 이 파일만 수정하고, 상세 절차는 `docs/` 의 해당 문서에 둡니다.
 
@@ -148,7 +148,7 @@ npm run verify
 | --- | --- | --- |
 | 타입 체크 | `astro check` | 에러 1건 이상 |
 | 빌드 | `astro build` | 빌드 오류 |
-| 링크 무결성 | `dist/` 내 모든 `href`/`src` 실존 확인 | 깨진 참조 1건 이상 |
+| 링크 무결성 | `dist/` 내 모든 `href`/`src` 실존 확인. 그리고 `sitemap.xml` 과 실제 페이지 대조 | 깨진 참조, 색인 누락, 죽은 주소, canonical 불일치 1건 이상 |
 | 렌더 | 8개 페이지 WebKit 렌더, 콘솔 오류 수집 | 콘솔 오류 1건 이상 |
 | 스타일 실측 | 배경색·대비·컴포넌트 치수 측정 | 기준선과 불일치 |
 | 폰트 서브셋 | self-host 폰트에 빌드가 그리는 문자가 모두 있는지 | 서브셋 밖 문자 1개 이상 |
@@ -177,11 +177,14 @@ python3 scripts/build-font-subset.py   # fonttools 와 brotli 가 필요합니�
 
 `python3 -m pip install --user fonttools brotli` 로 준비합니다. `swift` 를 쓰는
 6단계 때문에 이 검사는 macOS 에서만 돕니다. 절차는
-[`../docs/spec/QA_AND_A11Y.md`](../docs/spec/QA_AND_A11Y.md) 에 적었습니다.
+[`docs/spec/QA_AND_A11Y.md`](docs/spec/QA_AND_A11Y.md) 에 적었습니다.
 
 `scripts/verify.sh` 는 macOS WebKit 을 사용하므로 macOS 또는 macOS 러너에서만 동작합니다.
-CI 는 WebKit 5~8단계를 건너뛰고, 타입 체크·빌드·링크 무결성과 이모지 검사까지 돌립니다.
-즉 CI 는 8단계 중 1·2·4단계를 대신합니다.
+CI 는 WebKit 이 필요한 5~8단계를 건너뛰고, 타입 체크·빌드·링크 무결성·sitemap
+무결성과 이모지 검사까지 돌립니다. 즉 CI 는 8단계 중 1·2·4단계를 대신합니다.
+5~8단계(렌더·폰트·반응형·인터랙션)는 macOS 로컬에서만 돌아갑니다. CI 는
+Linux 러너라 WebKit 을 쓸 수 없습니다. 그래서 8단계 항목이 9개여도 CI 는
+그중 3개만 확인합니다. 나머지는 로컬 `npm run verify` 로만 확인할 수 있습니다.
 
 ---
 
