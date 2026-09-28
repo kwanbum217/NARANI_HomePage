@@ -2,8 +2,8 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-09-28
-> **버전**: v1.2.0
-> **상태**: Hallmark 재구성 적용 및 검증 통과. 7단계 게이트(타입 체크 포함). 결제·폼 백엔드 미연결
+> **버전**: v1.3.0
+> **상태**: Hallmark 재구성 적용 및 검증 통과. 8단계 게이트(타입 체크·폰트 서브셋 포함). 결제·폼 백엔드 미연결
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -19,9 +19,10 @@
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
 | 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts` |
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
-| 분석 도구 | 미연결 | `src/data/site.ts` 의 `gaMeasurementId` (빈 값). 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 dataLayer 로 보냅니다 |
+| 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 dataLayer 로 보냅니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
-| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 7단계 |
+| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계 |
+| 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift` |
 | 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 29파일, 에러 0 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
 | CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성 |
@@ -306,7 +307,15 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
    엔드포인트가 비어 있을 때 두 폼에 "전송되지 않습니다" 안내가 자동으로 보이게 했습니다.
    GA4 는 측정 ID가 있을 때만 태그가 삽입되며, 폼 전환 이벤트는 `src/scripts/app.js` 의
    `track()` 이 dataLayer 로 보냅니다. 서비스 페이지 시각 자료는 이번 회차 보류로 결정했습니다.
-   폰트 CDN 의존 제거는 별도 과업으로 진행 중입니다.
+   폰트 CDN 의존 제거도 2026-09-28에 끝냈습니다. Pretendard Variable 서브셋을
+   `public/fonts/` 로 내려 jsDelivr 의존을 없앴고, `preload` 로 바꿔 렌더 블로킹을
+   해제했습니다. 요청 10건이 1건으로 줄었고 용량은 58.9KB 에서 81.7KB 로 늘었습니다.
+   늘어난 만큼 서버 왕복이 사라졌고 jsDelivr 장애 시 폰트 없이 뜨지 않게 됩니다.
+   서브셋은 빌드가 그리는 문자만 담으므로, **새 한국어 카피를 추가할 때마다
+   `python3 scripts/build-font-subset.py` 를 먼저 돌려야 합니다.** 6단계
+   (`scripts/check-font-subset.swift`)가 서브셋 밖의 글자를 잡아 종료 코드 1 로
+   멈춥니다. 이 폰트는 가중치 400~900 축을 유지하며 `--font-display`(한국 세리프)과
+   `--font-body`(Pretendard) 역할 분리는 그대로입니다.
 Chrome 인터랙션, 스크롤바 원인, 본문 대비, CTA 치수는 2026-09-27에 이 문서의 Chrome 추가 실측 절로 승격했다.
 Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은 2026-09-27에 이 문서의 Firefox 추가 실측 절로 승격했다.
 
@@ -324,6 +333,7 @@ npm run verify
 
 - `astro check` 타입 에러
 - 빌드 실패
+- self-host 폰트 서브셋에 빌드가 그리는 문자가 없음
 - 깨진 참조 1건 이상
 - 콘솔 오류가 발생한 페이지 1개 이상. `src/scripts/app.js` 는 알 수 없는 폼 variant 를
   콘솔 에러로 올리므로, 페이지에 오타가 있어도 게이트가 멈춥니다

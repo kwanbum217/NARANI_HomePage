@@ -53,7 +53,7 @@ export const enquiryEndpoint = '';
  * 실사용 데이터가 없다고 "|ga| null" 로 오해하는 일을 막기 위해 값이 있는 경우에만
  * 스크립트를 내보냅니다.
  */
-export const gaMeasurementId = '';
+export const gaMeasurementId = 'G-R7CBGGMDFF';
 
 /**
  * Shared capability list. The `icon` markup is kept for future use but is not
