@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Pretendard Variable, self-hosted. Subset to the characters the built pages
+   actually render (see docs/context/CURRENT_STATE.md), weight axis 400-900.
+   font-display: swap keeps first paint off the font download; the preload in
+   BaseLayout.astro starts that download before this stylesheet is parsed. */
+@font-face {
+  font-family: "Pretendard Variable";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("/fonts/pretendard-variable-subset.woff2") format("woff2");
+}
+
 /* ==========================================================================
    NARANI / BIDBOX — design system
    Tokens are sampled from the source deck ("홈페이지 구성안").

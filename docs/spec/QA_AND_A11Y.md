@@ -13,7 +13,7 @@
 npm run verify
 ```
 
-`scripts/verify.sh` 는 다음 7단계를 순서대로 수행하고, 실패 시 종료 코드 1 을 반환합니다.
+`scripts/verify.sh` 는 다음 8단계를 순서대로 수행하고, 실패 시 종료 코드 1 을 반환합니다.
 
 ```mermaid
 flowchart LR
@@ -21,8 +21,9 @@ flowchart LR
   B --> C["3 서빙<br/>dist, 127.0.0.1:4322"]
   C --> D["4 링크 무결성<br/>check-links.mjs"]
   D --> E["5 렌더<br/>render.swift"]
-  E --> F["6 반응형·접근성<br/>a11y.swift"]
-  F --> G["7 인터랙션<br/>interact.swift"]
+  E --> F["6 폰트 서브셋<br/>check-font-subset.swift"]
+  F --> G["7 반응형·접근성<br/>a11y.swift"]
+  G --> H["8 인터랙션<br/>interact.swift"]
 ```
 
 ---
@@ -107,7 +108,7 @@ macOS 또는 macOS 러너에서만 실행됩니다.
 })();
 ```
 
-`scripts/verify.sh` 의 7단계에 `"/경로/|1440x900|scripts/audit/checks/example.js"` 를
+`scripts/verify.sh` 의 8단계에 `"/경로/|1440x900|scripts/audit/checks/example.js"` 를
 추가합니다.
 
 새 페이지를 추가하면 `scripts/verify.sh` 의 `PAGES` 와 `NARROW` 배열에도 추가합니다.
