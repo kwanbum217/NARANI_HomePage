@@ -28,7 +28,7 @@ npm run build
 | --- | --- |
 | 출력 모드 | `static` |
 | 출력 위치 | `dist/` |
-| 생성 페이지 | 7 |
+| 생성 페이지 | 8 (404.html 포함) |
 | 라우트 형식 | `directory` (예: `/bidbox/service/index.html`) |
 | 소요 시간 | 1초 미만 (측정값은 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md)) |
 
@@ -37,11 +37,12 @@ npm run build
 ```
 dist/
 ├── index.html
+├── 404.html
 ├── company/index.html
 ├── bidbox/index.html
 ├── bidbox/{service,pricing,demo,contact}/index.html
 ├── robots.txt          prerendered 엔드포인트
-├── sitemap.xml         prerendered 엔드포인트 (7개 경로)
+├── sitemap.xml         prerendered 엔드포인트 (색인 대상 7개, 404 제외)
 ├── og.svg, og.png      공유 이미지 (public/ 에서 복사)
 └── _astro/            번들된 CSS 와 JS (해시 파일명)
 ```
@@ -106,8 +107,10 @@ Referrer-Policy: strict-origin-when-cross-origin
 X-Frame-Options: SAMEORIGIN
 ```
 
-외부에서 불러오는 리소스는 Pretendard 폰트 CDN(jsDelivr) 하나입니다. CSP 를 도입할
-경우 이 도메인을 허용해야 합니다.
+외부에서 불러오는 리소스는 없습니다. 폰트는 `public/fonts/pretendard-variable-subset.woff2`
+로 self-host 하며 `src/layouts/BaseLayout.astro` 에서 preload 합니다(`src/styles/global.css`
+의 `@font-face` 도 같은 파일을 사용합니다). 따라서 CSP 를 도입해도 외부 출처를 허용할
+필요가 없습니다.
 
 ---
 
@@ -133,7 +136,7 @@ X-Frame-Options: SAMEORIGIN
 
 | 항목 | 상태 |
 | --- | --- |
-| `sitemap.xml` | 추가. `src/pages/sitemap.xml.ts` prerendered 엔드포인트가 7개 경로를 생성 |
+| `sitemap.xml` | 추가. `src/pages/sitemap.xml.ts` prerendered 엔드포인트가 색인 대상 7개(404 제외)를 생성 |
 | `robots.txt` | 추가. `src/pages/robots.txt.ts` prerendered 엔드포인트가 sitemap URL 을 안내 |
 | OG 이미지 | 추가. `public/og.svg`(1200x630)와 `og.png`, `BaseLayout` 에 og/twitter 메타 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
@@ -150,9 +153,11 @@ X-Frame-Options: SAMEORIGIN
 
 | 단계 | 내용 |
 | --- | --- |
-| 저장소 규칙 | 이모지 금지 검사 |
-| 빌드 | `astro build` |
-| 링크 무결성 | `dist/` 내부 참조 검사 |
+| 저장소 규칙 | 이모지 금지 검사 (`npm run check:emoji`) |
+| 타입 체크 | `npm run check` (`astro check`) |
+| 빌드 | `npm run build` |
+| 링크 무결성 | `npm run links` (`dist/` 내부 참조 검사) |
+| sitemap 무결성 | `npm run check:sitemap` (`sitemap.xml` 과 실제 페이지 대조) |
 | 산출물 | 페이지 목록과 번들 크기 요약, `dist/` 아티팩트 업로드 |
 
 브라우저 검증(`scripts/verify.sh`)은 macOS WebKit 을 사용하므로 CI 에서 실행하지

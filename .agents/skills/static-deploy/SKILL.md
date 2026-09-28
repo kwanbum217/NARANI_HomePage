@@ -55,15 +55,16 @@ Referrer-Policy: strict-origin-when-cross-origin
 X-Frame-Options: SAMEORIGIN
 ```
 
-외부에서 불러오는 리소스는 Pretendard 폰트 CDN 하나입니다. CSP 를 도입할 경우
-`cdn.jsdelivr.net` 을 허용해야 합니다.
+외부에서 불러오는 리소스는 없습니다. 폰트는 `public/fonts/pretendard-variable-subset.woff2`
+로 self-host 하며 `src/layouts/BaseLayout.astro` 에서 preload 합니다. 따라서 CSP 를
+도입해도 외부 출처를 허용할 필요가 없습니다.
 
 ## 배포 전 체크리스트
 
 - [ ] `npm run verify` 통과
 - [ ] `site` 값이 실제 도메인
 - [ ] 열린 항목 중 미연결 기능(폼, 결제)이 공개되어도 문제가 없는지 확인
-      [`../../docs/context/CURRENT_STATE.md`](../../docs/context/CURRENT_STATE.md) 4장
+      [`../../../docs/context/CURRENT_STATE.md`](../../../docs/context/CURRENT_STATE.md) 4장
 - [ ] WebKit 외 브라우저와 실기기에서 육안 확인
 - [ ] 이전 배포로 되돌리는 방법 확인
 
@@ -77,12 +78,12 @@ npm run build
 # 업로드
 ```
 
-## 미구현
+## 구현 상태
 
 | 항목 | 상태 |
 | --- | --- |
+| `sitemap.xml` | 구현 완료. 근거: `src/pages/sitemap.xml.ts` (prerendered 엔드포인트) |
+| `robots.txt` | 구현 완료. 근거: `src/pages/robots.txt.ts` (prerendered 엔드포인트) |
+| OG 이미지 | 구현 완료. 근거: `public/og.svg`, `public/og.png`, `src/layouts/BaseLayout.astro` 의 og/twitter 메타 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
-| `sitemap.xml` | 미추가. `@astrojs/sitemap` 으로 추가 가능 |
-| `robots.txt` | 미추가 |
-| OG 이미지 | 미추가. `public/` 에 두고 `BaseLayout` 메타에 연결 |
 | 배포 후 스모크 테스트 | 미구성 |
