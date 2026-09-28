@@ -8,8 +8,7 @@
  *
  * 파생 출처:
  * - 다이얼로그 제목/금액  : src/data/pricing.ts 의 featured 플랜 + src/pages/bidbox/pricing.astro 의 표기 규칙
- * - 폼 첫 오류 문구       : src/scripts/app.js 의 nameError 기본값
- * - 폼 전송 중 라벨/접수 표시 : src/pages/bidbox/contact.astro
+ * - 폼 오류 문구/라벨/접수 표시 : src/data/enquiry.ts 의 contact 카피
  *
  * 사용법: node scripts/audit/expected.mjs
  * 표준 출력은 체크 스크립트 앞에 주입할 JS 한 줄(window.__expected)입니다.
@@ -19,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { plans } from '../../src/data/pricing.ts';
+import { enquiryForms } from '../../src/data/enquiry.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
@@ -40,28 +40,19 @@ function pick(source, regex, label, rel) {
   return m[1];
 }
 
-const appJs = readSource('src/scripts/app.js');
-const contactAstro = readSource('src/pages/bidbox/contact.astro');
 const pricingAstro = readSource('src/pages/bidbox/pricing.astro');
 
-const nameError = pick(
-  appJs,
-  /\?\s*options\.nameError\s*:\s*'([^']*)'/,
-  '폼 nameError 기본값',
-  'src/scripts/app.js',
-);
-const busyLabel = pick(
-  contactAstro,
-  /busy\s*\?\s*'([^']*)'\s*:/,
-  '폼 전송 중 라벨',
-  'src/pages/bidbox/contact.astro',
-);
-const successText = pick(
-  contactAstro,
-  /status === 'sent'[\s\S]*?<h2[^>]*>([^<]+)<\/h2>/,
-  '접수 완료 표시',
-  'src/pages/bidbox/contact.astro',
-);
+const contactCopy = enquiryForms.contact;
+if (!contactCopy) {
+  throw new Error('src/data/enquiry.ts 에 contact 카피가 없습니다.');
+}
+for (const key of ['nameError', 'emailError', 'emailFormatError', 'messageError', 'submitLabel', 'busyLabel', 'successTitle', 'resetLabel']) {
+  if (typeof contactCopy[key] !== 'string' || contactCopy[key].trim() === '') {
+    throw new Error(`src/data/enquiry.ts 의 contact.${key} 가 비어 있습니다.`);
+  }
+}
+const { nameError, busyLabel, successTitle: successText } = contactCopy;
+
 const dialogSuffix = pick(
   pricingAstro,
   /selected\.label\s*\+\s*'([^']*)'/,
