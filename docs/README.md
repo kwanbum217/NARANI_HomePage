@@ -63,6 +63,16 @@ docs/
 | 브랜드 기준 | [`BRAND.md`](design/BRAND.md) | 브랜드명, 로고, 색 역할, 보이스, 금지 표현 |
 | 슬라이드 매핑 | [`DECK_TO_SITE_MAP.md`](design/DECK_TO_SITE_MAP.md) | 9장 대응표, 추출 파이프라인, 좌표 근거 |
 | 아키텍처 결정 | [`ADR-0001-astro-static-marketing-site.md`](design/ADR-0001-astro-static-marketing-site.md) | Astro 채택 배경, 검토한 대안, 결과 |
+| 접근성 터치 검토 | [`A11Y_TOUCH_REVIEW.md`](design/A11Y_TOUCH_REVIEW.md) | 접근성·터치 타겟 검토 |
+| 오류 안내 표면 검토 | [`ERROR_GUIDANCE_REVIEW.md`](design/ERROR_GUIDANCE_REVIEW.md) | 로고·이메일 등 안내 표면 검토 |
+| 폼 오류 검토 | [`FORM_ERROR_REVIEW.md`](design/FORM_ERROR_REVIEW.md) | 폼 오류 속성과 초점 이동 검토 |
+| Hallmark 재구성 기준 | [`HALLMARK_REDESIGN.md`](design/HALLMARK_REDESIGN.md) | Hallmark 재구성 구현 기준 |
+| Hallmark 재구성 검토 | [`HALLMARK_REVIEW.md`](design/HALLMARK_REVIEW.md) | Hallmark 재구성 검토 |
+| head·noindex 검토 | [`HEAD_AND_NOINDEX_REVIEW.md`](design/HEAD_AND_NOINDEX_REVIEW.md) | head 메타와 noindex 검토 |
+| 404 검토 | [`NOT_FOUND_REVIEW.md`](design/NOT_FOUND_REVIEW.md) | 404 페이지 검토 |
+| 접수 안내 검토 | [`RECEIPT_REVIEW.md`](design/RECEIPT_REVIEW.md) | 문의 접수 표시 검토 |
+| 검색 노출 검토 | [`SEO_REVIEW.md`](design/SEO_REVIEW.md) | SEO 메타 검토 |
+| 구조화 데이터 검토 | [`STRUCTURED_DATA_REVIEW.md`](design/STRUCTURED_DATA_REVIEW.md) | JSON-LD 구조화 데이터 검토 |
 
 ---
 
