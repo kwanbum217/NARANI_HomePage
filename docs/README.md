@@ -133,6 +133,7 @@ docs/
 | 2026-09-27 | [`handoff/2026-09-27_gate_and_promotion.md`](handoff/2026-09-27_gate_and_promotion.md) | 정본 승격, Firefox 측정, 검증 게이트 |
 | 2026-09-28 | [`handoff/2026-09-28_gate_recommendations.md`](handoff/2026-09-28_gate_recommendations.md) | 게이트 권고와 인수인계 |
 | 2026-09-28 | [`handoff/2026-09-28_expected_gate_and_review.md`](handoff/2026-09-28_expected_gate_and_review.md) | 기대값 게이트와 검토 |
+| 2026-09-29 | [`handoff/2026-09-29_queue.md`](handoff/2026-09-29_queue.md) | 시각 자료 완료와 남은 사람 결정. 현재 인수인계 |
 
 새 세션은 [`context/CURRENT_STATE.md`](context/CURRENT_STATE.md) 5장 열린 항목에서
 읽고 시작하십시오. 이 인덱스에는 세션 진행 상황이 없습니다.
