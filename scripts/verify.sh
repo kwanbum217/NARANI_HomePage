@@ -194,6 +194,7 @@ Q_REJECT_BARE="$(read_query rejectBareNumberQuery)"
 EXPECT_JS="$OUT/expected.js" swift scripts/audit/interact.swift "$BASE" \
   "/company/|390x900|scripts/audit/checks/nav.js" \
   "/bidbox/contact/|390x1400|scripts/audit/checks/form.js" \
+  "/bidbox/demo/|390x1400|scripts/audit/checks/form.js" \
   "/bidbox/pricing/|1440x1200|scripts/audit/checks/dialog.js" \
   "/bidbox/contact/${Q_ACCEPT}|390x1400|scripts/audit/checks/prefill.js" \
   "/bidbox/contact/${Q_REJECT_TRUNCATED}|390x1400|scripts/audit/checks/prefill-reject.js" \

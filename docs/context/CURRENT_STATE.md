@@ -21,7 +21,7 @@
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
 | 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 `gtag('event', ...)` 로 보냅니다. 일반 객체로 `dataLayer.push` 하면 gtag.js 가 콘솔 오류 없이 조용히 무시하므로 형식이 고정되어 있습니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
-| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 9개입니다(4단계 2개, 5단계 2개, 8단계 3개) |
+| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 10개입니다(4단계 2개, 5단계 2개, 8단계 4개) |
 | 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift` |
 | 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 29파일, 에러 0 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
@@ -407,6 +407,37 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
    `--font-body`(Pretendard) 역할 분리는 그대로입니다.
 Chrome 인터랙션, 스크롤바 원인, 본문 대비, CTA 치수는 2026-09-27에 이 문서의 Chrome 추가 실측 절로 승격했다.
 Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은 2026-09-27에 이 문서의 Firefox 추가 실측 절로 승격했다.
+
+16. **완료.** 폼 필드 접근성 2026-09-29. 문의·데모 폼의 텍스트 입력에 필수 표시와
+   길이 제한이 없었습니다. 게이트 8단계는 Alpine 검증 결과만 검사해서 이 결함을
+   잡지 못하고 통과했습니다. 2026-09-29에 보강했습니다.
+   필수 표시는 `aria-required="true"` 입니다. 폼에 `novalidate` 가 있고 검증은 Alpine 이
+   하므로 `required` 를 넣지 않았습니다. `required` 는 브라우저 네이티브 툴팁이
+   Alpine 검증과 별개로 떠 이중 메시지가 됩니다.
+   길이 상한은 `src/data/enquiry.ts` 에 두고(성함 100, 이메일 254, 문의내용 2000) 페이지가
+   거기서 읽습니다. 이메일 254 는 RFC 5321 최대 경로 길이이고, 나머지 두 값은 무한
+   입력 방지용 상한입니다. 근거 문서가 없습니다.
+   실측(Chrome, 빌드 후 서빙): `aria-required` 와 `maxlength` 가 7개 필드 전부 DOM 에
+   있고, 키 입력으로 120자를 넣었을 때 100자에서 멈춥니다.
+   게이트에 검사를 추가했습니다(`scripts/audit/expected.mjs` 가 정본에서 파생,
+   `scripts/audit/checks/form.js` 가 대조). `d-notice`(관심 공고)는 검증 대상이 아니라
+   `aria-required` 가 없는 것을 기대값으로 삼습니다. 실행 경로는 `scripts/verify.sh` 에
+   demo 를 추가해 8단계 항목이 9개에서 10개로 늘었습니다.
+   음성 검증: `aria-required` 를 지우면 종료 코드 1 과
+   `성명 필드(c-name)의 aria-required 가 true 가 아닙니다 (값: null).`,
+   `maxlength` 를 지우면 `이메일 필드(c-email)의 maxlength 가 254 가 아닙니다 (값: null).`
+   로 멈춥니다. 되돌리면 종료 코드 0.
+17. **미검증.** 요금 다이얼로그 포커스 트랩. 주문 확인 다이얼로그(`showModal`)가 열린
+   상태에서 Tab 을 8회 누르면 3개 포커스 요소를 순환하다가 4번째에 `BODY` 로 새어
+   나옵니다. 5번째부터 다시 다이얼로그 안으로 돌아옵니다. Chrome DevTools Protocol
+   `Input.dispatchKeyEvent` 로 측정했고 2회 실행해 결과가 같았습니다. WCAG 2.4.3
+   포커스 순서 위반이며 스크린리더 사용자는 배경 내용을 읽게 됩니다.
+   게이트에 넣지 않았습니다. `scripts/audit/interact.swift` 는 `evaluateJavaScript` 로
+   스크립트를 실행할 뿐 키 이벤트를 보내지 않아 브라우저의 실제 Tab 순환 로직을
+   타지 못하기 때문입니다. Chrome 과 게이트 환경인 WKWebView 의 동작이 다를 수
+   있으므로 Chrome 측정만으로 판정하지 않았습니다.
+   닫은 뒤 포커스가 열기 전 버튼으로 복귀하지 않고 `BODY` 에 남는 것도 함께
+   관찰됐습니다.
 
 ---
 
