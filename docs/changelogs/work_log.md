@@ -6,6 +6,45 @@
 
 ---
 
+## 2026-09-29 — 서비스 페이지 기능 행 아이콘 표시
+
+### 범위
+
+2026-09-28에 보류했던 서비스 페이지 시각 자료를 사용자가 재개했습니다. 서비스 페이지
+핵심 기능 3행에 기존 `capabilities.icon` 을 제목 옆 24px 마크로 그립니다.
+
+### 변경
+
+| 항목 | 내용 |
+| --- | --- |
+| 아이콘 표시 | `src/pages/bidbox/service.astro` 핵심 기능 행의 제목 옆에 `set:html={capability.icon}` 로 24px SVG 를 넣습니다. path 를 마크업에 복제하지 않고 데이터에서만 옵니다 |
+| 마크 스타일 | `src/styles/global.css` 의 `.rows` 근처에 `.cap-mark`(24px, `flex-shrink: 0`)를 추가했습니다. 색은 `currentColor` 를 유지합니다 |
+| 데이터 주석 | `src/data/site.ts` 의 `capabilities` 주석을 아이콘이 서비스 페이지 행에서 렌더된다고 고쳤습니다. `icon` 문자열 값은 바꾸지 않았습니다 |
+| 문서 | `docs/context/CURRENT_STATE.md` 5장 6번을 완료로, `docs/analysis/고도화_후보_20260928.md` 머리말과 4순위, `docs/handoff/2026-09-29_queue.md` 2장, `docs/design/HALLMARK_REDESIGN.md` 5.1 을 재개 내용으로 갱신했습니다 |
+
+### 건드리지 않은 것
+
+- 배포, 결제, 문의·데모 접수 API. 이번 범위가 아니며 보류 결정을 그대로 둡니다.
+- 허브(`/bidbox/`) 아이콘. 허브는 specimen 이므로 아이콘 없이 둡니다.
+- 3열 카드와 아이콘 타일. 복원하지 않았습니다.
+- Alpine 지점. 추가하지 않았습니다.
+
+### 검증
+
+워커는 `npm run check:emoji` 만 실행했습니다. 코디네이터가 워크트리에서
+`npm run verify` 를 실행해 종료 코드 0 으로 통과했습니다. Node 26.10.0,
+서빙 포트 64704(자동 배정)입니다. 8단계가 모두 통과했습니다. 대비 등 실측
+수치는 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 가 정본이므로
+이 일지에 옮기지 않습니다.
+
+### 남은 것
+
+- 원격 푸시는 사용자 지시가 있을 때 합니다.
+- 배포, 결제, 문의·데모 접수 API 는 보류입니다.
+- Chrome, Firefox, 실기기 확인은 [`../ops/BUILD_AND_DEPLOY.md`](../ops/BUILD_AND_DEPLOY.md) 5장의 사람 점검이며 이번 검증에 넣지 않았습니다.
+
+---
+
 ## 2026-09-23 — 저장소 최초 구성 및 1차 구현
 
 ### 범위

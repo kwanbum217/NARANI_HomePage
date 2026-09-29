@@ -56,9 +56,9 @@ export const enquiryEndpoint = '';
 export const gaMeasurementId = 'G-R7CBGGMDFF';
 
 /**
- * Shared capability list. The `icon` markup is kept for future use but is not
- * rendered on any page: the catalogue and specimen layouts are icon-free.
- * Stroke is `currentColor` so the glyph follows the surrounding text colour.
+ * Shared capability list. The `icon` markup is rendered beside each row title
+ * on the service page. Stroke is `currentColor` so the glyph follows the
+ * surrounding text colour.
  */
 export const capabilities: { title: string; body: string; icon: string }[] = [
   {
