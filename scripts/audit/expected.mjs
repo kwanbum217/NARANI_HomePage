@@ -9,6 +9,8 @@
  * 파생 출처:
  * - 다이얼로그 제목/금액  : src/data/pricing.ts 의 featured 플랜 + src/pages/bidbox/pricing.astro 의 표기 규칙
  * - 폼 오류 문구/라벨/접수 표시 : src/data/enquiry.ts 의 contact 카피
+ * - 폼 필드 aria-required/maxlength : src/data/enquiry.ts 의 contact·demo 카피 상한
+ *   (필드 id 는 src/pages/bidbox/contact.astro, demo.astro 마크업에서 읽은 값)
  *
  * 사용법: node scripts/audit/expected.mjs
  * 표준 출력은 체크 스크립트 앞에 주입할 JS 한 줄(window.__expected)입니다.
@@ -53,6 +55,29 @@ for (const key of ['nameError', 'emailError', 'emailFormatError', 'messageError'
   }
 }
 const { nameError, busyLabel, successTitle: successText } = contactCopy;
+
+const demoCopy = enquiryForms.demo;
+if (!demoCopy) {
+  throw new Error('src/data/enquiry.ts 에 demo 카피가 없습니다.');
+}
+
+// 폼 필드의 aria-required 와 maxlength 기대값입니다.
+// 상한은 화면에 하드코딩하지 않고 src/data/enquiry.ts 에서 파생합니다.
+// id 는 각 페이지 마크업(src/pages/bidbox/contact.astro, demo.astro)에서 읽은 값입니다.
+// 마지막 인자(noticeId)는 선택 필드입니다. 선택 필드는 aria-required 가 없어야 하므로
+// ariaRequired: false 로 두고, 검사는 속성이 없는지(null)로 판정합니다.
+const fieldSpec = (copy, nameId, emailId, messageId, noticeId) => {
+  const out = [];
+  out.push({ id: nameId, ariaRequired: true, maxLength: copy.nameMaxLength });
+  out.push({ id: emailId, ariaRequired: true, maxLength: copy.emailMaxLength });
+  out.push({ id: messageId, ariaRequired: true, maxLength: copy.messageMaxLength });
+  if (noticeId) out.push({ id: noticeId, ariaRequired: false, maxLength: copy.messageMaxLength });
+  return out;
+};
+
+// 관심 공고(d-notice)는 검증 대상이 아니라 aria-required 를 두지 않습니다.
+const contactFields = fieldSpec(contactCopy, 'c-name', 'c-email', 'c-message');
+const demoFields = fieldSpec(demoCopy, 'd-company', 'd-email', 'd-message', 'd-notice');
 
 const dialogSuffix = pick(
   pricingAstro,
@@ -111,7 +136,24 @@ const expected = {
     rejectScriptQuery: '?plan=' + encodeURIComponent('<script>alert(1)</script>'),
     rejectBareNumberQuery: '?plan=' + encodeURIComponent(String(dialogPlan.price)),
   },
-  form: { nameError, busyLabel, successText },
+  // 기존 평면 키(nameError/busyLabel/successText)는 contact 기준이며 그대로 둡니다.
+  // 다른 단언이 이 키를 쓰고 있으므로 대체하지 않고 fields 를 더합니다.
+  form: {
+    nameError,
+    busyLabel,
+    successText,
+    // 페이지별 필드 속성 기대값. 폼 검사가 location.pathname 으로 자기 페이지를 고릅니다.
+    fields: {
+      contact: contactFields,
+      demo: demoFields,
+    },
+    // demo 페이지는 카피가 달라(회사명/신청 접수) 흐름 단언에 쓸 값을 따로 둡니다.
+    demo: {
+      nameError: demoCopy.nameError,
+      busyLabel: demoCopy.busyLabel,
+      successText: demoCopy.successTitle,
+    },
+  },
   // 폼 실패 시 degrade 경로 카피. 주소는 brand 정본에서, 라벨은 enquiryFallback
   // 정본에서 읽습니다. 검사에 카피를 하드코딩하면 정본이 바뀌어도 옛 문구를 검사해
   // 조용히 통과합니다.
