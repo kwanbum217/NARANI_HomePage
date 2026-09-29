@@ -1,9 +1,12 @@
 # Orca 워커 운용 명세 (cmd 주력)
 
 > **작성일**: 2026-09-25
-> **수정일**: 2026-09-28
-> **버전**: v1.6.0
+> **수정일**: 2026-09-29
+> **버전**: v1.7.0
 > **상태**: 확정. 2026-09-25 브라우저 비교 세션에서 cmd 워커가 멈춘 원인을 근거로 작성.
+> v1.7.0 은 리뷰어 에이전트를 opencode 에서 kilo 로 바꾸고 모델을
+> `openrouter/stealth/space-bunny-alpha` (variant `max`) 로 정합니다. 2026-09-29
+> 사용자 결정입니다. 나머지 장은 v1.6.0 과 같습니다.
 > 2026-09-26 세션에서 cmd 자체 플래그(`--model`, `--skip-onboarding`, `--no-auto-update`) 사용법을 반영.
 > v1.3.0 은 `scripts/verify.sh` 의 자동 포트 배정(2026-09-28)을 반영합니다. 명세에 포트를
 > 적지 않아도 됩니다. v1.4.0 은 5장을 5.1~5.3 으로 나누고 표가 깨져 있던 지점을
@@ -24,7 +27,7 @@
 | --- | --- | --- | --- |
 | 코디네이터 | Claude Code 또는 Command Code (2026-09-26 세션은 Command Code) | 세션 모델 | 해당 없음 |
 | 주력 워커 | Command Code (`cmd`) | 세션마다 지정 (2026-09-26 은 `z-ai/glm-5.3-flash`) | 기동 명령의 `--model` 인자 |
-| 리뷰어 | opencode | `opencode/muse-spark-1.3-contributor-free` | 기동 명령의 `-m` 인자 |
+| 리뷰어 | kilo | `openrouter/stealth/space-bunny-alpha` (variant `max`) | 기동 명령의 `-m` 인자. variant 는 4.5 |
 
 워커와 리뷰어를 서로 다른 모델 계열로 둡니다. 리뷰는 구현 워커가 `worker_done` 을 보낸 뒤에만
 시작합니다.
@@ -79,7 +82,7 @@ flowchart TD
 | 4 | `orca orchestration dispatch --task <task_id> --to <handle> --run <run_id> --inject --json` | 응답의 `injected` 가 `true` 인지 봅니다 |
 | 5 | `orca terminal read --terminal <handle>` | 화면에 `=== TASK ===` 와 첫 도구 호출이 보이면 착수한 것입니다 |
 
-리뷰어는 2단계 명령만 `opencode -m opencode/muse-spark-1.3-contributor-free` 로 바꿉니다.
+리뷰어는 2단계 명령만 `kilo -m openrouter/stealth/space-bunny-alpha` 로 바꿉니다.
 리뷰어는 코드를 고치지 않으므로 yolo 를 쓰지 않습니다.
 
 ---
@@ -123,7 +126,27 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | 증상 | 원인 | 규칙 |
 | --- | --- | --- |
 | codex 가 과업 대신 `brew upgrade --cask codex` 를 실행하고 종료 | 기동 화면의 업데이트 안내가 주입된 Enter 를 받음 | codex 는 주력이 아닙니다. 써야 하면 먼저 수동으로 띄워 업데이트 안내를 넘긴 뒤 주입합니다 |
-| opencode 가 다른 모델로 뜸 | 기본 모델이 `~/.config/opencode/opencode.json` 설정을 따름 | 리뷰어는 `-m` 으로 모델을 명시합니다. `worker-start --agent opencode` 는 모델을 지정할 수 없어 쓰지 않습니다 |
+| kilo 가 다른 모델로 뜸 | 기본 모델이 `~/.config/kilo/kilo.jsonc` 의 `model` 설정을 따름 | 리뷰어는 `-m` 으로 모델을 명시합니다. `worker-start` 는 kilo 에 모델 선택을 지원하지 않으므로 쓰지 않습니다 |
+| kilo 리뷰어가 variant 없이 뜨거나 다른 effort 로 뜸 | TUI 루트 명령에는 variant 플래시가 없음 | 4.5 를 보십시오 |
+
+### 4.5 kilo 리뷰어의 variant 는 기동 명령이 아니라 상태 파일이 정합니다
+
+2026-09-29 실측입니다. `kilo` 의 TUI 루트 명령(`kilo`, `kilo <project>`)에는
+`--variant` 플래그가 없습니다. 있는 것은 `kilo run` 서브명령뿐이고, TUI 경로에서는
+쓸 수 없습니다. 모델 문자열로 variant 를 덧붙이는 방법도 없습니다
+(`openrouter/stealth/space-bunny-alpha#max` 와 `:max` 는 모두 `Model not found` 로
+실패함을 확인했습니다).
+
+TUI 는 `~/.local/state/kilo/model.json` 의 `variant` 객체에서 모델별 저장값을 읽습니다.
+2026-09-29 확인한 값은 `openrouter/stealth/space-bunny-alpha` 와
+`kilo/stealth/space-bunny-alpha` 가 모두 `max` 였습니다. 그래서 3장 기동 명령에는
+`-m openrouter/stealth/space-bunny-alpha` 만 적으면 variant `max` 가 적용됩니다.
+
+**저장값이 없으면 조용히 기본 effort 로 떨어집니다.** 리뷰어 기동 전에 이 파일의
+해당 키를 확인하십시오. 없으면 TUI 안에서 `/variant` 또는 `Shift+Tab` 으로 직접
+선택해야 하며, 그때는 사용자가 화면에서 봐야 합니다. variant 의 출처는
+`~/.config/kilo/kilo.jsonc` 의 `provider.openrouter.models.stealth/space-bunny-alpha.variants`
+정의이며 `low`·`medium`·`high`·`xhigh`·`max` 다섯 개입니다.
 
 ---
 
