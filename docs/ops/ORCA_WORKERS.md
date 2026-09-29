@@ -2,11 +2,14 @@
 
 > **작성일**: 2026-09-25
 > **수정일**: 2026-09-29
-> **버전**: v1.7.0
+> **버전**: v1.8.0
 > **상태**: 확정. 2026-09-25 브라우저 비교 세션에서 cmd 워커가 멈춘 원인을 근거로 작성.
 > v1.7.0 은 리뷰어 에이전트를 opencode 에서 kilo 로 바꾸고 모델을
 > `openrouter/stealth/space-bunny-alpha` (variant `max`) 로 정합니다. 2026-09-29
-> 사용자 결정입니다. 나머지 장은 v1.6.0 과 같습니다.
+> 사용자 결정입니다. v1.8.0 은 리뷰어에도 승인 창 제거를 적용합니다. v1.7.0 은
+> 리뷰어에 yolo 를 쓰지 않는다는 문장을 두었는데, 2026-09-29 실측으로 그것이
+> R2 리뷰어를 `Permission required` 화면에 멈추게 한 것이 확인되어 폐기했습니다.
+> 나머지 장은 v1.6.0 과 같습니다.
 > 2026-09-26 세션에서 cmd 자체 플래그(`--model`, `--skip-onboarding`, `--no-auto-update`) 사용법을 반영.
 > v1.3.0 은 `scripts/verify.sh` 의 자동 포트 배정(2026-09-28)을 반영합니다. 명세에 포트를
 > 적지 않아도 됩니다. v1.4.0 은 5장을 5.1~5.3 으로 나누고 표가 깨져 있던 지점을
@@ -72,7 +75,16 @@ flowchart TD
   C -->|"Ask your question... 대기"| E["dispatch --inject<br/>과업 주입"]
   E --> F["check --wait<br/>worker_done 대기"]
   F --> G["산출물 확인 후<br/>terminal close"]
+
+  H["리뷰어 기동<br/>kilo -m &lt;모델&gt; --auto"] --> I["terminal read<br/>Code auto 확인"]
+  I --> E
+  E --> F
 ```
+
+**리뷰어가 멈추지 않게 하는 것이 요건입니다.** 2026-09-29 실측으로 `--auto` 없이
+띄운 kilo 리뷰어가 `Permission required` 화면에서 멈춰 산출물을 만들지 못했습니다.
+승인 창에 사람이 매번 눌러 주어야 하는 워커는 리뷰를 수행하는 도구가 아닙니다.
+화면에 `Code auto` 가 보인 뒤에 주입하십시오.
 
 | 단계 | 명령 | 비고 |
 | --- | --- | --- |
@@ -82,8 +94,21 @@ flowchart TD
 | 4 | `orca orchestration dispatch --task <task_id> --to <handle> --run <run_id> --inject --json` | 응답의 `injected` 가 `true` 인지 봅니다 |
 | 5 | `orca terminal read --terminal <handle>` | 화면에 `=== TASK ===` 와 첫 도구 호출이 보이면 착수한 것입니다 |
 
-리뷰어는 2단계 명령만 `kilo -m openrouter/stealth/space-bunny-alpha` 로 바꿉니다.
-리뷰어는 코드를 고치지 않으므로 yolo 를 쓰지 않습니다.
+리뷰어는 2단계 명령만 `kilo -m openrouter/stealth/space-bunny-alpha --auto` 로 바꿉니다.
+
+**리뷰어도 승인 창을 없애야 합니다.** 2026-09-29 실측입니다. 리뷰어는 파일을
+고치지 않지만 셸을 씁니다. `git diff`·`git rev-parse`·`ls`·`grep` 같은 읽기 전용
+명령도 kilo 는 허가를 요청하고, 그때 리뷰어는 `Permission required` 화면에서
+멈춥니다. "읽기 전용"은 "파일을 안 고친다"일 뿐 "명령 승인이 필요 없다"가 아닙니다.
+이 때문에 R2 리뷰어가 승인 대기에서 멈춰 산출물을 못 만들고 있었습니다.
+
+`--auto` 는 "명시적으로 거부되지 않은 허가를 자동 승인"하는 플래그입니다. cmd 의
+`--permission-mode yolo` 와 같은 자리입니다. 리뷰어는 읽기 전용이므로 이 모드가
+놓치는 위험이 있습니다. 남는 위험은 리뷰어가 의도치 않게 파일을 고치는 것인데,
+그래도 멈추는 것보다 낫습니다. 멈춘 리뷰어는 산출물이 없어 리뷰가 산출되지 않습니다.
+
+4.3 절의 "명령마다 승인 창 → yolo 없이 기동" 규칙은 **리뷰어에도 그대로 적용됩니다.**
+이 문서에는 리뷰어 예외가 없습니다.
 
 ---
 
@@ -119,7 +144,7 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | 증상 | 원인 | 규칙 |
 | --- | --- | --- |
 | "Build Your Coding Taste" 선택 창 | 같은 프로젝트에 Codex 세션 기록이 있음 | 기동 명령에 `--skip-onboarding` 을 붙인 2026-09-26 세션에서는 창이 뜨지 않았습니다(1회 관찰). 창이 뜨면 아래 화살표로 `2. Skip` 을 고른 뒤 Enter 를 보냅니다. `n`(never)은 사용자 설정이므로 누르지 않습니다 |
-| 명령마다 승인 창 | yolo 없이 기동 | 구현 워커는 반드시 yolo 로 기동합니다 |
+| 명령마다 승인 창 | yolo 없이 기동 | 구현 워커는 반드시 yolo(`--permission-mode yolo`)로 기동합니다. **리뷰어도 예외가 아닙니다.** 리뷰어는 읽기 전용 명령에도 허가를 요청합니다. kilo 리뷰어는 `--auto` 로 기동하십시오. 2026-09-29 실측으로 `--auto` 없이 띄운 R2 리뷰어가 `Permission required` 화면에서 멈춰 산출물을 만들지 못했습니다 |
 
 ### 4.4 다른 워커 에이전트
 
