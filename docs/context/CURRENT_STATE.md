@@ -427,18 +427,29 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
    `성명 필드(c-name)의 aria-required 가 true 가 아닙니다 (값: null).`,
    `maxlength` 를 지우면 `이메일 필드(c-email)의 maxlength 가 254 가 아닙니다 (값: null).`
    로 멈춥니다. 되돌리면 종료 코드 0.
-17. **미검증.** 요금 다이얼로그 포커스 트랩. 주문 확인 다이얼로그(`showModal`)가 열린
-   상태에서 Tab 을 8회 누르면 3개 포커스 요소를 순환하다가 4번째에 `BODY` 로 새어
-   나옵니다. 5번째부터 다시 다이얼로그 안으로 돌아옵니다. Chrome DevTools Protocol
-   `Input.dispatchKeyEvent` 로 측정했고 2회 실행해 결과가 같았습니다. WCAG 2.4.3
-   포커스 순서 위반이며 스크린리더 사용자는 배경 내용을 읽게 됩니다.
-   게이트에 넣지 않았습니다. `scripts/audit/interact.swift` 는 `evaluateJavaScript` 로
-   스크립트를 실행할 뿐 키 이벤트를 보내지 않아 브라우저의 실제 Tab 순환 로직을
-   타지 못하기 때문입니다. Chrome 과 게이트 환경인 WKWebView 의 동작이 다를 수
-   있으므로 Chrome 측정만으로 판정하지 않았습니다.
-   닫은 뒤 포커스가 열기 전 버튼으로 복귀하지 않고 `BODY` 에 남는 것도 함께
-   관찰됐습니다.
-
+17. **해소됨. 결함 아님.** 요금 다이얼로그 포커스 순서. 처음에는 주문 확인
+   다이얼로그(`showModal`)가 열린 상태에서 Tab 을 누르면 4번째에 포커스가
+   `BODY` 로 새어 나가는 결함으로 기록했습니다. Chrome DevTools Protocol
+   `Input.dispatchKeyEvent` 로 2회 측정해 재현 가능하다고 단정했고, 이에 따라
+   포커스 트랩 자바스크립트를 네 가지 방식(keydown preventDefault, focusout,
+   tabindex=-1, document focusin 가드)으로 시도했습니다.
+   **결과는 가짜 양성이었습니다.** 2026-09-29 에 실제 Safari 창에서 사용자가
+   Tab 을 8회 넘게 눌러 확인한 결과 다이얼로그 밖으로 나가지 않았습니다.
+   CDP 합성 키 이벤트는 `inert` 처리를 우회해 포커스를 `BODY` 로 떨어뜨리는데,
+   실제 사용자 키 입력에서는 일어나지 않습니다. `showModal()` 이 포커스 트랩을
+   정상 제공합니다.
+   **결론: WCAG 2.4.3 위반이 아니며 수정한 코드는 없습니다.** main 은 `dc218b8` 로
+   그대로입니다. 시도한 수정은 되돌렸습니다.
+   **이 항목이 주는 교훈**: 측정 도구가 만든 현상을 제품 결함으로 단정하지
+   마십시오. CDP 로 재현된다고 해서 사용자에게도 재현되는 것은 아닙니다.
+   합성 이벤트 도구가 실제 사용자 경로를 faithfully 재현하는지 확인한 뒤에만
+   결함으로 기록하십시오. 이 저장소에서 확인 가능한 경로는 세 가지였습니다.
+   (1) 헤드리스 Chrome CDP — `inert` 우회로 가짜 양성,
+   (2) WebKit `evaluateJavaScript` — 키 이벤트 불가,
+   (3) 실제 Safari 창에서 사람이 누르는 것 — 이것만 재현 가능했습니다.
+   게이트에 이 검사를 추가하지 않은 판단은 맞았습니다. `scripts/audit/interact.swift`
+   는 `evaluateJavaScript` 로 스크립트를 실행할 뿐 키 이벤트를 보내지 못하며,
+   이 확인을 자동화하려면 게이트 구조를 바꿔야 합니다.
 ---
 
 ## 6. 회귀 감지
