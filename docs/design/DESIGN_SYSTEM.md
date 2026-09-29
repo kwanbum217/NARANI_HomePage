@@ -122,7 +122,7 @@ Myeongjo 계열 뒤에 Pretendard 를 두어, 명조가 없는 환경에서도 �
 
 | 항목 | 값 |
 | --- | --- |
-| 로딩 | self-host. `public/fonts/pretendard-variable-subset.woff2` 를 `src/styles/global.css` 의 `@font-face` 가 가리키고, `src/layouts/BaseLayout.astro` 가 preload 합니다 (제목·본문 공용) |
+| 로딩 | self-host. `public/fonts/pretendard-variable-subset.woff2` 를 `src/styles/global.css` 의 `@font-face` 가 가리키고, `src/layouts/BaseLayout.astro` 가 preload 합니다 (제목·본문 공용). Astro 는 `public/` 안의 파일을 루트에 복사하므로 서빙 URL 은 `/fonts/pretendard-variable-subset.woff2` 입니다 |
 | 본문 크기 | `1rem` |
 | 본문 행간 | `1.5` |
 | 다크 레지스터 본문 행간 | `1.72` (밝은 글자는 광학적으로 얇게 보이므로 보정) |
