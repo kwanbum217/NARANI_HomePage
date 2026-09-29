@@ -119,6 +119,7 @@ const copyState = `{
                 <div class="field" :class="errors.name ? 'is-invalid' : ''">
                   <label for="c-name">성명</label>
                   <input id="c-name" name="name" type="text" autocomplete="name"
+                         aria-required="true" maxlength={copy.nameMaxLength}
                          :aria-invalid="errors.name ? 'true' : 'false'"
                          :aria-describedby="errors.name ? 'c-name-error' : null"
                          x-model="values.name" @input="clear('name')" placeholder="이름을 입력하세요" />
@@ -128,6 +129,7 @@ const copyState = `{
                 <div class="field" :class="errors.email ? 'is-invalid' : ''">
                   <label for="c-email">이메일</label>
                   <input id="c-email" name="email" type="email" autocomplete="email" inputmode="email"
+                         aria-required="true" maxlength={copy.emailMaxLength}
                          :aria-invalid="errors.email ? 'true' : 'false'"
                          :aria-describedby="errors.email ? 'c-email-error' : null"
                          x-model="values.email" @input="clear('email')" placeholder="이메일을 입력하세요" />
@@ -137,6 +139,7 @@ const copyState = `{
                 <div class="field" :class="errors.message ? 'is-invalid' : ''">
                   <label for="c-message">문의내용</label>
                   <textarea id="c-message" name="message"
+                            aria-required="true" maxlength={copy.messageMaxLength}
                             :aria-invalid="errors.message ? 'true' : 'false'"
                             :aria-describedby="errors.message ? 'c-message-error' : null"
                             x-model="values.message" @input="clear('message')"

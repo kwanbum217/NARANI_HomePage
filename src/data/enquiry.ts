@@ -20,6 +20,12 @@ export type EnquiryFormCopy = {
   successTitle: string;
   /** Button that returns from the success panel to an empty form. */
   resetLabel: string;
+  /** Maximum length for the name (or company name) field. */
+  nameMaxLength: number;
+  /** Maximum length for the email field. */
+  emailMaxLength: number;
+  /** Maximum length for the message field. */
+  messageMaxLength: number;
 };
 
 export const enquiryForms: Record<EnquiryFormKey, EnquiryFormCopy> = {
@@ -32,6 +38,12 @@ export const enquiryForms: Record<EnquiryFormKey, EnquiryFormCopy> = {
     busyLabel: '전송 중…',
     successTitle: '문의가 접수되었습니다',
     resetLabel: '새 문의 작성',
+    // 근거 문서 없음. 무한 입력 방지용 상한입니다.
+    nameMaxLength: 100,
+    // RFC 5321 의 이메일 주소 최대 길이(254자)입니다.
+    emailMaxLength: 254,
+    // 근거 문서 없음. 무한 입력 방지용 상한입니다.
+    messageMaxLength: 2000,
   },
   demo: {
     nameError: '회사명을 입력해 주세요.',
