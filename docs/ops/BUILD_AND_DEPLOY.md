@@ -1,7 +1,8 @@
 # 빌드와 배포
 
 > **작성일**: 2026-09-23
-> **버전**: v1.0.0
+> **수정일**: 2026-09-29
+> **버전**: v1.0.1
 > **대상**: 로컬 개발, 빌드 산출물, 정적 배포
 
 ---
@@ -77,8 +78,10 @@ npm run links      # 링크 무결성만 검사
 
 ### 4.1 도메인 전환
 
-`astro.config.mjs` 의 `site` 값이 canonical 과 OG URL 의 기준입니다. 실제 도메인이
-정해지면 이 한 곳만 바꿉니다.
+`astro.config.mjs` 의 `site` 값이 canonical 과 OG URL 의 기준입니다. 현재 값은
+`https://narani.my` 입니다. 공개 도메인이 이 값과 같으면 바꾸지 않습니다. 다른
+도메인으로 정했을 때만 `astro.config.mjs` 의 `site` 한 곳을 바꾼 뒤 다시 빌드합니다.
+호스팅 선택, DNS 연결, 첫 배포는 사람이 정하기 전에는 하지 않습니다.
 
 ```js
 export default defineConfig({
@@ -86,8 +89,6 @@ export default defineConfig({
   // ...
 });
 ```
-
-현재 값은 확정 전 임시값입니다.
 
 ### 4.2 권장 캐시 헤더
 
@@ -107,10 +108,12 @@ Referrer-Policy: strict-origin-when-cross-origin
 X-Frame-Options: SAMEORIGIN
 ```
 
-외부에서 불러오는 리소스는 없습니다. 폰트는 `public/fonts/pretendard-variable-subset.woff2`
-로 self-host 하며 `src/layouts/BaseLayout.astro` 에서 preload 합니다(`src/styles/global.css`
-의 `@font-face` 도 같은 파일을 사용합니다). 따라서 CSP 를 도입해도 외부 출처를 허용할
-필요가 없습니다.
+폰트는 `public/fonts/pretendard-variable-subset.woff2` 로 self-host 하며
+`src/layouts/BaseLayout.astro` 에서 preload 합니다(`src/styles/global.css` 의
+`@font-face` 도 같은 파일을 사용합니다). 측정 ID 가 있으면 `src/layouts/BaseLayout.astro`
+가 `https://www.googletagmanager.com/gtag/js` 를 불러옵니다. 측정 ID 의 유무와 값은
+[`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 1장을 정본으로 봅니다.
+따라서 CSP 를 나중에 도입할 때는 그 스크립트 출처를 허용해야 합니다.
 
 ---
 
@@ -140,7 +143,7 @@ X-Frame-Options: SAMEORIGIN
 | `robots.txt` | 추가. `src/pages/robots.txt.ts` prerendered 엔드포인트가 sitemap URL 을 안내 |
 | OG 이미지 | 추가. `public/og.svg`(1200x630)와 `og.png`, `BaseLayout` 에 og/twitter 메타 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
-| 분석 도구 | 미도입 |
+| 분석 도구 | 연결. 측정 ID 가 있을 때만 GA4 태그가 들어갑니다. 측정 ID 의 유무와 값은 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 1장을 정본으로 봅니다 |
 
 `sitemap.xml` 과 `robots.txt` 는 새 패키지를 추가하지 않고 prerendered 엔드포인트로
 생성합니다. OG 이미지는 `public/` 에 두고 빌드 시 `dist/` 로 복사합니다.

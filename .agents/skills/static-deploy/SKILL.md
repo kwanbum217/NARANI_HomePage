@@ -34,7 +34,9 @@ export default defineConfig({
 });
 ```
 
-현재 값은 확정 전 임시값입니다. 도메인이 정해지면 이 값을 바꾸고 재빌드합니다.
+`site` 의 현재 값은 `https://narani.my` 입니다. 공개 도메인이 이 값과 같으면 바꾸지
+않습니다. 다른 도메인으로 정했을 때만 이 한 곳을 바꾸고 다시 빌드합니다. 호스트 선택과
+DNS 연결, 첫 배포는 사람이 정하기 전에는 진행하지 않습니다.
 
 ## 캐시 헤더
 
@@ -55,9 +57,13 @@ Referrer-Policy: strict-origin-when-cross-origin
 X-Frame-Options: SAMEORIGIN
 ```
 
-외부에서 불러오는 리소스는 없습니다. 폰트는 `public/fonts/pretendard-variable-subset.woff2`
-로 self-host 하며 `src/layouts/BaseLayout.astro` 에서 preload 합니다. 따라서 CSP 를
-도입해도 외부 출처를 허용할 필요가 없습니다.
+폰트는 `public/fonts/pretendard-variable-subset.woff2` 로 self-host 하며
+`src/layouts/BaseLayout.astro` 에서 preload 합니다. 외부에서 불러오는 것은 분석 도구
+스크립트 하나입니다. 측정 ID 가 있을 때 `src/layouts/BaseLayout.astro` 가
+`https://www.googletagmanager.com/gtag/js` 를 불러옵니다. 측정 ID 의 유무와 값은
+[`../../../docs/context/CURRENT_STATE.md`](../../../docs/context/CURRENT_STATE.md) 1장이
+정본입니다. 나중에 CSP 를 도입할 때는 이 스크립트 출처를 허용해야 합니다.
+호스트 설정 파일은 만들지 않습니다.
 
 ## 배포 전 체크리스트
 
@@ -85,5 +91,6 @@ npm run build
 | `sitemap.xml` | 구현 완료. 근거: `src/pages/sitemap.xml.ts` (prerendered 엔드포인트) |
 | `robots.txt` | 구현 완료. 근거: `src/pages/robots.txt.ts` (prerendered 엔드포인트) |
 | OG 이미지 | 구현 완료. 근거: `public/og.svg`, `public/og.png`, `src/layouts/BaseLayout.astro` 의 og/twitter 메타 |
+| 분석 도구 | 연결. 측정 ID 가 있을 때만 GA4 태그가 삽입됩니다. 근거: `src/layouts/BaseLayout.astro`, 정본 [`../../../docs/context/CURRENT_STATE.md`](../../../docs/context/CURRENT_STATE.md) 1장 |
 | 배포 자동화 | 미구성. 호스팅 연결 후 GitHub Actions 로 `dist/` 업로드 예정 |
 | 배포 후 스모크 테스트 | 미구성 |
