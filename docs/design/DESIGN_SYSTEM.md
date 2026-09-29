@@ -1,7 +1,8 @@
 # 디자인 시스템
 
 > **작성일**: 2026-09-23
-> **버전**: v1.0.0
+> **수정일**: 2026-09-29
+> **버전**: v1.0.1
 > **정본 위치**: `src/styles/global.css`
 > 색·간격·반경의 실제 값은 `global.css` 의 `:root` 가 정본입니다. 이 문서는 각 값의
 > 역할과 근거를 설명합니다.
@@ -121,7 +122,7 @@ Myeongjo 계열 뒤에 Pretendard 를 두어, 명조가 없는 환경에서도 �
 
 | 항목 | 값 |
 | --- | --- |
-| 로딩 | jsDelivr Pretendard 가변 서브셋 (제목·본문 공용) |
+| 로딩 | self-host. `public/fonts/pretendard-variable-subset.woff2` 를 `src/styles/global.css` 의 `@font-face` 가 가리키고, `src/layouts/BaseLayout.astro` 가 preload 합니다 (제목·본문 공용) |
 | 본문 크기 | `1rem` |
 | 본문 행간 | `1.5` |
 | 다크 레지스터 본문 행간 | `1.72` (밝은 글자는 광학적으로 얇게 보이므로 보정) |
