@@ -39,8 +39,8 @@
 
 ### 남은 것
 
-- 원격 푸시는 사용자 지시가 있을 때 합니다.
-- 배포, 결제, 문의·데모 접수 API 는 보류입니다.
+- 원격 푸시는 2026-09-29에 했습니다. `main` 과 `origin/main` 은 `1ac5537` 입니다.
+- 배포, 결제, 문의·데모 접수 API 는 보류입니다. 현재 인수인계는 [`../handoff/2026-09-29_queue.md`](../handoff/2026-09-29_queue.md) 입니다.
 - Chrome, Firefox, 실기기 확인은 [`../ops/BUILD_AND_DEPLOY.md`](../ops/BUILD_AND_DEPLOY.md) 5장의 사람 점검이며 이번 검증에 넣지 않았습니다.
 
 ---
