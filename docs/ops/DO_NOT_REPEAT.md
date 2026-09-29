@@ -228,7 +228,10 @@ fail-closed 로 타임아웃됩니다.
 
 **닫힌 항목**: 2026-09-28 에 지연돼 있던 세 군데가 모두 반영됐습니다.
 1. 8장 검증 표의 링크 무결성 행에 sitemap 대조와 네 가지 실패 기준
-2. 8장 말미 CI 설명(WebKit 5~8단계는 로컬 전용, 8단계 9개 항목 중 CI 는 3개만 확인)
+2. 8장 말미 CI 설명(WebKit 5~8단계는 로컬 전용, 8단계 항목 중 CI 는 3개만 확인)
+   - 2026-09-29 에 8단계 항목이 9개에서 10개로 늘었습니다. `AGENTS.md` 8장 표와
+     `docs/context/CURRENT_STATE.md` 1장은 갱신됐습니다. `AGENTS.md` 는 Hermes 가
+     보호하므로 Hermes 밖의 에이전트에게 넘깁니다.
 3. 180행의 깨진 링크 `../docs/spec/QA_AND_A11Y.md` → `docs/spec/QA_AND_A11Y.md`
    (이 링크는 `ea99d22`부터 깨져 있었습니다)
 
