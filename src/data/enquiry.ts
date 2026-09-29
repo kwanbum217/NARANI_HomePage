@@ -54,6 +54,12 @@ export const enquiryForms: Record<EnquiryFormKey, EnquiryFormCopy> = {
     busyLabel: '신청 접수 중…',
     successTitle: '신청이 접수되었습니다',
     resetLabel: '다른 공고로 신청',
+    // 근거 문서 없음. 무한 입력 방지용 상한입니다.
+    nameMaxLength: 100,
+    // RFC 5321 의 이메일 주소 최대 길이(254자)입니다.
+    emailMaxLength: 254,
+    // 근거 문서 없음. 무한 입력 방지용 상한입니다.
+    messageMaxLength: 2000,
   },
 };
 

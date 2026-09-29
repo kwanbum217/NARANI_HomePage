@@ -92,6 +92,7 @@ const copyState = `{
                 <div class="field" :class="errors.name ? 'is-invalid' : ''">
                   <label for="d-company">회사명</label>
                   <input id="d-company" name="company" type="text" autocomplete="organization"
+                         aria-required="true" maxlength={copy.nameMaxLength}
                          x-model="values.name" @input="clear('name')" placeholder="예) 나란히물류"
                          :aria-invalid="Boolean(errors.name).toString()"
                          :aria-describedby="errors.name ? 'd-company-error' : null" />
@@ -101,6 +102,7 @@ const copyState = `{
                 <div class="field" :class="errors.email ? 'is-invalid' : ''">
                   <label for="d-email">이메일</label>
                   <input id="d-email" name="email" type="email" autocomplete="email" inputmode="email"
+                         aria-required="true" maxlength={copy.emailMaxLength}
                          x-model="values.email" @input="clear('email')" placeholder="name@company.co.kr"
                          :aria-invalid="Boolean(errors.email).toString()"
                          :aria-describedby="errors.email ? 'd-email-error' : null" />
@@ -110,13 +112,15 @@ const copyState = `{
                 <div class="field">
                   <label for="d-notice">관심 공고</label>
                   <input id="d-notice" name="notice" type="text"
+                         maxlength={copy.messageMaxLength}
                          x-model="values.topic" placeholder="공고명 또는 공고번호 (선택)" />
                   <p class="hint">모르시면 비워 두셔도 됩니다.</p>
                 </div>
 
                 <div class="field" :class="errors.message ? 'is-invalid' : ''">
                   <label for="d-message">확인하고 싶은 내용</label>
-                  <textarea id="d-message" name="message" x-model="values.message" @input="clear('message')"
+                  <textarea id="d-message" name="message" aria-required="true" maxlength={copy.messageMaxLength}
+                            x-model="values.message" @input="clear('message')"
                             :aria-invalid="Boolean(errors.message).toString()"
                             :aria-describedby="errors.message ? 'd-message-error' : null"
                             placeholder="예) 경비 용역 입찰의 예상 낙찰가와 근거를 보고 싶습니다."></textarea>
