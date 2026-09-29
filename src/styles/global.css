@@ -178,6 +178,9 @@ h2 { font-weight: 700; }
 .reg-dark .rows { border-top-color: var(--bb-border); }
 .reg-dark .rows > * { border-bottom-color: var(--bb-border); }
 
+/* Capability glyph shown beside a row title. Stroke follows currentColor. */
+.cap-mark { width: 24px; height: 24px; flex-shrink: 0; }
+
 /* Rate-sheet emphasis: a left bar. Never a filled panel. */
 .rate-bar { border-left: 4px solid var(--primary); padding-left: 24px; }
 .reg-dark .rate-bar { border-left-color: var(--bb-accent); }
