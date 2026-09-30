@@ -1,14 +1,16 @@
 # Orca 워커 운용 명세 (cmd 주력)
 
 > **작성일**: 2026-09-25
-> **수정일**: 2026-09-29
-> **버전**: v1.8.0
+> **수정일**: 2026-09-30
+> **버전**: v1.9.0
 > **상태**: 확정. 2026-09-25 브라우저 비교 세션에서 cmd 워커가 멈춘 원인을 근거로 작성.
 > v1.7.0 은 리뷰어 에이전트를 opencode 에서 kilo 로 바꾸고 모델을
 > `openrouter/stealth/space-bunny-alpha` (variant `max`) 로 정합니다. 2026-09-29
 > 사용자 결정입니다. v1.8.0 은 리뷰어에도 승인 창 제거를 적용합니다. v1.7.0 은
 > 리뷰어에 yolo 를 쓰지 않는다는 문장을 두었는데, 2026-09-29 실측으로 그것이
 > R2 리뷰어를 `Permission required` 화면에 멈추게 한 것이 확인되어 폐기했습니다.
+> v1.9.0 은 kilo 리뷰어의 좌측 상태 아이콘이 Orca 화면에서 opencode 로 보이는
+> 결함과 그 재현 절차를 4.6 에 적습니다.
 > 나머지 장은 v1.6.0 과 같습니다.
 > 2026-09-26 세션에서 cmd 자체 플래그(`--model`, `--skip-onboarding`, `--no-auto-update`) 사용법을 반영.
 > v1.3.0 은 `scripts/verify.sh` 의 자동 포트 배정(2026-09-28)을 반영합니다. 명세에 포트를
@@ -153,6 +155,7 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | codex 가 과업 대신 `brew upgrade --cask codex` 를 실행하고 종료 | 기동 화면의 업데이트 안내가 주입된 Enter 를 받음 | codex 는 주력이 아닙니다. 써야 하면 먼저 수동으로 띄워 업데이트 안내를 넘긴 뒤 주입합니다 |
 | kilo 가 다른 모델로 뜸 | 기본 모델이 `~/.config/kilo/kilo.jsonc` 의 `model` 설정을 따름 | 리뷰어는 `-m` 으로 모델을 명시합니다. `worker-start` 는 kilo 에 모델 선택을 지원하지 않으므로 쓰지 않습니다 |
 | kilo 리뷰어가 variant 없이 뜨거나 다른 effort 로 뜸 | TUI 루트 명령에는 variant 플래시가 없음 | 4.5 를 보십시오 |
+| kilo 리뷰어의 좌측 아이콘이 opencode 로 표시 | opencode 상태 플러그인이 `/hook/opencode` 로 POST 하고 Orca 에 kilo hook 라우트가 없음 | kilo 에 상태 플러그인을 설치하지 않습니다. 설치해야 한다면 4.6 을 읽고 아이콘과 상태 중 무엇을 포기할지 먼저 정하십시오 |
 
 ### 4.5 kilo 리뷰어의 variant 는 기동 명령이 아니라 상태 파일이 정합니다
 
@@ -172,6 +175,39 @@ TUI 는 `~/.local/state/kilo/model.json` 의 `variant` 객체에서 모델별 �
 선택해야 하며, 그때는 사용자가 화면에서 봐야 합니다. variant 의 출처는
 `~/.config/kilo/kilo.jsonc` 의 `provider.openrouter.models.stealth/space-bunny-alpha.variants`
 정의이며 `low`·`medium`·`high`·`xhigh`·`max` 다섯 개입니다.
+
+### 4.6 kilo 리뷰어는 좌측 아이콘이 opencode 로 뜹니다
+
+2026-09-30 실측입니다. Orca 1.4.217, kilo 7.8.1 기준입니다. 리뷰어 에이전트 kilo 의
+좌측 아이콘이 Orca 화면에서 opencode 아이콘으로 보입니다. 원인을 코드에서
+확인했습니다. 다음 세션이 같은 플러그인을 다시 붙이면 같은 일이 재현되므로 절차를
+남깁니다.
+
+1. Orca 의 에이전트 상태 훅 라우트 테이블에 `kilo` 항목이 없습니다. 라우트 맵에는
+   21개 항목이 있고 그 목록은 claude, codex, gemini, antigravity, amp, opencode,
+   opencode2, mimo-code, cursor, pi, omp, prime-agent, droid, command-code, grok,
+   copilot, hermes, devin, kimi, muse, zcode 입니다. `kilo` 가 그 안에 없습니다.
+   `orca agent hooks status --json` 에도 kilo 가 나오지 않습니다.
+2. 그래서 kilo 를 opencode 상태 플러그인에 연결하면 그 플러그인은 `/hook/opencode`
+   로 POST 합니다(플러그인 342행). Orca 는 그 경로를 근거로 pane 의 agentType 을
+   `opencode` 로 기록합니다.
+3. Orca 의 pane 아이콘 결정은 증거 우선순위가 `live-hook` > `process` > `launch` >
+   `completed-hook` > `title` 순서입니다. 플러그인이 살아 있으면 `live-hook` 가
+   항상 1위라, 프로세스 감지가 잡은 `kilo` 를 덮습니다.
+4. 재현 절차와 그때의 관측값입니다.
+   - `orca terminal create --worktree active --command "kilo -m openrouter/stealth/space-bunny-alpha --auto" --json`
+   - `orca terminal send --terminal <handle> --text "1부터 30까지 줄바꿈 출력하세요." --enter --json`
+   - `orca terminal list --json` 의 `agentIdentity` 가 `kilo` 가 아니라 `opencode`
+     로 나옵니다. 24회 폴링이 전부 같았습니다.
+   - 플러그인을 `~/.config/kilo/plugins/` 에서 빼면 `agentIdentity` 가 `kilo` 로
+     돌아오지만, Orca 로 올라오는 상태(working/idle)는 0건이 됩니다.
+5. 2026-09-30 시점의 Orca 최신 릴리스는 1.4.217 이고 설치본과 같습니다. 릴리스
+   노트에 kilo 언급이 없어 우회로도 없습니다.
+
+그래서 리뷰어 kilo 에는 상태 플러그인을 설치하지 않습니다. 아이콘과 상태를 동시에
+가질 수 없기 때문입니다. 상태 플러그인을 설치하면 아이콘이 `opencode` 로 굳고,
+빼면 아이콘이 `kilo` 로 돌아오지만 상태가 올라오지 않습니다. 설치해야 한다면 4.4
+표의 규칙대로 아이콘과 상태 중 무엇을 포기할지 먼저 정하십시오.
 
 ---
 
