@@ -188,6 +188,11 @@ TUI 는 `~/.local/state/kilo/model.json` 의 `variant` 객체에서 모델별 �
    opencode2, mimo-code, cursor, pi, omp, prime-agent, droid, command-code, grok,
    copilot, hermes, devin, kimi, muse, zcode 입니다. `kilo` 가 그 안에 없습니다.
    `orca agent hooks status --json` 에도 kilo 가 나오지 않습니다.
+   **감지 테이블과 상태 훅 라우트 테이블은 별개입니다.** Orca 의 TUI 에이전트
+   감지 테이블에는 `kilo` 가 있고 그 값이
+   `detectCmd: "kilo"`, `promptInjectionMode: "stdin-after-start"` 입니다.
+   그래서 kilo 프로세스는 `process` 증거로 잡힙니다. 상태 훅 라우트에만 kilo 가
+   없다는 뜻입니다.
 2. 그래서 kilo 를 opencode 상태 플러그인에 연결하면 그 플러그인은 `/hook/opencode`
    로 POST 합니다(플러그인 342행). Orca 는 그 경로를 근거로 pane 의 agentType 을
    `opencode` 로 기록합니다.
