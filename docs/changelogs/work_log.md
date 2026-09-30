@@ -24,7 +24,9 @@
 | 상태 플러그인 제거 | `~/.config/kilo/plugins/orca-opencode-status.js` 를 `~/.config/kilo/plugins.disabled/` 로 옮겼습니다. 아이콘은 kilo 로 돌아오고 Orca 상태 표시는 올라오지 않습니다. 사용자가 택한 절충입니다 |
 | `AGENTS.md` 8장 정합 | 인터랙션 행에 prefill 4케이스·degrade 2폼을 나열하고, 8단계 항목 수를 10개로 확정했습니다. Hermes 보호 파일이라 저장소 밖의 cmd 워커에게 편집할 문장을 diff 로 넘겼습니다 |
 | 항목 수 정정 | 8단계 항목 10개의 내역을 실제 구성(nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2)으로 바로잡았습니다. `docs/context/CURRENT_STATE.md` 24행, `SKILLS.md` 74행, `docs/README.md` 머리말을 함께 갱신했습니다 |
-| 인수인계 | `docs/handoff/2026-09-30_kilo_icon_and_gate_sync.md` 작성, `docs/README.md` 6장 색인 등재, `docs/context/CURRENT_STATE.md` 5장 18번 항목 추가 |
+| 인수인계 | `docs/handoff/2026-09-30_kilo_icon_and_gate_sync.md` 에 2.3~2.6절과 머리말, 6장까지 반영 |
+| kilo 워커 실측 | `openrouter/stealth/space-bunny-alpha` kilo 워커가 `dispatch --inject` 로 실측 과업을 받고 46초에 세 항목을 확인했습니다. 그 과정에서 `docs/ops/ORCA_WORKERS.md` 4.6절의 근거 표 혼용이 지적되어 고쳐졌습니다 |
+| supervised 경로 | `worker-start --agent kilo` 가 `agent_readiness` 에서 45초 timeout 으로 실패함을 실측했습니다. kilo 에게 검증된 경로는 `terminal create` + `dispatch --inject` 뿐입니다. `docs/ops/ORCA_WORKERS.md` 4.2 표에 두 행을 추가했습니다 |
 
 ### 검증
 
@@ -33,11 +35,20 @@
 무결성" success 입니다. 게이트 수치 정본은
 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 3장입니다.
 
+`worker-start --agent kilo` 의 실패 유형과 `dispatch --inject` 경로의 정상
+작동을 kilo 워커와 probe 워크트리로 실측했습니다. 상세는
+[`../handoff/2026-09-30_kilo_icon_and_gate_sync.md`](../handoff/2026-09-30_kilo_icon_and_gate_sync.md)
+2.6절과 [`../ops/ORCA_WORKERS.md`](../ops/ORCA_WORKERS.md) 4.2절에 있습니다.
+
 ### 남은 것
 
 - 리뷰 권고 중 형식 불일치 1건(당초 `changelogs/` 번호 장 부재)은 이번 회차에
   해소했습니다.
 - 사람 결정 항목(도메인·결제·접수 API)은 손대지 않았습니다.
+- 리뷰 권고 8건은 모두 이번 회차에 처리했습니다.
+- Orca 1.4.217 에 kilo 상태 훅 라우트가 없어 리뷰어 세션의 상태 표시를
+  Orca 화면에서 볼 수 없습니다. Orca 를 고쳐야 풀리며 이 저장소 밖의
+  일입니다.
 
 ---
 

@@ -9,7 +9,7 @@
 > 보십시오.
 > **이어받은 문서**: [`2026-09-29_docs_and_form_a11y.md`](2026-09-29_docs_and_form_a11y.md)
 > **Orca Run**: `run_8ea848fe98e2` (2.4절), 그리고 2.5·2.6절의 Run 은 각 절에 서술하지 않았습니다
-> **다음 인수인계**: 없음. 4장에 남은 항목이 없습니다
+> **다음 인수인계**: [`2026-09-30_kilo_icon_and_gate_sync.md`](2026-09-30_kilo_icon_and_gate_sync.md) (이 문서). 착수 가능한 미처리 항목은 6장에 적었습니다
 
 ---
 
@@ -258,3 +258,26 @@ R1 이 낸 권고 8건 중 미처리는 0건입니다. 다만 R1 이 지적한 �
 
 결과는 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 4장과 5장에
 반영하십시오. 이번 회차는 제품 코드 변경이 없어 3장 기준선은 그대로입니다.
+
+---
+
+### 6.1 다음 세션 시작 순서
+
+1. 이 문서를 먼저 읽으십시오. 2.5절과 2.6절이 이번 회차 후반부입니다.
+2. [`../ops/ORCA_WORKERS.md`](../ops/ORCA_WORKERS.md) 3장을 읽으십시오.
+   kilo 리뷰어를 띄우는 경로가 여기 있습니다. 4.6절은 kilo 리뷰어의
+   제약(상태 표시가 오르지 않음)을, 4.2절은 `worker-start` 가 왜 안 되는지를
+   설명합니다.
+3. [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 4장을 읽으십시오.
+   4.1 이 착수 가능한 유일한 항목이고 4.2 가 보류 항목입니다.
+4. 그다음에 [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 9.1 을 보십시오.
+   `AGENTS.md` 를 고쳐야 할 때 Hermes 밖의 에이전트에게 편집할 문장을
+   diff 로 넘기는 절차입니다.
+
+### 6.2 이번 회차가 남긴 주의
+
+| 항목 | 내용 |
+| --- | --- |
+| 코디네이터의 명세 신뢰 | 이번 회차에 코디네이터가 워커 명세에서 수치 모순과 파일 상태 오류를 네 차례 냈습니다. 리뷰어와 워커가 각각 잡았습니다. 수치와 파일 상태를 명세에 적을 때는 먼저 측정하십시오 |
+| kilo 상태 표시 없음 | Orca 1.4.217 에 kilo 상태 훅 라우트가 없어 리뷰어 세션의 working·idle 이 Orca 로 오르지 않습니다. 리뷰어 진행 확인은 `orca terminal read` 로 하십시오. 우회로는 없습니다(2.6절) |
+| 되돌릴 수 있는 변경 | `~/.config/kilo/plugins/orca-opencode-status.js` 를 `~/.config/kilo/plugins.disabled/` 로 옮겨둔 상태입니다. 되돌리려면 원위치로 옮기고 kilo 를 다시 띄우십시오 |
