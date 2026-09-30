@@ -187,7 +187,11 @@ TUI 는 `~/.local/state/kilo/model.json` 의 `variant` 객체에서 모델별 �
    21개 항목이 있고 그 목록은 claude, codex, gemini, antigravity, amp, opencode,
    opencode2, mimo-code, cursor, pi, omp, prime-agent, droid, command-code, grok,
    copilot, hermes, devin, kimi, muse, zcode 입니다. `kilo` 가 그 안에 없습니다.
-   `orca agent hooks status --json` 에도 kilo 가 나오지 않습니다.
+   이 21개 목록은 `app.asar` 코드 확인으로 얻은 값이지 `orca agent hooks status`
+   출력이 아닙니다. `orca agent hooks status --json` 은 16개 에이전트만 찍고 그
+   목록에 kilo 가 없지만, opencode·opencode2·mimo-code·pi·omp·prime-agent 가
+   빠져 있어 **21개 라우트 맵의 근거로 쓸 수 없습니다.** 두 표를 같은 근거로
+   인용하지 마십시오.
    **감지 테이블과 상태 훅 라우트 테이블은 별개입니다.** Orca 의 TUI 에이전트
    감지 테이블에는 `kilo` 가 있고 그 값이
    `detectCmd: "kilo"`, `promptInjectionMode: "stdin-after-start"` 입니다.
@@ -208,6 +212,15 @@ TUI 는 `~/.local/state/kilo/model.json` 의 `variant` 객체에서 모델별 �
      돌아오지만, Orca 로 올라오는 상태(working/idle)는 0건이 됩니다.
 5. 2026-09-30 시점의 Orca 최신 릴리스는 1.4.217 이고 설치본과 같습니다. 릴리스
    노트에 kilo 언급이 없어 우회로도 없습니다.
+6. **kilo 워커로 재확인했습니다.** 2026-09-30 에 `kilo -m
+   openrouter/stealth/space-bunny-alpha --auto` 로 띄운 워커에
+   `dispatch --inject` 로 실측 과업을 주입했습니다. 워커가 직접 확인한 값은
+   `agentIdentity` 가 `kilo` 로 유지되고 working·idle 류 상태 필드가 아예
+   없다는 것이었습니다. 플러그인을 붙이지 않은 이 상태에서는
+   3번의 아이콘 덮어쓰기도 일어나지 않습니다. **kilo 는 상태를 Orca 에
+   올릴 경로가 없어, 상태 플러그인을 붙이지 않으면 아이콘은 맞고 상태는
+   없는 상태가 정상입니다.** 리뷰어가 말한 대로 이 상태에서 리뷰를 돌릴 수
+   있고 진행 확인은 `orca terminal read` 로 합니다.
 
 그래서 리뷰어 kilo 에는 상태 플러그인을 설치하지 않습니다. 아이콘과 상태를 동시에
 가질 수 없기 때문입니다. 상태 플러그인을 설치하면 아이콘이 `opencode` 로 굳고,
