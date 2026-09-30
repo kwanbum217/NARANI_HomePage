@@ -71,7 +71,7 @@
 | `src/data/enquiry.ts` | 문의·데모 폼 라벨과 오류 문구, 접수 완료 문구, 실패 시 degrade 카피 |
 | `src/styles/global.css` | 디자인 토큰과 컴포넌트 클래스 |
 | `src/scripts/app.js` | Alpine 컴포넌트 3종 |
-| `scripts/verify.sh` | 8단계. 실제 검사 항목은 9개(4단계 2개, 5단계 2개, 8단계 3개) |
+| `scripts/verify.sh` | 8단계. 실제 검사 항목은 10개(8단계 안에서 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
 | `scripts/check-links.mjs` | dist 내 href/src 실존 확인 |
 | `scripts/check-sitemap.mjs` | sitemap.xml 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
 | `AGENTS.md` | **보호 파일.** Hermes 세션의 어떤 에이전트로도 고칠 수 없습니다. 수정이 필요하면 Hermes 밖의 에이전트에게 편집할 문장을 diff 형태로 넘깁니다([`docs/ops/DO_NOT_REPEAT.md`](docs/ops/DO_NOT_REPEAT.md) 9.1) |
