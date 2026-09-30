@@ -98,6 +98,10 @@ flowchart TD
 
 리뷰어는 2단계 명령만 `kilo -m openrouter/stealth/space-bunny-alpha --auto` 로 바꿉니다.
 
+`--worktree` 에 `active` 를 주면 Orca 가 자기가 만든 worktree 만 압니다.
+절대 경로(`--worktree path:<절대경로>`)를 주십시오. `selector_not_found`
+가 나면 이것부터 의심하십시오. 2026-09-30 실측입니다.
+
 **리뷰어도 승인 창을 없애야 합니다.** 2026-09-29 실측입니다. 리뷰어는 파일을
 고치지 않지만 셸을 씁니다. `git diff`·`git rev-parse`·`ls`·`grep` 같은 읽기 전용
 명령도 kilo 는 허가를 요청하고, 그때 리뷰어는 `Permission required` 화면에서
@@ -131,7 +135,7 @@ flowchart TD
 JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별도 호출에서 읽습니다.
 `orca` 명령과 가공 명령을 한 줄에 묶지 않습니다.
 
-### 4.2 Orca 쪽 (command-code 연동)
+### 4.2 Orca 쪽 (TUI 에이전트 연동)
 
 | 증상 | 원인 | 규칙 |
 | --- | --- | --- |
@@ -140,6 +144,13 @@ JSON 을 가공해야 하면 `orca ... --json` 결과를 한 번 받은 뒤, 별
 | `worker-start --agent command-code` 가 `agent_readiness` 시간 초과 | Orca 가 command-code 에 `PreToolUse`, `PostToolUse`, `Stop` 훅만 설치. 기동 시 준비 신호가 없음 | 3장의 `terminal create` + `dispatch --inject` 경로만 씁니다 |
 | `terminal wait --for tui-idle` 시간 초과 | 위와 같은 이유 | 기다리지 말고 `terminal read` 로 화면을 봅니다 |
 | 같은 Task 3회 실패 후 `failed` | Orca 의 circuit-break | 새 Task 로 우회하려면 사용자 승인을 받습니다 |
+| `worker-start --agent kilo` 가 `agent_readiness` 시간 초과 | Orca 가 kilo 에도 준비 신호 훅이 없습니다. 4.2 의 command-code 행과 같은 유형이고 `agent_unconfigured` 가 아닙니다 | 3장의 `terminal create` + `dispatch --inject` 경로만 씁니다. kilo 에서 이 경로가 정상 작동함을 2026-09-30 실측으로 확인했습니다 |
+| `worker-start --worktree active` 가 `selector_not_found` | Orca 는 자기가 만든 worktree만 `active` 로 압니다 | 절대 경로를 줍니다(`--worktree path:<절대경로>`). 3장 경로도 마찬가지입니다 |
+
+`agent_readiness` 시간 초과는 에이전트가 TUI 인 경우 command-code 와 kilo
+양쪽에서 나타납니다. Orca 는 이 에이전트들에 기동 준비 신호 훅을 설치하지
+않고, 그 신호를 기다리다 시간 초과합니다. 2026-09-30 에 kilo 로 실측해
+확인했습니다. 어느 쪽이든 3장 경로로 우회합니다.
 
 ### 4.3 cmd 쪽 (기동 화면)
 
