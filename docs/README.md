@@ -154,6 +154,22 @@ docs/
 | 2026-09-29 | [`handoff/2026-09-29_docs_and_form_a11y.md`](handoff/2026-09-29_docs_and_form_a11y.md) | 색인 복구와 폼 접근성, 리뷰어 운용 |
 | 2026-09-30 | [`handoff/2026-09-30_kilo_icon_and_gate_sync.md`](handoff/2026-09-30_kilo_icon_and_gate_sync.md) | kilo 리뷰어 좌측 아이콘 진단, AGENTS.md 게이트 정합. **현재 인수인계** |
 
+---
+
+## 7. changelogs/
+
+| 날짜 | 내용 |
+| --- | --- |
+| 2026-09-30 | 문서 정합과 워커 운용 규칙 |
+| 2026-09-29 | 서비스 페이지 기능 행 아이콘 표시 |
+| 2026-09-23 | 저장소 최초 구성 및 1차 구현 |
+| 2026-09-23 | 원격 연결과 CI 구성 |
+| 2026-09-28 | 검증 게이트 고도화와 상태 정본 구조 정리 |
+
+`docs/changelogs/` 폴더는 `work_log.md` 한 파일입니다. 위 표는 그 파일의
+`## ` 장 제목에서 날짜와 제목을 뽑은 것이고, 세부는 `work_log.md` 를
+보십시오.
+
 새 세션은 [`context/CURRENT_STATE.md`](context/CURRENT_STATE.md) 5장 열린 항목에서
 읽고 시작하십시오. 이 인덱스에는 세션 진행 상황이 없습니다.
 

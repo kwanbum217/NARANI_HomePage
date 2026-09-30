@@ -1,9 +1,43 @@
 # 작업 일지
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-29
-> **버전**: v1.1.0
+> **수정일**: 2026-09-30
+> **버전**: v1.2.0
 > 기록 형식: 날짜, 범위, 변경, 검증, 남은 것.
+> 이번 회차는 문서 정합과 워커 운용 규칙이며, 제품 코드 변경은 없습니다.
+
+---
+
+## 2026-09-30 — 문서 정합과 워커 운용 규칙
+
+### 범위
+
+문서 정합과 워커 운용 규칙. 제품 코드는 한 줄도 바뀌지 않았습니다. 리뷰어
+에이전트 kilo 의 Orca 좌측 아이콘 진단, `AGENTS.md` 8단계 항목 정합,
+2026-09-30 인수인계 작성입니다.
+
+### 변경
+
+| 항목 | 내용 |
+| --- | --- |
+| kilo 아이콘 진단 | Orca 1.4.217 의 에이전트 상태 훅 라우트 테이블에 kilo 항목이 없어 리뷰어 세션의 좌측 아이콘이 opencode 로 표시됐습니다. 원인 3단계와 재현 절차를 `docs/ops/ORCA_WORKERS.md` 4.6 절에 기록했습니다 |
+| 상태 플러그인 제거 | `~/.config/kilo/plugins/orca-opencode-status.js` 를 `~/.config/kilo/plugins.disabled/` 로 옮겼습니다. 아이콘은 kilo 로 돌아오고 Orca 상태 표시는 올라오지 않습니다. 사용자가 택한 절충입니다 |
+| `AGENTS.md` 8장 정합 | 인터랙션 행에 prefill 4케이스·degrade 2폼을 나열하고, 8단계 항목 수를 10개로 확정했습니다. Hermes 보호 파일이라 저장소 밖의 cmd 워커에게 편집할 문장을 diff 로 넘겼습니다 |
+| 항목 수 정정 | 8단계 항목 10개의 내역을 실제 구성(nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2)으로 바로잡았습니다. `docs/context/CURRENT_STATE.md` 24행, `SKILLS.md` 74행, `docs/README.md` 머리말을 함께 갱신했습니다 |
+| 인수인계 | `docs/handoff/2026-09-30_kilo_icon_and_gate_sync.md` 작성, `docs/README.md` 6장 색인 등재, `docs/context/CURRENT_STATE.md` 5장 18번 항목 추가 |
+
+### 검증
+
+`npm run verify` 종료 코드 0(8단계 10개 항목 `fail: null`, 콘솔 오류 0건),
+`npm run check:emoji` 101개 파일 이모지 없음, GitHub Actions 잡 "빌드와 링크
+무결성" success 입니다. 게이트 수치 정본은
+[`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 3장입니다.
+
+### 남은 것
+
+- 리뷰 권고 중 형식 불일치 1건(당초 `changelogs/` 번호 장 부재)은 이번 회차에
+  해소했습니다.
+- 사람 결정 항목(도메인·결제·접수 API)은 손대지 않았습니다.
 
 ---
 
