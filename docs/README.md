@@ -149,7 +149,8 @@ docs/
 | 2026-09-28 | [`handoff/2026-09-28_gate_recommendations.md`](handoff/2026-09-28_gate_recommendations.md) | 게이트 권고와 인수인계 |
 | 2026-09-28 | [`handoff/2026-09-28_expected_gate_and_review.md`](handoff/2026-09-28_expected_gate_and_review.md) | 기대값 게이트와 검토 |
 | 2026-09-29 | [`handoff/2026-09-29_queue.md`](handoff/2026-09-29_queue.md) | 시각 자료 완료와 남은 사람 결정 |
-| 2026-09-29 | [`handoff/2026-09-29_docs_and_form_a11y.md`](handoff/2026-09-29_docs_and_form_a11y.md) | 색인 복구와 폼 접근성, 리뷰어 운용. **현재 인수인계** |
+| 2026-09-29 | [`handoff/2026-09-29_docs_and_form_a11y.md`](handoff/2026-09-29_docs_and_form_a11y.md) | 색인 복구와 폼 접근성, 리뷰어 운용 |
+| 2026-09-30 | [`handoff/2026-09-30_kilo_icon_and_gate_sync.md`](handoff/2026-09-30_kilo_icon_and_gate_sync.md) | kilo 리뷰어 좌측 아이콘 진단, AGENTS.md 게이트 정합. **현재 인수인계** |
 
 새 세션은 [`context/CURRENT_STATE.md`](context/CURRENT_STATE.md) 5장 열린 항목에서
 읽고 시작하십시오. 이 인덱스에는 세션 진행 상황이 없습니다.

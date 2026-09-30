@@ -450,6 +450,20 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
    게이트에 이 검사를 추가하지 않은 판단은 맞았습니다. `scripts/audit/interact.swift`
    는 `evaluateJavaScript` 로 스크립트를 실행할 뿐 키 이벤트를 보내지 못하며,
    이 확인을 자동화하려면 게이트 구조를 바꿔야 합니다.
+18. **완료.** 2026-09-30 문서 정합 2건. `AGENTS.md` 8장 검증 표의 인터랙션 행이
+    2026-09-28 에 추가된 prefill·degrade 를 빠뜨린 상태였고, 8장 말미 CI 설명이
+    8단계 항목 수를 9개로 적고 있었습니다. 실제 항목은 10개입니다(4단계 2개,
+    5단계 2개, 8단계 4개 — 10번 항목 기준). 두 곳을 실측값으로 맞췄습니다.
+    `AGENTS.md` 는 Hermes 가 보호하므로 Hermes 밖의 cmd 워커에게 편집할 문장을
+    diff 로 넘겨 반영했습니다(절차는
+    [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 9.1).
+    같은 회차에 리뷰어 에이전트 kilo 의 좌측 아이콘이 Orca 화면에서 opencode
+    아이콘으로 보이던 결함을 진단해
+    [`../ops/ORCA_WORKERS.md`](../ops/ORCA_WORKERS.md) 4.6 절에 기록했습니다.
+    원인은 Orca 1.4.217 의 상태 훅 라우트 테이블에 kilo 항목이 없어서입니다.
+    **이번 회차는 제품 코드를 한 줄도 바꾸지 않았으므로 3장 기준선 수치는
+    그대로입니다.** 상세는
+    [`../handoff/2026-09-30_kilo_icon_and_gate_sync.md`](../handoff/2026-09-30_kilo_icon_and_gate_sync.md) 입니다.
 ---
 
 ## 6. 회귀 감지
