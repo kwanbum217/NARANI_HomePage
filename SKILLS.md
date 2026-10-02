@@ -69,6 +69,7 @@
 | `src/data/site.ts` | 브랜드명, 이메일, 내비 2종, CTA, 핵심 기능 목록, GA4 측정 ID, 문의 엔드포인트 |
 | `src/data/pricing.ts` | 포인트 단가, 요금제 3종, 유의 문구. 문의 폼의 상품 라벨 화이트리스트 정본 |
 | `src/data/enquiry.ts` | 문의·데모 폼 라벨과 오류 문구, 접수 완료 문구, 실패 시 degrade 카피 |
+| `src/data/faq.ts` | FAQ 질문·답변 단일 소스. 요금·서비스 두 페이지가 공통으로 씁니다 |
 | `src/styles/global.css` | 디자인 토큰과 컴포넌트 클래스 |
 | `src/scripts/app.js` | Alpine 컴포넌트 3종 |
 | `scripts/verify.sh` | 8단계. 실제 검사 항목은 10개(8단계 안에서 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |

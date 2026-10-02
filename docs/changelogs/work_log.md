@@ -1,10 +1,57 @@
 # 작업 일지
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-30
-> **버전**: v1.2.0
+> **수정일**: 2026-10-02
+> **버전**: v1.3.0
 > 기록 형식: 날짜, 범위, 변경, 검증, 남은 것.
-> 이번 회차는 문서 정합과 워커 운용 규칙이며, 제품 코드 변경은 없습니다.
+> 이번 회차는 CTA 라벨 정직화, FAQ 데이터 모듈과 두 페이지 섹션, BIDBOX 전용
+> JSON-LD 와 그 리뷰이며, 제품 코드 변경이 있었습니다.
+
+---
+
+## 2026-10-02 — CTA 라벨 정직화, FAQ 섹션, BIDBOX JSON-LD
+
+### 범위
+
+배포 없이 착수 가능한 고도화 항목. 병렬 워커 2기(codex)로 구현하고 리뷰어 1기(kilo)로
+검증했습니다. 이전 회차(cursor CLI 코디네이터)가 만든 W1·W2 를 인계받아 이어서
+완료했습니다.
+
+### 변경
+
+| 커밋 | 내용 |
+| --- | --- |
+| `d936023` | `src/data/site.ts` 의 `primaryCta.program.label` "프로그램 접속" → "요금 보기". `src/pages/bidbox/index.astro` 의 하드코딩 CTA 를 단일 소스로 연결. `src/layouts/BaseLayout.astro` 에 BIDBOX 한정 `SoftwareApplication` 노드 추가 |
+| `125f8e9` | `src/data/faq.ts` 신규(질문·답변 5건). `src/pages/bidbox/pricing.astro` 와 `service.astro` 에 `section`+`h2`+`dl/dt/dd` FAQ 섹션. 폰트 서브셋 52,176 → 50,172 바이트 재생성 |
+| `c587ade` | 리뷰서 `docs/analysis/검토_고도화_W1W2_20261002.md` |
+| `cdb6c33` | `applicationCategory` 를 `'SoftwareApplication'` → `'BusinessApplication'` |
+
+문서 갱신: `docs/context/CURRENT_STATE.md`(v1.4.0), `docs/README.md`(v1.3.0),
+새 인수인계 1건.
+
+### 검증
+
+- `npm run verify` 를 병합 트리에서 2회 실행, 종료 코드 0. 8단계 전부 통과:
+  5단계 8개 페이지 콘솔 오류 0건(라이트 대비 15.88, 다크 19.46, CTA 44px),
+  6단계 폰트 서브셋 누락 0건(검사 문자 352개, 기준선과 동일),
+  7단계 `0 issue group(s)`, 8단계 10개 항목 전부 `fail: null`
+- `grep -c 'SoftwareApplication'` — BIDBOX 5개 페이지 각 1건, nani 3개 페이지 0건
+- `npm run check:emoji` — 이모지 없음
+- 리뷰어 인용 6건을 코디네이터가 원문 대조로 재검증. 전부 일치
+- `applicationCategory` 판정을 schema.org 공식 문서로 확인
+
+### 남은 것
+
+리뷰가 낸 결함 4건 중 3건이 이월입니다. `CURRENT_STATE.md` 4.1 에 적었습니다.
+
+| 항목 | 내용 |
+| --- | --- |
+| FAQ 단일 소스 위반 | `src/data/faq.ts:13`, `:17` 이 `POINT_NOTE` 를 복사. 변경 시 조용히 뒤처짐 |
+| 요금 다이얼로그 카피 모순 | 헤더 CTA "요금 보기" vs `pricing.astro:193` "프로그램 접속" |
+| 게이트의 사각지 | 8단계 10개 항목이 통과해도 위 두 결함이 남습니다. 구조화 데이터 검증이 게이트에 없음 |
+
+이번 회차는 카피와 구조화 데이터만 바꿨으므로 3장 기준선 수치는 그대로입니다.
+세 항목 모두 2026-10-02 사용자 결정으로 이월했습니다.
 
 ---
 

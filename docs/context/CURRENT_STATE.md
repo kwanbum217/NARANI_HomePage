@@ -1,9 +1,10 @@
 # CURRENT_STATE — narani_homepage 운영 상태 정본
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-28
-> **버전**: v1.3.0
-> **상태**: Hallmark 재구성 적용 및 검증 통과. 8단계 게이트(타입 체크·폰트 서브셋 포함). 결제·폼 백엔드 미연결
+> **수정일**: 2026-10-02
+> **버전**: v1.4.0
+> **상태**: 2026-10-02 고도화(CTA 라벨·FAQ 섹션·BIDBOX JSON-LD) 병합 및 리뷰 통과.
+> 8단계 게이트 통과. 결제·폼 백엔드 미연결. 리뷰가 낸 결함 4건 중 1건 수정, 3건 이월
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -31,7 +32,8 @@
 | 폼 백엔드 | 미연결 | `src/data/site.ts` 의 `enquiryEndpoint` 가 빈 값이라 900ms 지연 시뮬레이션. 문의·데모 접수 API 가 제품 본체(`refac_bid_box`)에 없으므로 이 저장소에서 만들지 않고 위임합니다 |
 | 결제 연동 | 미연결 | 주문 확인 다이얼로그까지만 동작 |
 | sitemap / robots / OG | 완료 | prerendered 엔드포인트(`src/pages/sitemap.xml.ts`, `src/pages/robots.txt.ts`)와 `public/og.svg`, `og.png`. 새 패키지 추가 없이 정적 생성 |
-| 구조화 데이터 | 완료 | `src/layouts/BaseLayout.astro` 가 head 에 Organization·WebSite JSON-LD 를 출력 |
+| 구조화 데이터 | 완료 | `src/layouts/BaseLayout.astro` 가 head 에 Organization·WebSite JSON-LD 를 출력하고, BIDBOX 5개 페이지에만 `SoftwareApplication` 노드를 덧붙입니다. `applicationCategory` 는 `BusinessApplication` 입니다. nani 3개 페이지에는 없습니다 |
+| FAQ 데이터 모듈 | 완료 | `src/data/faq.ts`. 요금·서비스 두 페이지가 공통으로 씁니다. `CURRENT_STATE.md` 4.1 의 단일 소스 위반 항목 참조 |
 | 다국어 | 미착수 | 한국어 단일 |
 
 ### 페이지 라우트
@@ -276,6 +278,9 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 | 항목 | 영향 | 다음 행동 | 담당 |
 | --- | --- | --- | --- |
 | 공개 URL 없음 | 도메인·canonical·sitemap 모두 `https://narani.my` 로 고정돼 있고 실제 주소가 없음 | `dist/` 를 정적 호스팅에 올리고 DNS 를 연결합니다. `astro.config.mjs` 의 `site` 는 이미 채워져 있어 바꿀 곳이 없습니다 | 미정 |
+| FAQ 단일 소스 위반 | `src/data/faq.ts:13`, `:17` 이 `POINT_NOTE`(`src/data/pricing.ts:21-22`)와 요금 사용 규칙 문장을 복사했습니다. `POINT_NOTE` 가 바뀌면 faq.ts 가 조용히 뒤처집니다 | `faq.ts` 가 `pricing.ts` 를 import 하도록 바꾸거나, 두 문장을 `pricing.ts` 한 곳으로 모읍니다. 근거는 [`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md) 1절 | 미정 |
+| 요금 다이얼로그 카피 모순 | 헤더 CTA 는 "요금 보기"(`src/data/site.ts:36`) 인데 `src/pages/bidbox/pricing.astro:193` 은 "담당자가 포인트 충전과 프로그램 접속을 안내합니다"입니다. 같은 화면에서 서로 다른 서비스를 약속합니다 | `pricing.astro:193` 의 문장을 새 CTA 에 맞춥니다. 근거는 같은 리뷰서 3절 | 미정 |
+| 게이트의 사각지 | `scripts/verify.sh` 에 구조화 데이터 검증이 한 줄도 없고, 페이지 간 카피 정합성 검사와 단일 소스 중복 검사도 없습니다. 8단계 10개 항목이 전부 통과해도 위 두 결함이 남았습니다 | 검사를 추가합니다. `scripts/verify.sh` 를 건드리는 변경이라 별도 워커 단위로 하십시오. 근거는 같은 리뷰서 6절 | 미정 |
 
 ### 4.2 보류 — 하지 않기로 한 것 (결정 완료, 다시 열지 않음)
 
@@ -465,6 +470,19 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     **이번 회차는 제품 코드를 한 줄도 바꾸지 않았으므로 3장 기준선 수치는
     그대로입니다.** 상세는
     [`../handoff/2026-09-30_kilo_icon_and_gate_sync.md`](../handoff/2026-09-30_kilo_icon_and_gate_sync.md) 입니다.
+19. **완료(1)·이월(3).** 2026-10-02 고도화. CTA 라벨 정직화, FAQ 데이터 모듈과
+    요금·서비스 페이지 FAQ 섹션, BIDBOX 전용 `SoftwareApplication` JSON-LD 를
+    병렬 워커 2기로 구현하고 리뷰어 1기로 검증했습니다. 리뷰가 결함 4건을 냈고
+    그중 `applicationCategory` 값(`'SoftwareApplication'` 은 `@type` 을 그대로
+    반복한 용어 오류)만 `'BusinessApplication'` 으로 고쳤습니다. 나머지 3건
+    (FAQ 단일 소스 위반, 요금 다이얼로그 카피 모순, 게이트의 사각지)은 2026-10-02
+    사용자 결정으로 4.1 에 이월했습니다.
+    **이 회차는 카피와 구조화 데이터만 바꿨으므로 3장 기준선 수치는 그대로입니다.**
+    실측: 라이트 대비 15.88, 다크 19.46, CTA 44px, 폰트 서브셋 검사 문자 352개,
+    7단계 0 issue group, 8단계 10개 항목 전부 `fail: null`. 상세는
+    [`../handoff/2026-10-02_cta_faq_jsonld_review.md`](../handoff/2026-10-02_cta_faq_jsonld_review.md),
+    리뷰서는
+    [`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md) 입니다.
 ---
 
 ## 6. 회귀 감지
