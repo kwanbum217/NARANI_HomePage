@@ -138,6 +138,10 @@ node scripts/check-links.mjs
 # sitemap 은 손으로 유지되는 경로 목록입니다. 새 페이지를 넣고 목록을 잊어도
 # 링크 검사는 통과합니다. 여기서 색인 누락과 죽은 주소를 막습니다.
 node scripts/check-sitemap.mjs "$ROOT/dist"
+# 정본에서 파생한 기대값과 대조합니다. 게이트가 "깨지지 않은 것"만 증명하는
+# 사각지(같은 리뷰서 6절)는 여기서 막습니다.
+node scripts/check-structured-data.mjs "$ROOT/dist"
+node scripts/check-copy-consistency.mjs "$ROOT"
 
 echo "== 5/8 렌더 / 콘솔 오류 / 스타일 실측 =="
 RENDER_OUT="$(swift scripts/audit/render.swift "$BASE" "$OUT" "${PAGES[@]}")"
