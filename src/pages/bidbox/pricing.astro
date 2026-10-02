@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { plans, pointRate, POINT_NOTE } from '../../data/pricing';
+import { faqs } from '../../data/faq';
 
 const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
 
@@ -198,5 +199,20 @@ const dialogState = `{
         </div>
       </div>
     </dialog>
+  </section>
+
+  <section class="section-tight" aria-labelledby="faq-title">
+    <div class="wrap">
+      <p class="label">자주 묻는 질문</p>
+      <h2 id="faq-title" class="mt-3 text-[clamp(1.4rem,3vw,2rem)]">요금과 이용 안내</h2>
+      <dl class="rows mt-8">
+        {faqs.map((faq) => (
+          <div class="grid min-w-0 gap-2 py-5 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-8">
+            <dt class="font-bold">{faq.question}</dt>
+            <dd class="text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">{faq.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   </section>
 </BaseLayout>
