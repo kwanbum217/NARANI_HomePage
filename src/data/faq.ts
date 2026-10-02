@@ -1,3 +1,5 @@
+import { POINT_NOTE, POINT_USAGE_RULE } from './pricing';
+
 export type FaqItem = {
   question: string;
   answer: string;
@@ -10,11 +12,11 @@ export const faqs: FaqItem[] = [
   },
   {
     question: '포인트는 언제 사용되나요?',
-    answer: '공고·낙찰 탐색 및 AI 예측당 1포인트가 사용됩니다.',
+    answer: POINT_USAGE_RULE,
   },
   {
     question: '같은 공고를 다시 조회하면 포인트가 차감되나요?',
-    answer: '네. 포인트는 조회당 사용되며, 동일한 공고를 재조회하면 포인트가 차감됩니다.',
+    answer: `네. ${POINT_NOTE}`,
   },
   {
     question: '예측 결과와 근거를 함께 볼 수 있나요?',

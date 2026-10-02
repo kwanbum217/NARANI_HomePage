@@ -21,6 +21,10 @@ export type Plan = {
 export const POINT_NOTE =
   '포인트는 조회당 사용됩니다. 동일한 공고를 재조회하면 포인트가 차감됩니다.';
 
+/** 포인트 사용 범위 문장. faq.ts 등에서 import 해 같은 문구를 유지한다. */
+export const POINT_USAGE_RULE =
+  '공고 · 낙찰 탐색 및 AI 예측당 1포인트가 사용됩니다.';
+
 export const plans: Plan[] = [
   {
     id: 'p100',
