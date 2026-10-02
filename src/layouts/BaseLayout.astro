@@ -40,6 +40,15 @@ const structuredData = {
       name: brand.company,
       url: Astro.site,
     },
+    ...(isBidbox
+      ? [{
+          '@type': 'SoftwareApplication',
+          name: brand.product,
+          description,
+          url: new URL('/bidbox/', Astro.site).href,
+          applicationCategory: 'SoftwareApplication',
+        }]
+      : []),
   ],
 };
 ---
