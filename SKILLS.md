@@ -72,9 +72,11 @@
 | `src/data/faq.ts` | FAQ 질문·답변 단일 소스. 요금·서비스 두 페이지가 공통으로 씁니다 |
 | `src/styles/global.css` | 디자인 토큰과 컴포넌트 클래스 |
 | `src/scripts/app.js` | Alpine 컴포넌트 3종 |
-| `scripts/verify.sh` | 8단계. 실제 검사 항목은 10개(8단계 안에서 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
+| `scripts/verify.sh` | 8단계. 8단계 안의 인터랙션 항목은 10개(nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2). 여기에 4단계의 정적 검사 3종(링크·sitemap·JSON-LD)과 카피 정합 1종이 더 있습니다. **단계 수는 8로 고정이고 검사 항목만 늘어납니다** |
 | `scripts/check-links.mjs` | dist 내 href/src 실존 확인 |
 | `scripts/check-sitemap.mjs` | sitemap.xml 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
+| `scripts/check-structured-data.mjs` | 4단계. dist 의 JSON-LD 10개 항목. 자기참조 `applicationCategory`·`offers` 잔존·정본 불일치를 막습니다 |
+| `scripts/check-copy-consistency.mjs` | 4단계. `src/data` 정본 문장의 소비처 하드코딩과 폐기 CTA 문구를 화이트리스트로 막습니다 |
 | `AGENTS.md` | **보호 파일.** Hermes 세션의 어떤 에이전트로도 고칠 수 없습니다. 수정이 필요하면 Hermes 밖의 에이전트에게 편집할 문장을 diff 형태로 넘깁니다([`docs/ops/DO_NOT_REPEAT.md`](docs/ops/DO_NOT_REPEAT.md) 9.1) |
 | `scripts/audit/` | WebKit 기반 감사 도구 (macOS) |
 

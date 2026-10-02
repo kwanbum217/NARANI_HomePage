@@ -2,9 +2,9 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-10-02
-> **버전**: v1.4.0
-> **상태**: 2026-10-02 고도화(CTA 라벨·FAQ 섹션·BIDBOX JSON-LD) 병합 및 리뷰 통과.
-> 8단계 게이트 통과. 결제·폼 백엔드 미연결. 리뷰가 낸 결함 4건 중 1건 수정, 3건 이월
+> **버전**: v1.5.0
+> **상태**: 2026-10-02 리뷰 결함 3건까지 처리 완료. 8단계 게이트에 카피 정합과
+> 구조화 데이터 검사를 추가함. 결제·폼 백엔드 미연결
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -278,9 +278,13 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 | 항목 | 영향 | 다음 행동 | 담당 |
 | --- | --- | --- | --- |
 | 공개 URL 없음 | 도메인·canonical·sitemap 모두 `https://narani.my` 로 고정돼 있고 실제 주소가 없음 | `dist/` 를 정적 호스팅에 올리고 DNS 를 연결합니다. `astro.config.mjs` 의 `site` 는 이미 채워져 있어 바꿀 곳이 없습니다 | 미정 |
-| FAQ 단일 소스 위반 | `src/data/faq.ts:13`, `:17` 이 `POINT_NOTE`(`src/data/pricing.ts:21-22`)와 요금 사용 규칙 문장을 복사했습니다. `POINT_NOTE` 가 바뀌면 faq.ts 가 조용히 뒤처집니다 | `faq.ts` 가 `pricing.ts` 를 import 하도록 바꾸거나, 두 문장을 `pricing.ts` 한 곳으로 모읍니다. 근거는 [`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md) 1절 | 미정 |
-| 요금 다이얼로그 카피 모순 | 헤더 CTA 는 "요금 보기"(`src/data/site.ts:36`) 인데 `src/pages/bidbox/pricing.astro:193` 은 "담당자가 포인트 충전과 프로그램 접속을 안내합니다"입니다. 같은 화면에서 서로 다른 서비스를 약속합니다 | `pricing.astro:193` 의 문장을 새 CTA 에 맞춥니다. 근거는 같은 리뷰서 3절 | 미정 |
-| 게이트의 사각지 | `scripts/verify.sh` 에 구조화 데이터 검증이 한 줄도 없고, 페이지 간 카피 정합성 검사와 단일 소스 중복 검사도 없습니다. 8단계 10개 항목이 전부 통과해도 위 두 결함이 남았습니다 | 검사를 추가합니다. `scripts/verify.sh` 를 건드리는 변경이라 별도 워커 단위로 하십시오. 근거는 같은 리뷰서 6절 | 미정 |
+
+2026-10-02 에 4.1 에 있던 세 항목(FAQ 단일 소스 위반, 요금 다이얼로그 카피 모순,
+게이트의 사각지)은 모두 2026-10-02 에 처리되어 이 표에서 빠졌습니다. 근거는
+[`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md)
+와
+[`../handoff/2026-10-02_review_findings_fixed.md`](../handoff/2026-10-02_review_findings_fixed.md)
+입니다.
 
 ### 4.2 보류 — 하지 않기로 한 것 (결정 완료, 다시 열지 않음)
 
@@ -483,6 +487,26 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     [`../handoff/2026-10-02_cta_faq_jsonld_review.md`](../handoff/2026-10-02_cta_faq_jsonld_review.md),
     리뷰서는
     [`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md) 입니다.
+20. **완료.** 2026-10-02 리뷰 결함 3건 처리. 19번에서 이월한 세 항목을
+    병렬 워커 3기(W3·W4 병렬, W5 는 둘의 병합 후)로 해결했습니다.
+    W3 은 `src/data/faq.ts` 가 `src/data/pricing.ts` 의 `POINT_NOTE` 와 신규
+    `POINT_USAGE_RULE` 를 import 하도록 바꾸고, 코디네이터가 `pricing.astro:79` 의
+    하드코딩을 그 상수로 배선했습니다. W4 는 다이얼로그 문장의 "프로그램 접속"을
+    "서비스 이용"으로 고쳤습니다. W5 는 `scripts/check-structured-data.mjs`(10개
+    항목)와 `scripts/check-copy-consistency.mjs`(화이트리스트 4개 항목)를 만들어
+    `scripts/verify.sh` 4단계에 붙였습니다. 단계 수는 8 그대로이고 검사 항목만
+    늘어났습니다.
+    **코디네이터 음성 검증**(워커 자기보고 재현): 자기참조 `applicationCategory`
+    되돌리면 구조화 데이터 검사 exit 1(5건), "프로그램 접속" 복원하면 카피 검사
+    exit 1(1건), `POINT_USAGE_RULE` 하드코딩하면 카피 검사 exit 1(1건).
+    전부 복원 후 통과 확인했습니다.
+    **폰트 서브셋 검사 문자 352 → 350.** 사라진 문자는 정확히 `램속` 2자이며,
+    이는 "프로그램 접속"이 페이지에서 사라진 결과입니다. 문자 집합을 직접
+    비교해 확인했습니다(353 vs 355, 개행 처리 차이).
+    **이번 회차는 카피·데이터·게이트만 바꿨으므로 3장 기준선 수치는 그대로입니다.**
+    실측: 라이트 대비 15.88, 다크 19.46, CTA 44px, 5단계 콘솔 오류 0건,
+    7단계 0 issue group, 8단계 10개 항목 전부 `fail: null`. 상세는
+    [`../handoff/2026-10-02_review_findings_fixed.md`](../handoff/2026-10-02_review_findings_fixed.md) 입니다.
 ---
 
 ## 6. 회귀 감지
@@ -505,6 +529,22 @@ npm run verify
 - 320px 에서 작은 터치 타겟이 있거나, h1 이 1개가 아니거나, html lang 이 ko 가 아니거나, 이미지 alt 가 빠진 경우
 - 인터랙션 시나리오의 기대 상태 불일치
 - 정본에서 기대 문구를 파생하지 못했거나, 주입할 기대값 파일을 읽지 못한 경우
+- JSON-LD 가 파싱되지 않거나, `@context`·`Organization`·`WebSite` 노드가 없고,
+  BIDBOX 5개 페이지에 `SoftwareApplication` 이 없거나, nani 3개 페이지에 있거나,
+  `applicationCategory` 가 자기 자신(`SoftwareApplication`)이거나, 결제 보류인데
+  `offers` 가 있거나, `url`·`name` 이 정본(`astro.config.mjs` 의 `site`,
+  `src/data/site.ts` 의 `brand.product`)과 다르거나.
+  `scripts/check-structured-data.mjs` 가 검사합니다
+- `src/data` 정본 문장(`primaryCta.program.label`, `POINT_NOTE`,
+  `POINT_USAGE_RULE`)이 소비처 `.astro` 에 하드코딩으로 반복되거나, 폐기된 CTA
+  문구 `프로그램 접속` 이 `src/pages`·`src/components` 에 남아 있거나.
+  `scripts/check-copy-consistency.mjs` 가 화이트리스트 방식으로 검사합니다.
+  정본 파일(`src/data/` 아래)은 대상이 아닙니다
+
+마지막 두 항목은 2026-10-02 에 추가했습니다. 그전까지 게이트는 "깨지지 않은 것"만
+증명했고 "틀린 것"을 증명하지 못했습니다
+([`../analysis/검토_고도화_W1W2_20261002.md`](../analysis/검토_고도화_W1W2_20261002.md) 6절).
+**단계 수는 8 그대로입니다.** 검사 항목이 늘어난 것이지 단계가 늘어난 것이 아닙니다.
 
 인터랙션 체크가 비교하는 기대 문자열은 `scripts/audit/expected.mjs` 가 정본에서
 파생해 `scripts/audit/interact.swift` 가 주입합니다. 파생 경로와 주입 경로는
