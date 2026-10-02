@@ -33,7 +33,7 @@ export const productNav: NavItem[] = [
 
 export const primaryCta = {
   demo: { label: '데모 신청', href: '/bidbox/demo/' },
-  program: { label: '프로그램 접속', href: '/bidbox/pricing/' },
+  program: { label: '요금 보기', href: '/bidbox/pricing/' },
 };
 
 /**
