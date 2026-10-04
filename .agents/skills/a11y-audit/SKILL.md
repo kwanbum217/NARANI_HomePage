@@ -61,7 +61,7 @@ swift scripts/audit/a11y.swift "http://127.0.0.1:${PORT[0]}" "/company/|320x900"
    해결됩니다.
 5. 다시 `npm run verify` 를 실행합니다.
 6. 실측값이 바뀌었으면
-   [`../../docs/context/CURRENT_STATE.md`](../../docs/context/CURRENT_STATE.md) 의
+   [`../../docs/context/CURRENT_STATE.md`](../../../docs/context/CURRENT_STATE.md) 의
    기준선 표를 갱신합니다.
 
 ## 하지 않는 것
@@ -77,5 +77,5 @@ swift scripts/audit/a11y.swift "http://127.0.0.1:${PORT[0]}" "/company/|320x900"
 - 200% 확대 시각 확인
 
 이 항목들은 배포 전 육안 확인이 필요하며,
-[`../../docs/spec/QA_AND_A11Y.md`](../../docs/spec/QA_AND_A11Y.md) 7장에 정리되어
+[`../../docs/spec/QA_AND_A11Y.md`](../../../docs/spec/QA_AND_A11Y.md) 7장에 정리되어
 있습니다.

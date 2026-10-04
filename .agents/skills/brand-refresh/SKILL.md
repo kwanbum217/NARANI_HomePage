@@ -47,10 +47,10 @@ description: 로고, 색, 회사명, 연락처, 내비게이션을 단일 소스
    npm run verify
    ```
 
-5. [`../../docs/design/BRAND.md`](../../docs/design/BRAND.md) 와
-   [`../../docs/design/DESIGN_SYSTEM.md`](../../docs/design/DESIGN_SYSTEM.md) 의 값 표를
+5. [`../../docs/design/BRAND.md`](../../../docs/design/BRAND.md) 와
+   [`../../docs/design/DESIGN_SYSTEM.md`](../../../docs/design/DESIGN_SYSTEM.md) 의 값 표를
    갱신합니다.
-6. 실측 수치는 [`../../docs/context/CURRENT_STATE.md`](../../docs/context/CURRENT_STATE.md)
+6. 실측 수치는 [`../../docs/context/CURRENT_STATE.md`](../../../docs/context/CURRENT_STATE.md)
    의 기준선 표를 갱신합니다. 다른 문서에는 수치를 복사하지 않습니다.
 
 ## 하지 않는 것
@@ -62,6 +62,6 @@ description: 로고, 색, 회사명, 연락처, 내비게이션을 단일 소스
 ## 완료 조건
 
 - `npm run verify` 통과
-- 7개 페이지 푸터와 헤더가 새 값으로 표시됨
+- 8개 페이지 푸터와 헤더가 새 값으로 표시됨
 - 대비가 하한 이상
 - 문서 표가 실제 값과 일치

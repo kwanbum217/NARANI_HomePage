@@ -1,10 +1,11 @@
 # CURRENT_STATE — narani_homepage 운영 상태 정본
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-10-02
-> **버전**: v1.5.0
+> **수정일**: 2026-10-05
+> **버전**: v1.6.0
 > **상태**: 2026-10-02 리뷰 결함 3건까지 처리 완료. 8단계 게이트에 카피 정합과
-> 구조화 데이터 검사를 추가함. 결제·폼 백엔드 미연결
+> 구조화 데이터 검사를 추가함. 결제·폼 백엔드 미연결.
+> 2026-10-05 문서·코드 정합 검토에서 실측값이 뒤처진 항목을 갱신했습니다(1·2장, 5장 21번)
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -14,19 +15,19 @@
 
 | 항목 | 상태 | 근거 |
 | --- | --- | --- |
-| 페이지 7종 | 완료 | `src/pages/` |
-| Hallmark 섹션 리듬 재구성 | 완료 | [`../design/HALLMARK_REDESIGN.md`](../design/HALLMARK_REDESIGN.md). 7개 라우트가 각기 다른 구조 |
+| 페이지 8종 | 완료 | `src/pages/` 의 `.astro` 8개. `scripts/verify.sh` 의 `PAGES`·`NARROW` 배열과 일치 |
+| Hallmark 섹션 리듬 재구성 | 완료 | [`../design/HALLMARK_REDESIGN.md`](../design/HALLMARK_REDESIGN.md). 8개 라우트가 각기 다른 구조 |
 | 디자인 토큰 | 완료 | `src/styles/global.css` `:root` 단일 소스 |
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
-| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts` |
+| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts`, `src/data/faq.ts` |
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
 | 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 `gtag('event', ...)` 로 보냅니다. 일반 객체로 `dataLayer.push` 하면 gtag.js 가 콘솔 오류 없이 조용히 무시하므로 형식이 고정되어 있습니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
 | 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 10개입니다(검사 구성은 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
-| 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift` |
-| 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 29파일, 에러 0 |
+| 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. **현재 50,172 바이트**(2026-10-05 실측). CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift`. 5장 10·15번의 81,696·52,176·58.9KB 값은 각 회차 시점 기록이므로 현재 기준으로 읽지 마십시오 |
+| 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 35파일, 에러 0, 힌트 2건(2026-10-05 실측). 힌트는 `scripts/audit/checks/prefill.js` 와 `prefill-reject.js` 의 미사용 `sleep` 변수(`ts6133`)이며 `npm run check` 의 실패 기준은 error 이므로 통과에 영향이 없습니다 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
-| CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성 |
+| CI 파이프라인 | 통과·사각지 있음 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성, sitemap 무결성. **2026-10-05 확인: 4단계에 추가된 `check-structured-data.mjs` 와 `check-copy-consistency.mjs` 는 CI 에 없음.** 둘 다 순수 Node 스크립트라 Linux 러너에서 그대로 돕습니다. 5장 21번 참조 |
 | 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
 | 폼 백엔드 | 미연결 | `src/data/site.ts` 의 `enquiryEndpoint` 가 빈 값이라 900ms 지연 시뮬레이션. 문의·데모 접수 API 가 제품 본체(`refac_bid_box`)에 없으므로 이 저장소에서 만들지 않고 위임합니다 |
@@ -64,8 +65,14 @@
 | 검증 도구 | macOS WebKit (WKWebView), Swift 6.4 |
 
 Node 와 npm 은 2026-09-27 에 [`환경_버전_20260927.md`](../analysis/환경_버전_20260927.md)
-실측으로 갱신했습니다. 그 외 항목은 같은 실측에서 일치를 확인했으며, WKWebView 상세 버전은
-확인하지 않았습니다.
+실측으로 갱신했고, **2026-10-05 에 사용자 로그인 셸(`zsh -lic`)로 재확인해 여전히
+v26.10.0·12.1.0 임을 확인했습니다.** 패키지 4종과 esbuild, Swift 6.4 도 같은
+방법으로 일치를 재확인했습니다. WKWebView 상세 버전은 확인하지 않았습니다.
+
+**주의**: Hermes `execute_code` 커널의 PATH 맨 앞에는
+`~/.hermes/tools/node-26.7.0-darwin-arm64/bin` 이 붙어 있어 `node -v` 가
+v26.7.0·npm 11.19.0 으로 나옵니다. **이 값이 아니라 로그인 셸의 값을 기록하십시오.**
+사유는 [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 11.3 참조.
 
 ---
 
@@ -495,7 +502,7 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     "서비스 이용"으로 고쳤습니다. W5 는 `scripts/check-structured-data.mjs`(10개
     항목)와 `scripts/check-copy-consistency.mjs`(화이트리스트 4개 항목)를 만들어
     `scripts/verify.sh` 4단계에 붙였습니다. 단계 수는 8 그대로이고 검사 항목만
-    늘어났습니다.
+    늘었습니다.
     **코디네이터 음성 검증**(워커 자기보고 재현): 자기참조 `applicationCategory`
     되돌리면 구조화 데이터 검사 exit 1(5건), "프로그램 접속" 복원하면 카피 검사
     exit 1(1건), `POINT_USAGE_RULE` 하드코딩하면 카피 검사 exit 1(1건).
@@ -507,6 +514,57 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     실측: 라이트 대비 15.88, 다크 19.46, CTA 44px, 5단계 콘솔 오류 0건,
     7단계 0 issue group, 8단계 10개 항목 전부 `fail: null`. 상세는
     [`../handoff/2026-10-02_review_findings_fixed.md`](../handoff/2026-10-02_review_findings_fixed.md) 입니다.
+21. **완료(문서 6건·게이트 2건).** 2026-10-05 문서·코드 정합 검토. 문서가 코드를
+    따라가지 못한 9건을 실측으로 찾아 처리했습니다. **3장 기준선 수치는 그대로입니다**
+    (카피·데이터·토큰을 건드리지 않았습니다).
+
+    **문서 정정 12건**
+
+    | 건 | 처리 |
+    | --- | --- |
+    | 1장 "페이지 7종" | 8종으로 정정. `.astro` 8개, `verify.sh` `PAGES` 배열과 일치 확인 |
+    | 1장 콘텐츠 단일 소스 | `src/data/faq.ts` 누락이었습니다 |
+    | 1장 폰트 용량 | 현재값 50,172 바이트를 정본에 기록. 81,696·52,176·58.9KB 는 회차 기록임을 명시 |
+    | 1장 타입 체크 | 29파일 → 35파일, 힌트 2건의 정체를 기록 |
+    | 1장 CI | 4단계 정적 검사가 4종인데 2종만 돌던 사각지를 발견하고 **CI 에 추가** |
+    | `docs/analysis/README.md` | 색인 26건 → 32건. 2026-10-02 회차 6건이 빠져 있었습니다 |
+    | `docs/spec/QA_AND_A11Y.md` 3장 | 도구 표가 12개 중 4개만 열거. 전부 채우고 이모지 검사 범위를 명시 |
+    | `.agents/skills/` | 5개 파일 링크 13건이 `../../docs/` (한 단계 부족). `../../../docs/` 로 수정 |
+    | `docs/ops/BUILD_AND_DEPLOY.md` 8장 | CI 표에 검사 2종 추가 |
+    | `Makefile` | `PORT ?= 4322` 가 2026-09-28 포트 자동 배정 이후 죽은 변수로 남아 있었습니다. 제거 |
+    | `docs/ops/DO_NOT_REPEAT.md` | 9.2(문서 링크 깊이)와 11장(오탐 2건) 추가 |
+
+    **게이트 코드 변경 2건과 음성 검증 결과**
+
+    - `scripts/check-no-emoji.mjs` 의 `DEFAULT_TARGETS` 에 `.agents`, `.github`,
+      `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`,
+      `tsconfig.json` 을 추가했습니다. 검사 파일 112 → **123개**.
+      음성 검증: `.github/workflows/ci.yml` 과 `.agents/skills/a11y-audit/SKILL.md` 에
+      이모지를 심어 **둘 다 exit 1 로 잡히는 것**을 확인하고 되돌렸습니다.
+    - `.github/workflows/ci.yml` 에 `check-structured-data.mjs` 와
+      `check-copy-consistency.mjs` 를 추가했습니다. CI 7단계(로컬 재현)를 전부
+      실행해 종료 코드 0 을 확인했습니다.
+
+    **이 세션에서 내가 만든 오탐 3건**(셋 다 정정 후 기록함)
+
+    (1) `check-copy-consistency` 음성 검증에 실제 상숫값과 다른 문장을 넣어
+    통과가 나왔습니다. 틀린 값을 넣으면 검사가 아무것도 하지 않은 것처럼
+    통과하므로, 실제 값으로 다시 넣어 exit 1 을 확인했습니다.
+    (2) `plans` 항목 수를 `grep "{ id: '"` 로 세어 0 을 얻었습니다. 실제 3개입니다.
+    (3) **가장 부당한 오탐.** `execute_code` 커널에서 `node -v` 를 돌려
+    v26.7.0·npm 11.19.0 을 얻고 2장 환경의 v26.10.0·12.1.0 이 낡았다고
+    "정정"했습니다. **원래 문서가 옳았습니다.** Hermes 커널의 PATH 맨 앞에
+    `~/.hermes/tools/node-26.7.0-darwin-arm64/bin` 이 붙어 있어서 다른 Node 가
+    잡힌 것이었습니다. `terminal` 도구와 `zsh -lic` 로그인 셸 모두 v26.10.0·12.1.0 을
+    가리킵니다. 되돌렸고 2장 경고를 남겼습니다.
+    셋 다 [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 11장에 남겼습니다.
+
+    **AGENTS.md 는 이번 회차에 손대지 않았습니다.** 1장 표 "BIDBOX 4개"(실제 5개)와
+    8장 표의 단계 구성이 `verify.sh` 와 어긋납니다. Hermes 보호 파일이라
+    [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 9.1 절차가 필요하며,
+    다음 인수인계의 최우선 항목입니다. 상세는
+    [`../handoff/2026-10-05_docs_code_consistency_audit.md`](../handoff/2026-10-05_docs_code_consistency_audit.md) 입니다.
+
 ---
 
 ## 6. 회귀 감지

@@ -45,6 +45,15 @@ jobs:
       - name: sitemap 무결성
         run: npm run check:sitemap
 
+      # 4단계 정적 검사 4종 중 나머지 2종입니다. 2026-10-02 에 verify.sh 에 붙었지만
+      # 여기에는 없었습니다. 둘 다 순수 Node 이므로 Linux 러너에서 그대로 돕니다.
+      # check-structured-data 는 dist/ 를 읽으므로 위 빌드 뒤에 있어야 합니다.
+      - name: 구조화 데이터 정합
+        run: node scripts/check-structured-data.mjs dist
+
+      - name: 카피 정합
+        run: node scripts/check-copy-consistency.mjs .
+
       - name: 산출물 요약
         run: |
           echo "생성된 페이지:"

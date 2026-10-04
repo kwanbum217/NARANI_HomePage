@@ -4,13 +4,33 @@
  * 저장소 규칙상 코드, 주석, 커밋 메시지, 문서 어디에도 이모지를 쓰지 않습니다.
  *
  * 사용법: node scripts/check-no-emoji.mjs [경로...]
- * 경로를 주지 않으면 기본 대상(src, docs, scripts, 최상위 md)을 검사합니다.
+ * 경로를 주지 않으면 기본 대상(아래 DEFAULT_TARGETS)을 검사합니다.
+ *
+ * 기본 대상에 담는 기준은 AGENTS.md 7장입니다. "코드, 주석, 커밋 메시지, 문서
+ * 어디에도 쓰지 않습니다"이므로 저장소가 추적하는 텍스트 파일은 모두 검사 대상입니다.
+ * 2026-10-05 이전에는 최상위 md 3종만 담겨 있어 .github/, .agents/skills/,
+ * astro.config.mjs, Makefile, .pre-commit-config.yaml 에 들어간 이모지를
+ * CI 와 커밋 훅이 모두 놓치고 있었습니다.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { hasEmoji } from './lib/emoji.mjs';
 
-const DEFAULT_TARGETS = ['src', 'docs', 'scripts', 'AGENTS.md', 'SKILLS.md', 'README.md'];
+const DEFAULT_TARGETS = [
+  'src',
+  'docs',
+  'scripts',
+  '.agents',
+  '.github',
+  'AGENTS.md',
+  'SKILLS.md',
+  'README.md',
+  'astro.config.mjs',
+  'Makefile',
+  '.pre-commit-config.yaml',
+  'package.json',
+  'tsconfig.json',
+];
 
 const EXTS = new Set([
   '.md', '.astro', '.ts', '.js', '.mjs', '.css', '.json',

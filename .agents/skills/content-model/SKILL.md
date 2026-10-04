@@ -62,7 +62,7 @@ export const plans: Plan[] = [
 
 ## 스키마 표 갱신
 
-필드를 추가하면 [`docs/spec/CONTENT_MODEL.md`](../../docs/spec/CONTENT_MODEL.md) 의
+필드를 추가하면 [`docs/spec/CONTENT_MODEL.md`](../../../docs/spec/CONTENT_MODEL.md) 의
 표에 함께 적습니다.
 
 ## 함정

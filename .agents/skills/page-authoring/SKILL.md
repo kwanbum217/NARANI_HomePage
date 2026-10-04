@@ -9,7 +9,7 @@ description: 새 페이지를 추가하는 절차입니다. 레이아웃 선택,
 
 ### 1. 명세 먼저
 
-[`docs/spec/PAGE_SPEC.md`](../../docs/spec/PAGE_SPEC.md) 에 항목을 추가합니다.
+[`docs/spec/PAGE_SPEC.md`](../../../docs/spec/PAGE_SPEC.md) 에 항목을 추가합니다.
 아래를 정합니다.
 
 - 라우트
@@ -72,7 +72,7 @@ import { brand } from '../../data/site';
 ### 5. 반복 카피 승격
 
 같은 문장이 두 곳 이상에서 쓰이면 `src/data/` 로 올립니다. 판단 기준은
-[`docs/spec/CONTENT_MODEL.md`](../../docs/spec/CONTENT_MODEL.md) 1장입니다.
+[`docs/spec/CONTENT_MODEL.md`](../../../docs/spec/CONTENT_MODEL.md) 1장입니다.
 
 ### 6. 검증 목록에 추가
 
@@ -103,4 +103,4 @@ npm run verify
 - `.astro` 에서 `{` `}` 는 표현식입니다. CSS 나 JS 리터럴을 그대로 넣지 않습니다.
 - Tailwind important 는 접미사입니다(`p-0!`). 접두사(`!p-0`)는 무효입니다.
 - 모바일 메뉴에 `x-transition` 을 붙이지 않습니다.
-  [`../../docs/ops/DO_NOT_REPEAT.md`](../../docs/ops/DO_NOT_REPEAT.md) 참조
+  [`../../docs/ops/DO_NOT_REPEAT.md`](../../../docs/ops/DO_NOT_REPEAT.md) 참조

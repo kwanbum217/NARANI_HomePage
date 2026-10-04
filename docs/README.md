@@ -1,11 +1,14 @@
 # narani_homepage 문서 인덱스
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-10-02
-> **버전**: v1.3.0
+> **수정일**: 2026-10-05
+> **버전**: v1.4.0
 > **상태**: 1차 구현 및 검증 완료. 결제·폼 백엔드 미연결. 2026-10-02 고도화 구현·머지·리뷰 완료
 > v1.3.0 은 2026-10-02 인수인계(`2026-10-02_cta_faq_jsonld_review.md`)와
 > changelogs 2026-10-02 행을 등재하고, 최신 회차 표시를 그 행으로 옮겼습니다.
+> v1.4.0 은 2026-10-05 문서·코드 정합 검토 회차를 등재하고 최신 인수인계 표시를
+> 그 문서로 옮겼습니다. 이번 회차는 상위 인덱스가 아니라 하위 색인(`analysis/README.md`)이
+> 밀려 있던 것을 고쳤습니다.
 > **적용 범위**: Google Slides 구성안 9장 → 8페이지 정적 사이트(404 포함)
 
 ---
@@ -160,7 +163,8 @@ docs/
 | 2026-09-29 | [`handoff/2026-09-29_docs_and_form_a11y.md`](handoff/2026-09-29_docs_and_form_a11y.md) | 색인 복구와 폼 접근성, 리뷰어 운용 |
 | 2026-09-30 | [`handoff/2026-09-30_kilo_icon_and_gate_sync.md`](handoff/2026-09-30_kilo_icon_and_gate_sync.md) | kilo 리뷰어 좌측 아이콘 진단, AGENTS.md 게이트 정합 |
 | 2026-10-02 | [`handoff/2026-10-02_cta_faq_jsonld_review.md`](handoff/2026-10-02_cta_faq_jsonld_review.md) | CTA 라벨 정직화, FAQ 모듈과 섹션, BIDBOX JSON-LD, 리뷰와 결함 이월 |
-| 2026-10-02 | [`handoff/2026-10-02_review_findings_fixed.md`](handoff/2026-10-02_review_findings_fixed.md) | 리뷰 결함 3건 처리, 게이트에 카피 정합·구조화 데이터 검사 추가. **현재 인수인계** |
+| 2026-10-02 | [`handoff/2026-10-02_review_findings_fixed.md`](handoff/2026-10-02_review_findings_fixed.md) | 리뷰 결함 3건 처리, 게이트에 카피 정합·구조화 데이터 검사 추가 |
+| 2026-10-05 | [`handoff/2026-10-05_docs_code_consistency_audit.md`](handoff/2026-10-05_docs_code_consistency_audit.md) | **현재 인수인계.** 문서 12건 정정, 이모지 검사 범위 확장, CI 에 정적 검사 2종 추가. AGENTS.md 2건은 위임 대기 |
 
 ---
 
@@ -168,6 +172,7 @@ docs/
 
 | 날짜 | 내용 |
 | --- | --- |
+| 2026-10-05 | 문서·코드 정합 검토. 상태 정본 5건 정정, 스킬 링크 13건·분석 색인 6건, 이모지 검사 범위 확장, CI 에 정적 검사 2종 |
 | 2026-10-02 | 리뷰 결함 3건 처리. FAQ 단일 소스 배선, 다이얼로그 카피 정정, 게이트 검사 2종 추가 |
 | 2026-10-02 | CTA 라벨 정직화, FAQ 데이터 모듈과 두 페이지 섹션, BIDBOX 전용 JSON-LD, JSON-LD 용어 정정 |
 | 2026-09-30 | 문서 정합과 워커 운용 규칙 |
