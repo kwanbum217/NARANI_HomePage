@@ -514,11 +514,11 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     실측: 라이트 대비 15.88, 다크 19.46, CTA 44px, 5단계 콘솔 오류 0건,
     7단계 0 issue group, 8단계 10개 항목 전부 `fail: null`. 상세는
     [`../handoff/2026-10-02_review_findings_fixed.md`](../handoff/2026-10-02_review_findings_fixed.md) 입니다.
-21. **완료(문서 6건·게이트 2건).** 2026-10-05 문서·코드 정합 검토. 문서가 코드를
+21. **완료(문서 14건·게이트 2건·AGENTS.md 2곳).** 2026-10-05 문서·코드 정합 검토. 문서가 코드를
     따라가지 못한 9건을 실측으로 찾아 처리했습니다. **3장 기준선 수치는 그대로입니다**
     (카피·데이터·토큰을 건드리지 않았습니다).
 
-    **문서 정정 12건**
+    **문서 정정 12건 + AGENTS.md 2곳(외부 워커 위임)**
 
     | 건 | 처리 |
     | --- | --- |
@@ -532,13 +532,16 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     | `.agents/skills/` | 5개 파일 링크 13건이 `../../docs/` (한 단계 부족). `../../../docs/` 로 수정 |
     | `docs/ops/BUILD_AND_DEPLOY.md` 8장 | CI 표에 검사 2종 추가 |
     | `Makefile` | `PORT ?= 4322` 가 2026-09-28 포트 자동 배정 이후 죽은 변수로 남아 있었습니다. 제거 |
-    | `docs/ops/DO_NOT_REPEAT.md` | 9.2(문서 링크 깊이)와 11장(오탐 2건) 추가 |
+    | `docs/ops/DO_NOT_REPEAT.md` | 9.2(문서 링크 깊이)와 11장(오탐 3건) 추가 |
+    | `AGENTS.md` 1장 | "BIDBOX 4개" → "BIDBOX 5개". Hermes 밖의 `cmd` 워커가 수정 |
+    | `AGENTS.md` 8장 표 | `dist 서빙` 행 추가, 5단계 스타일 실측 통합, 4단계에 정적 검사 2종 추가. `QA_AND_A11Y.md` 2장과 8단계 전부 일치 확인 |
 
     **게이트 코드 변경 2건과 음성 검증 결과**
 
     - `scripts/check-no-emoji.mjs` 의 `DEFAULT_TARGETS` 에 `.agents`, `.github`,
       `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`,
-      `tsconfig.json` 을 추가했습니다. 검사 파일 112 → **123개**.
+      `tsconfig.json` 을 추가했습니다. 검사 파일 112 → **123개**
+      (인수인계 문서 1건이 추가되어 최종 124개).
       음성 검증: `.github/workflows/ci.yml` 과 `.agents/skills/a11y-audit/SKILL.md` 에
       이모지를 심어 **둘 다 exit 1 로 잡히는 것**을 확인하고 되돌렸습니다.
     - `.github/workflows/ci.yml` 에 `check-structured-data.mjs` 와
@@ -559,11 +562,14 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     가리킵니다. 되돌렸고 2장 경고를 남겼습니다.
     셋 다 [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 11장에 남겼습니다.
 
-    **AGENTS.md 는 이번 회차에 손대지 않았습니다.** 1장 표 "BIDBOX 4개"(실제 5개)와
-    8장 표의 단계 구성이 `verify.sh` 와 어긋납니다. Hermes 보호 파일이라
-    [`../ops/DO_NOT_REPEAT.md`](../ops/DO_NOT_REPEAT.md) 9.1 절차가 필요하며,
-    다음 인수인계의 최우선 항목입니다. 상세는
-    [`../handoff/2026-10-05_docs_code_consistency_audit.md`](../handoff/2026-10-05_docs_code_consistency_audit.md) 입니다.
+    **AGENTS.md 는 Hermes 밖의 워커에게 위임해 수정했습니다.** 1장 표 "BIDBOX 4개"를
+    5개로, 8장 표를 `verify.sh` 실제 8단계(`docs/spec/QA_AND_A11Y.md` 2장 기준)에
+    맞췄습니다. 워커는 `cmd`(Command Code v1.74.1, yolo), Orca run `run_cc70cb292163`.
+    코디네이터가 `git diff` 로 대조했고 지시한 두 곳 외 변경은 0건이었습니다.
+    워커가 커밋하지 않고 넘겼으므로 코디네이터가 커밋했습니다.
+    185~189행 CI 설명은 원래부터 참이었고 이번 세션의 CI 보강으로 계속 참이므로
+    손대지 않았습니다. 상세는
+    [`../handoff/2026-10-05_docs_code_consistency_audit.md`](../handoff/2026-10-05_docs_code_consistency_audit.md) 5장입니다.
 
 ---
 
