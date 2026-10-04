@@ -1,9 +1,15 @@
 # 검증과 접근성
 
 > **작성일**: 2026-09-23
-> **버전**: v1.0.0
-> **도구 위치**: `scripts/verify.sh`, `scripts/audit/`, `scripts/check-links.mjs`
+> **수정일**: 2026-10-05
+> **버전**: v1.1.0
+> **도구 위치**: `scripts/verify.sh`, `scripts/audit/`, `scripts/check-*.mjs`,
+> `scripts/check-no-emoji.mjs`, `scripts/validate-commit-message.mjs`,
+> `scripts/build-font-subset.py`
 > 기준선 수치의 정본은 [`../context/CURRENT_STATE.md`](../context/CURRENT_STATE.md) 입니다.
+>
+> v1.1.0 은 3장 도구 표가 `scripts/` 12개 중 4개만 적고 있던 것을 전부 채웠고,
+> 이모지 검사의 실제 대상 범위를 명시했습니다.
 
 ---
 
@@ -78,8 +84,24 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 | `scripts/audit/render.swift` | 경로와 뷰포트를 받아 렌더. 배경색, 텍스트색, 명도 대비, 컴포넌트 치수, 요금 카드 수, 다이얼로그 존재, 푸터 문구, 콘솔 오류를 JSON 으로 출력하고 스크린샷을 저장 |
 | `scripts/audit/a11y.swift` | 문서 오버플로우, 라벨 없는 입력, 작은 터치 타겟, `h1` 개수, `lang`, 이미지 `alt` 누락 검사 |
 | `scripts/audit/interact.swift` | 페이지에서 임의의 JS 시나리오를 실행하고 `window.__it` 결과를 수집 |
-| `scripts/audit/checks/*.js` | 인터랙션 시나리오. `nav.js`, `form.js`, `dialog.js` |
+| `scripts/audit/checks/*.js` | 인터랙션 시나리오 6종: `nav.js`, `form.js`, `dialog.js`, `prefill.js`, `prefill-reject.js`, `fallback.js` |
+| `scripts/audit/expected.mjs` | 정본에서 기대 문구를 파생해 `interact.swift` 에 주입 |
 | `scripts/check-links.mjs` | `dist/` 전체 링크 무결성 |
+| `scripts/check-sitemap.mjs` | `sitemap.xml` 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
+| `scripts/check-structured-data.mjs` | `dist/` 의 JSON-LD 10개 항목 검사 |
+| `scripts/check-copy-consistency.mjs` | 정본 문장의 소비처 하드코딩과 폐기 문구 잔존 검사 |
+| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상은 `src`, `docs`, `scripts`, 최상위 `md` 3종 |
+| `scripts/validate-commit-message.mjs` | 커밋 메시지 형식(`type: 한국어 subject`) 검사 |
+| `scripts/build-font-subset.py` | 폰트 서브셋 재생성. **6단계를 통과시키려면 새 한국어 카피 추가 후 먼저 돌립니다** |
+
+목록은 `find scripts -type f` 로 생성할 수 있습니다. 4단계 정적 검사 4종
+(`check-links`, `check-sitemap`, `check-structured-data`, `check-copy-consistency`)은
+모두 순수 Node 이므로 Linux 러너에서도 돕습니다.
+
+`check-no-emoji.mjs` 의 기본 대상은 저장소 전체가 아닙니다. `.github/`,
+`.agents/skills/`, `astro.config.mjs`, `Makefile` 은 기본 범위 밖이므로 이모지가
+들어갔을 때 CI 가 잡지 못합니다. 커밋 훅(`pre-commit`, `pass_filenames: false` 과
+`always_run: true`)도 같은 기본 대상을 씁니다. 전체를 보려면 대상 경로를 명시하십시오.
 
 도구는 macOS WebKit 을 사용합니다. PyObjC 없이 Swift PDFKit 과 WKWebView 로 동작하므로
 macOS 또는 macOS 러너에서만 실행됩니다.
@@ -150,3 +172,10 @@ macOS 또는 macOS 러너에서만 실행됩니다.
 | 이미지 시각 품질 | 추출 세션이 이미지를 볼 수 없었음 | 담당자 육안 확인 |
 | 폼 실제 전송 | 엔드포인트 미연결 | 연결 후 별도 검증 |
 | 결제 | 미연결 | 제품 본체 연동 후 |
+| degrade 클립보드 거절 분기 | `127.0.0.1`·`localhost` 모두 보안 컨텍스트라 거절을 만들 수 없음 | 2장 각주 참조 |
+| FAQ·JSON-LD·카피 정합의 CI 검사 | 2026-10-05 기준 `.github/workflows/ci.yml` 에 두 스크립트가 없음 | 로컬 `npm run verify` |
+
+마지막 두 행은 재현 불가능이라 문서로만 남기는 한계가 아니라, **아직 안 넣은 검사**입니다.
+두 스크립트 모두 순수 Node 이므로 CI 에 붙이는 것 자체는 가능합니다.
+`scripts/check-structured-data.mjs` 는 `dist/` 를 읽으므로 빌드 뒤에,
+`scripts/check-copy-consistency.mjs` 는 소스를 읽으므로 어디서든 돕니다.

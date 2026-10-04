@@ -1,9 +1,11 @@
 # 빌드와 배포
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-29
-> **버전**: v1.0.1
+> **수정일**: 2026-10-05
+> **버전**: v1.1.0
 > **대상**: 로컬 개발, 빌드 산출물, 정적 배포
+>
+> v1.1.0 은 8장 CI 표에 2026-10-02 에 추가된 정적 검사 2종이 빠져 있던 것을 채웠습니다.
 
 ---
 
@@ -161,7 +163,13 @@ X-Frame-Options: SAMEORIGIN
 | 빌드 | `npm run build` |
 | 링크 무결성 | `npm run links` (`dist/` 내부 참조 검사) |
 | sitemap 무결성 | `npm run check:sitemap` (`sitemap.xml` 과 실제 페이지 대조) |
+| 구조화 데이터 정합 | `node scripts/check-structured-data.mjs dist` (JSON-LD 10개 항목) |
+| 카피 정합 | `node scripts/check-copy-consistency.mjs .` (정본 문장 하드코딩·폐기 문구) |
 | 산출물 | 페이지 목록과 번들 크기 요약, `dist/` 아티팩트 업로드 |
+
+뒤의 두 검사는 2026-10-05 에 추가했습니다. 4단계 정적 검사 4종을 CI 가 전부 돌리며,
+모두 순수 Node 이므로 WebKit 이 필요 없습니다. 즉 CI 는 8단계 중 1·2·4단계를
+빠짐없이 대신합니다.
 
 브라우저 검증(`scripts/verify.sh`)은 macOS WebKit 을 사용하므로 CI 에서 실행하지
 않습니다. 배포 전 로컬에서 수행합니다.

@@ -1,7 +1,10 @@
 .DEFAULT_GOAL := help
 SHELL := /bin/bash
-PORT ?= 4322
 
+# 여기 있었던 `PORT ?= 4322` 는 2026-10-05 에 지웠습니다. 2026-09-28 에
+# verify.sh 가 빈 포트를 자동 배정하도록 바뀐 뒤 아무 타깃도 쓰지 않는 죽은
+# 변수로 남아 있었습니다. 고정 기본값은 병렬 워커가 서로의 dist 를 검증하게
+# 만듭니다. 근거는 CURRENT_STATE.md 5장 9번입니다.
 .PHONY: help setup dev build preview verify links check-emoji hooks clean
 
 help: ## 사용 가능한 타깃을 출력합니다
