@@ -2,10 +2,11 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-10-05
-> **버전**: v1.6.0
+> **버전**: v1.6.1
 > **상태**: 2026-10-02 리뷰 결함 3건까지 처리 완료. 8단계 게이트에 카피 정합과
 > 구조화 데이터 검사를 추가함. 결제·폼 백엔드 미연결.
-> 2026-10-05 문서·코드 정합 검토에서 실측값이 뒤처진 항목을 갱신했습니다(1·2장, 5장 21번)
+> 2026-10-05 문서·코드 정합 검토에서 실측값이 뒤처진 항목을 갱신했습니다(1·2장, 5장 21번).
+> 같은 날 1장 CI 행이 21번 갱신 전에 멈춰 있어 "CI 에 없음" 으로 남아 있던 것을 바로잡았습니다
 > 본 문서가 **단일 진실 원천(SSOT)** 입니다. 실측값과 판정은 이 문서에만 적고,
 > 다른 문서는 링크로 가리킵니다.
 
@@ -27,7 +28,7 @@
 | 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. **현재 50,172 바이트**(2026-10-05 실측). CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift`. 5장 10·15번의 81,696·52,176·58.9KB 값은 각 회차 시점 기록이므로 현재 기준으로 읽지 마십시오 |
 | 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 35파일, 에러 0, 힌트 2건(2026-10-05 실측). 힌트는 `scripts/audit/checks/prefill.js` 와 `prefill-reject.js` 의 미사용 `sleep` 변수(`ts6133`)이며 `npm run check` 의 실패 기준은 error 이므로 통과에 영향이 없습니다 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
-| CI 파이프라인 | 통과·사각지 있음 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성, sitemap 무결성. **2026-10-05 확인: 4단계에 추가된 `check-structured-data.mjs` 와 `check-copy-consistency.mjs` 는 CI 에 없음.** 둘 다 순수 Node 스크립트라 Linux 러너에서 그대로 돕습니다. 5장 21번 참조 |
+| CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성, sitemap 무결성, 구조화 데이터 정합, 카피 정합. 8단계 중 1·2·4단계를 전부 돕니다. **4단계 정적 검사 4종을 모두 돌립니다.** 2026-10-02 에 `verify.sh` 4단계에 붙은 `check-structured-data.mjs` 와 `check-copy-consistency.mjs` 가 CI 에 없던 사각지를 2026-10-05 에 찾아 붙였습니다. 둘 다 순수 Node 이므로 Linux 러너에서 그대로 돕습니다. 5장 21번 참조 |
 | 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
 | 정적 배포 | 미수행 | `dist/` 는 로컬 검증까지만 |
 | 폼 백엔드 | 미연결 | `src/data/site.ts` 의 `enquiryEndpoint` 가 빈 값이라 900ms 지연 시뮬레이션. 문의·데모 접수 API 가 제품 본체(`refac_bid_box`)에 없으므로 이 저장소에서 만들지 않고 위임합니다 |
