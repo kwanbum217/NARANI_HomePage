@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // 문서 상대 링크 검사기
-// 검사 대상: docs/**/*.md, .agents/skills/**/*.md, 루트 *.md
+// 검사 대상: 저장소 루트 아래 모든 *.md (SKIP_DIRS 제외, 숨은 디렉터리 포함)
 // 제외 디렉터리: node_modules, dist, .git, .verify, .astro, .worktrees
 
 import fs from 'fs';
@@ -49,28 +49,6 @@ function collectMarkdownFiles(dir) {
       }
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       results.push(fullPath);
-    }
-  }
-
-  return results;
-}
-
-/**
- * 루트 *.md 파일 목록을 반환합니다 (하위 디렉터리 제외).
- * @returns {string[]}
- */
-function collectRootMarkdownFiles() {
-  const results = [];
-  let entries;
-  try {
-    entries = fs.readdirSync(REPO_ROOT, { withFileTypes: true });
-  } catch {
-    return results;
-  }
-
-  for (const entry of entries) {
-    if (entry.isFile() && entry.name.endsWith('.md')) {
-      results.push(path.join(REPO_ROOT, entry.name));
     }
   }
 
@@ -145,12 +123,8 @@ function checkFile(filePath) {
 }
 
 function main() {
-  // 검사 대상 파일 수집
-  const files = [
-    ...collectRootMarkdownFiles(),
-    ...collectMarkdownFiles(path.join(REPO_ROOT, 'docs')),
-    ...collectMarkdownFiles(path.join(REPO_ROOT, '.agents', 'skills')),
-  ];
+  // 루트부터 전체를 한 번에 훑습니다. 루트 *.md 도 이 스캔에 포함되므로 따로 더하지 않습니다(중복 검사 방지).
+  const files = collectMarkdownFiles(REPO_ROOT);
 
   let totalLinks = 0;
   const allFailures = [];
