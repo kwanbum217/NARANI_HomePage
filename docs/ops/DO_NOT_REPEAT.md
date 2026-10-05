@@ -323,8 +323,8 @@ COPY  src/pages/bidbox/pricing.astro: POINT_USAGE_RULE 를 문자열로 반복�
 `plans` 항목 수를 `grep "{ id: '"` 로 세면 0 이 나옵니다. `pricing.ts` 는
 `id:` 앞의 공백 개수가 일정하지 않습니다. 항목 수는 파일을 열어 세거나
 구조를 아는 정규식으로 세어야 합니다. 2026-10-05 에 실제 `plans` 는 3개,
-`faqs` 는 6개입니다. `docs/changelogs/work_log.md` 는 FAQ 를 "5건" 으로 적고
-있는데 이는 작성 회차 시점 값이며 지금은 6개입니다.
+`faqs` 는 5개입니다. `docs/changelogs/work_log.md` 의 5건이 현재 값과
+일치합니다.
 
 ### 11.3 측정 도구마다 PATH 가 다를 수 있습니다
 
