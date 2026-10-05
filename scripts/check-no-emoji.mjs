@@ -67,7 +67,8 @@ function walk(target, acc = []) {
 }
 
 const targets = process.argv.slice(2);
-const files = (targets.length ? targets : DEFAULT_TARGETS).flatMap((t) => walk(t));
+const selectedTargets = targets.length ? targets : DEFAULT_TARGETS;
+const files = selectedTargets.flatMap((t) => walk(t));
 
 let violations = 0;
 for (const file of files) {
@@ -80,7 +81,13 @@ for (const file of files) {
   });
 }
 
-console.log(`검사한 파일 ${files.length}개`);
+// 출력 수치는 '검사 대상 N개 항목'과 '로컬 파일 M개'로 나눠 적습니다. 앞은 코드가
+// 정한 목록(DEFAULT_TARGETS 또는 인자)의 개수라 같은 커밋에서 항상 같지만, 뒤는
+// .claude·.commandcode 처럼 gitignore 대상이 섞여 있어 워크트리의 로컬 상태에 따라
+// 달라집니다. 출력에 남는 비결정적 수치는 다음 세션이 문서에 옮겨 적을 때
+// 재현되지 않으므로, 판정(실제 파일 전체를 훑는 이모지 검사)은 그대로 두고
+// 수치의 지위만 문구로 구분합니다.
+console.log(`검사 대상 ${selectedTargets.length}개 항목 (로컬 파일 ${files.length}개, 실행 시점 기준)`);
 if (violations > 0) {
   console.error(`이모지 사용 ${violations}건. AGENTS.md 7장에 따라 제거가 필요합니다.`);
   process.exit(1);
