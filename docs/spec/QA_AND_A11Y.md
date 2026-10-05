@@ -90,7 +90,7 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 | `scripts/check-sitemap.mjs` | `sitemap.xml` 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
 | `scripts/check-structured-data.mjs` | `dist/` 의 JSON-LD 10개 항목 검사 |
 | `scripts/check-copy-consistency.mjs` | 정본 문장의 소비처 하드코딩과 폐기 문구 잔존 검사 |
-| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상은 `src`, `docs`, `scripts`, 최상위 `md` 3종 |
+| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상 13개 항목(`src`, `docs`, `scripts`, `.agents`, `.github`, `AGENTS.md`, `SKILLS.md`, `README.md`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`, `tsconfig.json`). 2026-10-05 실행 기준 124개 파일 검사 |
 | `scripts/validate-commit-message.mjs` | 커밋 메시지 형식(`type: 한국어 subject`) 검사 |
 | `scripts/build-font-subset.py` | 폰트 서브셋 재생성. **6단계를 통과시키려면 새 한국어 카피 추가 후 먼저 돌립니다** |
 
@@ -98,10 +98,10 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 (`check-links`, `check-sitemap`, `check-structured-data`, `check-copy-consistency`)은
 모두 순수 Node 이므로 Linux 러너에서도 돕습니다.
 
-`check-no-emoji.mjs` 의 기본 대상은 저장소 전체가 아닙니다. `.github/`,
-`.agents/skills/`, `astro.config.mjs`, `Makefile` 은 기본 범위 밖이므로 이모지가
-들어갔을 때 CI 가 잡지 못합니다. 커밋 훅(`pre-commit`, `pass_filenames: false` 과
-`always_run: true`)도 같은 기본 대상을 씁니다. 전체를 보려면 대상 경로를 명시하십시오.
+`check-no-emoji.mjs` 는 2026-10-05 에 기본 대상을 13개 항목으로 확장했습니다.
+`.github/`, `.agents/`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`,
+`package.json`, `tsconfig.json` 이 기본 범위에 포함됩니다. 커밋 훅(`pre-commit`,
+`pass_filenames: false` 과 `always_run: true`)도 같은 기본 대상을 씁니다.
 
 도구는 macOS WebKit 을 사용합니다. PyObjC 없이 Swift PDFKit 과 WKWebView 로 동작하므로
 macOS 또는 macOS 러너에서만 실행됩니다.
@@ -173,9 +173,9 @@ macOS 또는 macOS 러너에서만 실행됩니다.
 | 폼 실제 전송 | 엔드포인트 미연결 | 연결 후 별도 검증 |
 | 결제 | 미연결 | 제품 본체 연동 후 |
 | degrade 클립보드 거절 분기 | `127.0.0.1`·`localhost` 모두 보안 컨텍스트라 거절을 만들 수 없음 | 2장 각주 참조 |
-| FAQ·JSON-LD·카피 정합의 CI 검사 | 2026-10-05 기준 `.github/workflows/ci.yml` 에 두 스크립트가 없음 | 로컬 `npm run verify` |
 
-마지막 두 행은 재현 불가능이라 문서로만 남기는 한계가 아니라, **아직 안 넣은 검사**입니다.
-두 스크립트 모두 순수 Node 이므로 CI 에 붙이는 것 자체는 가능합니다.
-`scripts/check-structured-data.mjs` 는 `dist/` 를 읽으므로 빌드 뒤에,
-`scripts/check-copy-consistency.mjs` 는 소스를 읽으므로 어디서든 돕니다.
+마지막 행(degrade 클립보드 거절 분기)은 재현 불가능이라 문서로만 남기는 한계입니다.
+`scripts/check-structured-data.mjs` 와 `scripts/check-copy-consistency.mjs` 는
+2026-10-05 에 `.github/workflows/ci.yml` 에 추가되었으므로 이 목록에서 제외됩니다.
+두 스크립트 모두 순수 Node 이며 Linux 러너에서 그대로 동작합니다.
+CI 의 현재 검사 목록은 [`../../.github/workflows/ci.yml`](../../.github/workflows/ci.yml) 참조.

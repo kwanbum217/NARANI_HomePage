@@ -387,7 +387,7 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 13. **완료.** `npm run check` 편입은 2026-09-28에 반영했습니다. 게이트는 6단계에서 7단계로
    늘었고 1단계가 타입 체크입니다. 패키지 3개(`@astrojs/check`, `typescript`,
    `@types/node`)는 사용자가 승인과 함께 지정했습니다. GitHub Actions 실환경
-   (ubuntu-latest, Node v22.23.2)에서 28파일 에러 0 을 확인했습니다.
+   (ubuntu-latest, Node v22.23.2)에서 35파일 에러 0 을 확인했습니다.
 14. **완료.** 폼 variant 는 `x-data` 인라인 문자열이라 `astro check` 가 걸지 않습니다. 알 수 없는
    variant 조용히 contact 로 떨어지던 것을 2026-09-28에 콘솔 에러로 바꿨습니다. 데모
    페이지에 `'demmo'` 오타를 심어 게이트가 종료 코드 1 로 멈추는 것을 확인한 뒤 되돌렸습니다.
