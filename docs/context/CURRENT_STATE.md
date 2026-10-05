@@ -24,7 +24,7 @@
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
 | 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 `gtag('event', ...)` 로 보냅니다. 일반 객체로 `dataLayer.push` 하면 gtag.js 가 콘솔 오류 없이 조용히 무시하므로 형식이 고정되어 있습니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
-| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 10개입니다(검사 구성은 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
+| 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). 4단계 정적 검사는 6종입니다(`check-links`, `check-sitemap`, `check-structured-data`, `check-copy-consistency`, `check-doc-links`, `check-pages-listed`). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 10개입니다(검사 구성은 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
 | 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. **현재 50,172 바이트**(2026-10-05 실측). CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift`. 5장 10·15번의 81,696·52,176·58.9KB 값은 각 회차 시점 기록이므로 현재 기준으로 읽지 마십시오 |
 | 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 37파일, 에러 0, 힌트 2건(2026-10-05 실측). 힌트는 `scripts/audit/checks/prefill.js` 와 `prefill-reject.js` 의 미사용 `sleep` 변수(`ts6133`)이며 `npm run check` 의 실패 기준은 error 이므로 통과에 영향이 없습니다 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
@@ -594,6 +594,30 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     185~189행 CI 설명은 원래부터 참이었고 이번 세션의 CI 보강으로 계속 참이므로
     손대지 않았습니다. 상세는
     [`../handoff/2026-10-05_docs_code_consistency_audit.md`](../handoff/2026-10-05_docs_code_consistency_audit.md) 5장입니다.
+
+---
+
+22. **완료.** 2026-10-05 리뷰 권고 3건. `docs/analysis/검토_게이트정합_배치_20261005.md` 의
+   권고 1·3·5 를 처리했습니다.
+   - `check-doc-links.mjs` 의 대상 수집을 하드코딩 목록 3개에서 **저장소 전체 스캔**으로
+     바꿨습니다. `.github/` `.claude/` 마크다운 사각지가 닫혔습니다(음성 검증으로 두
+     디렉터리 모두 잡힘을 확인). `collectRootMarkdownFiles` 는 루트 `*.md` 가 전체
+     스캔에 포함되어 중복 수집을 만들므로 삭제했습니다.
+   - `check-pages-listed.mjs` 의 배열 파싱을 `[^)]+` 정규식에서 **줄 단위 경계
+     찾기**로 바꿨습니다. 이전에는 `PAGES=(` 다음 줄 주석의 `)` 에서 배열이 닫힌 것으로
+     오판해 8개 항목이 전부 유실됐습니다. `verify.sh` 주석에도 이 의존성을 적었습니다.
+   - **중복 라우트 검사**를 추가했습니다. `Set` 비교는 중복을 지우고 항목 수 비교는
+     총 개수만 본다고, 라우트 하나를 지우고 다른 것을 두 번 넣으면 조용히 통과했습니다.
+   - **8단계 인터랙션 시나리오 목록 대조**를 추가했습니다. `verify.sh` 의 손으로 관리되는
+     목록은 세 개이고(`PAGES`, `NARROW`, 시나리오 호출부) 앞의 둘만 검사되고 있었습니다.
+     판정 6~9(죽은 시나리오·미검증 시나리오·중복·불필요한 예외)로 막습니다.
+     **예외 4개**(`/`, `/bidbox/`, `/bidbox/service/`, `/404.html`)는 페이지 고유
+     인터랙션이 없어 시나리오가 없습니다. 공유 메뉴 토글은 `/company/` 에서 1회만
+     검증됩니다. 이 사실을 `SCENARIO_EXEMPT` 로 코드에 명시했고 판정 8로
+     "예외가 더 이상 필요 없으면 제거하라" 도 강제합니다.
+   - **검증하지 못한 것**: 참조형 링크(`[k1][ref]`) 미탐지(리뷰 권고 2)와 앵커 존재
+     여부 미검사는 이번 묶음의 스코프 밖이라 남아 있습니다. CI 러너에서의 실제
+     동작도 재현하지 못했습니다.
 
 ---
 
