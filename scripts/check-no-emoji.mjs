@@ -22,6 +22,8 @@ const DEFAULT_TARGETS = [
   'scripts',
   '.agents',
   '.github',
+  '.claude',
+  '.commandcode',
   'AGENTS.md',
   'SKILLS.md',
   'README.md',
