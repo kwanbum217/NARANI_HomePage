@@ -26,7 +26,7 @@
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
 | 검증 파이프라인 | 완료 | `scripts/verify.sh`. 8단계(1 타입·2 빌드·3 서빙·4 링크·5 렌더·6 폰트·7 반응형·접근성·8 인터랙션). `8단계` 는 shell 단계 번호이고, 8단계가 실제로 돌리는 검사 항목은 10개입니다(검사 구성은 nav 1, form 2, dialog 1, prefill 1, prefill-reject 3, fallback 2) |
 | 폰트 | self-host | `public/fonts/pretendard-variable-subset.woff2`. **현재 50,172 바이트**(2026-10-05 실측). CDN 의존 제거, 요청 10건 → 1건, 비차단 로드. 재생성은 `scripts/build-font-subset.py`, 누락 검사는 `scripts/check-font-subset.swift`. 5장 10·15번의 81,696·52,176·58.9KB 값은 각 회차 시점 기록이므로 현재 기준으로 읽지 마십시오 |
-| 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 35파일, 에러 0, 힌트 2건(2026-10-05 실측). 힌트는 `scripts/audit/checks/prefill.js` 와 `prefill-reject.js` 의 미사용 `sleep` 변수(`ts6133`)이며 `npm run check` 의 실패 기준은 error 이므로 통과에 영향이 없습니다 |
+| 타입 체크 | 완료 | `npm run check` = `astro check`. `tsconfig.json` (strict) 기준. 37파일, 에러 0, 힌트 2건(2026-10-05 실측). 힌트는 `scripts/audit/checks/prefill.js` 와 `prefill-reject.js` 의 미사용 `sleep` 변수(`ts6133`)이며 `npm run check` 의 실패 기준은 error 이므로 통과에 영향이 없습니다 |
 | 게이트 기대값 파생 | 완료 | `scripts/audit/expected.mjs`. 정본에서 기대 문구를 파생해 `interact.swift` 가 주입 |
 | CI 파이프라인 | 통과 | `.github/workflows/ci.yml`. 이모지 검사, 타입 체크, 빌드, 링크 무결성, sitemap 무결성, 구조화 데이터 정합, 카피 정합. 8단계 중 1·2·4단계를 전부 돕니다. **4단계 정적 검사 4종을 모두 돌립니다.** 2026-10-02 에 `verify.sh` 4단계에 붙은 `check-structured-data.mjs` 와 `check-copy-consistency.mjs` 가 CI 에 없던 사각지를 2026-10-05 에 찾아 붙였습니다. 둘 다 순수 Node 이므로 Linux 러너에서 그대로 돕습니다. 5장 21번 참조 |
 | 원격 저장소 | 연결 | `origin` = `github.com/kwanbum217/NARANI_HomePage` |
@@ -387,7 +387,11 @@ Astro 이관 과정에서 시각 회귀가 없었음을 뜻합니다. 이후 Hal
 13. **완료.** `npm run check` 편입은 2026-09-28에 반영했습니다. 게이트는 6단계에서 7단계로
    늘었고 1단계가 타입 체크입니다. 패키지 3개(`@astrojs/check`, `typescript`,
    `@types/node`)는 사용자가 승인과 함께 지정했습니다. GitHub Actions 실환경
-   (ubuntu-latest, Node v22.23.2)에서 35파일 에러 0 을 확인했습니다.
+   (ubuntu-latest, Node v22.23.2)에서 37파일 에러 0 을 확인했습니다.
+   2026-10-05 게이트 정합 배치에서 `npm run check` 를 main HEAD 에서 실행해
+   재확인했습니다. 그 배치에서 추가된 `scripts/check-doc-links.mjs` 와
+   `scripts/check-pages-listed.mjs` 두 `.mjs` 가 `astro check` 대상에 들어가므로
+   이 값은 배치 이전의 35 가 아니라 37 입니다.
 14. **완료.** 폼 variant 는 `x-data` 인라인 문자열이라 `astro check` 가 걸지 않습니다. 알 수 없는
    variant 조용히 contact 로 떨어지던 것을 2026-09-28에 콘솔 에러로 바꿨습니다. 데모
    페이지에 `'demmo'` 오타를 심어 게이트가 종료 코드 1 로 멈추는 것을 확인한 뒤 되돌렸습니다.
@@ -568,6 +572,25 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     맞췄습니다. 워커는 `cmd`(Command Code v1.74.1, yolo), Orca run `run_cc70cb292163`.
     코디네이터가 `git diff` 로 대조했고 지시한 두 곳 외 변경은 0건이었습니다.
     워커가 커밋하지 않고 넘겼으므로 코디네이터가 커밋했습니다.
+
+   **리뷰 반영 (2026-10-05, 배치 `0cb8566..7a95487` 이후)**
+   `docs/analysis/검토_게이트정합_배치_20261005.md` 의 차단 2건을 처리했습니다.
+
+   - **B-1 CI 커밋 메시지 검사 무음 통과.** 프로세스 치환 `done < <(git log ...)`
+     안의 실패는 `pipefail` 이 잡지 못해 루프가 "입력 없음"으로 새고 종료 코드 0 이
+     됐습니다. 커밋 1개 저장소의 최초 푸시(all-zeros)에서 재현됩니다. 범위를 루프 밖에서
+     먼저 해석하고 빈 결과면 실패시키도록 고쳤습니다. 음성 검증 8케이스(최초 푸시·빈
+     base·push 2·3커밋·PR head·이모지·마침표·머지 메시지) 전부 기대값과 일치합니다.
+     러너에서의 실제 동작은 재현하지 못했습니다.
+   - **B-2 문서 수치 불일치 3건.** 5장 13번과 1장 타입 체크를 35파일 → 37파일로
+     바로잡았습니다(신규 `.mjs` 2개가 `astro check` 대상). `QA_AND_A11Y.md` 의 이모지
+     검사 설명은 13개 항목/124개 파일 → 15개 항목으로 고치고, **검사 파일 수는 실행
+     시점의 로컬 파일 집합에 따라 달라지므로 문서에 고정값으로 적지 않습니다.**
+     같은 커밋에서 워크트리별로 124~132개로 갈리는 것을 확인했습니다.
+   - **리뷰 권고 6번도 함께 처리.** `Makefile` 은 `DEFAULT_TARGETS` 에 있었지만
+     확장자 필터에 없어 항상 0개를 셌습니다. `BARE_FILES` 로 받도록 바꿨고, 이모지를
+     심어 `Makefile:42` 로 잡히는지 확인한 뒤 되돌렸습니다.
+   - 이 회차는 제품 코드를 건드리지 않았으므로 3장 기준선 수치는 그대로입니다.
     185~189행 CI 설명은 원래부터 참이었고 이번 세션의 CI 보강으로 계속 참이므로
     손대지 않았습니다. 상세는
     [`../handoff/2026-10-05_docs_code_consistency_audit.md`](../handoff/2026-10-05_docs_code_consistency_audit.md) 5장입니다.

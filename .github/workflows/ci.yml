@@ -54,8 +54,17 @@ jobs:
               range="${base}..HEAD"
             fi
           fi
+          # 범위를 루프 밖에서 먼저 해석합니다. 프로세스 치환(<(...)) 안의 git log 은
+          # 별도 프로세스라 pipefail 이 적용되지 않고, 그 실패가 루프의 "입력 없음"으로
+          # 새어 조용히 exit 0 이 됩니다. 2026-10-05 리뷰가 커밋 1개 저장소의
+          # 최초 푸시에서 이 경로를 재현했습니다(fatal: ambiguous argument 'HEAD~1..HEAD').
+          shas=$(git log --format=%H "$range") || exit 1
+          if [ -z "$shas" ]; then
+            echo "검사할 커밋이 없습니다. range=$range" >&2
+            exit 1
+          fi
           failed=0
-          while IFS= read -r sha; do
+          for sha in $shas; do
             msg=$(git log -1 --format=%B "$sha")
             tmpfile=$(mktemp)
             printf '%s' "$msg" > "$tmpfile"
@@ -64,7 +73,7 @@ jobs:
               failed=1
             fi
             rm -f "$tmpfile"
-          done < <(git log --format=%H "$range")
+          done
           exit $failed
 
       - name: 타입 체크

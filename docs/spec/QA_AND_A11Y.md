@@ -90,7 +90,7 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 | `scripts/check-sitemap.mjs` | `sitemap.xml` 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
 | `scripts/check-structured-data.mjs` | `dist/` 의 JSON-LD 10개 항목 검사 |
 | `scripts/check-copy-consistency.mjs` | 정본 문장의 소비처 하드코딩과 폐기 문구 잔존 검사 |
-| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상 13개 항목(`src`, `docs`, `scripts`, `.agents`, `.github`, `AGENTS.md`, `SKILLS.md`, `README.md`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`, `tsconfig.json`). 2026-10-05 실행 기준 124개 파일 검사 |
+| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상은 `DEFAULT_TARGETS` 의 15개 항목(`src`, `docs`, `scripts`, `.agents`, `.github`, `.claude`, `.commandcode`, `AGENTS.md`, `SKILLS.md`, `README.md`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`, `tsconfig.json`). 검사 파일 수는 실행 시점의 로컬 파일 집합에 따라 달라지므로 고정값으로 문서에 적지 않습니다 |
 | `scripts/validate-commit-message.mjs` | 커밋 메시지 형식(`type: 한국어 subject`) 검사 |
 | `scripts/build-font-subset.py` | 폰트 서브셋 재생성. **6단계를 통과시키려면 새 한국어 카피 추가 후 먼저 돌립니다** |
 
@@ -98,9 +98,10 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 (`check-links`, `check-sitemap`, `check-structured-data`, `check-copy-consistency`)은
 모두 순수 Node 이므로 Linux 러너에서도 돕습니다.
 
-`check-no-emoji.mjs` 는 2026-10-05 에 기본 대상을 13개 항목으로 확장했습니다.
-`.github/`, `.agents/`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`,
-`package.json`, `tsconfig.json` 이 기본 범위에 포함됩니다. 커밋 훅(`pre-commit`,
+`check-no-emoji.mjs` 는 2026-10-05 에 기본 대상을 15개 항목으로 확장했습니다.
+`.github/`, `.agents/`, `.claude/`, `.commandcode/`, `astro.config.mjs`, `Makefile`,
+`.pre-commit-config.yaml`, `package.json`, `tsconfig.json` 이 기본 범위에 포함됩니다.
+`Makefile` 은 확장자가 없어 `EXTS` 가 아니라 `BARE_FILES` 로 받습니다. 커밋 훅(`pre-commit`,
 `pass_filenames: false` 과 `always_run: true`)도 같은 기본 대상을 씁니다.
 
 도구는 macOS WebKit 을 사용합니다. PyObjC 없이 Swift PDFKit 과 WKWebView 로 동작하므로

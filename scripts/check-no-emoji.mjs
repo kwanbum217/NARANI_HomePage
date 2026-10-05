@@ -39,6 +39,10 @@ const EXTS = new Set([
   '.yml', '.yaml', '.toml', '.html', '.swift',
 ]);
 
+// 확장자가 없는 설정 파일입니다. EXTS 로는 걸리지 않으므로 이름으로 직접 받습니다.
+// 이게 없으면 DEFAULT_TARGETS 에 Makefile 이 있어도 항상 0개를 셉니다.
+const BARE_FILES = new Set(['Makefile']);
+
 const IGNORE_DIRS = new Set(['node_modules', 'dist', '.astro', '.git', '.verify']);
 
 const isEmoji = (s) => hasEmoji(s);
@@ -47,14 +51,15 @@ function walk(target, acc = []) {
   if (!fs.existsSync(target)) return acc;
   const stat = fs.statSync(target);
   if (stat.isFile()) {
-    if (EXTS.has(path.extname(target))) acc.push(target);
+    if (EXTS.has(path.extname(target)) || BARE_FILES.has(path.basename(target)))
+      acc.push(target);
     return acc;
   }
   for (const entry of fs.readdirSync(target, { withFileTypes: true })) {
     if (entry.isDirectory()) {
       if (IGNORE_DIRS.has(entry.name)) continue;
       walk(path.join(target, entry.name), acc);
-    } else if (EXTS.has(path.extname(entry.name))) {
+    } else if (EXTS.has(path.extname(entry.name)) || BARE_FILES.has(entry.name)) {
       acc.push(path.join(target, entry.name));
     }
   }
