@@ -90,9 +90,9 @@ plan 쿼리 URL 인코딩도 `expected.mjs` 가 합니다. 셸에서 만들면 `
 | `scripts/check-sitemap.mjs` | `sitemap.xml` 과 실제 페이지 대조. 색인 누락·죽은 주소·canonical 불일치 |
 | `scripts/check-structured-data.mjs` | `dist/` 의 JSON-LD 10개 항목 검사 |
 | `scripts/check-copy-consistency.mjs` | 정본 문장의 소비처 하드코딩과 폐기 문구 잔존 검사 |
-| `scripts/check-doc-links.mjs` | 저장소 전체 마크다운의 상대 링크 무결성 검사 |
+| `scripts/check-doc-links.mjs` | 저장소 전체 마크다운의 상대 링크 무결성. 인라인 링크와 참조형 링크 정의를 모두 검사. 앵커 존재 여부는 검사하지 않음 |
 | `scripts/check-pages-listed.mjs` | `verify.sh` 의 `PAGES`·`NARROW`·8단계 인터랙션 시나리오 목록과 `src/pages/` 의 실제 `.astro` 대조. 죽은 항목·미검증 페이지·중복 라우트·불필요한 예외 검사 |
-| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상은 `DEFAULT_TARGETS` 의 15개 항목(`src`, `docs`, `scripts`, `.agents`, `.github`, `.claude`, `.commandcode`, `AGENTS.md`, `SKILLS.md`, `README.md`, `astro.config.mjs`, `Makefile`, `.pre-commit-config.yaml`, `package.json`, `tsconfig.json`). 검사 파일 수는 실행 시점의 로컬 파일 집합에 따라 달라지므로 고정값으로 문서에 적지 않습니다 |
+| `scripts/check-no-emoji.mjs` | 저장소 규칙(이모지 금지) 검사. 기본 대상 `DEFAULT_TARGETS` 15개 항목. 출력은 결정적 값(대상 항목 수)과 비결정적 값(로컬 파일 수)을 구분 |
 | `scripts/validate-commit-message.mjs` | 커밋 메시지 형식(`type: 한국어 subject`) 검사 |
 | `scripts/build-font-subset.py` | 폰트 서브셋 재생성. **6단계를 통과시키려면 새 한국어 카피 추가 후 먼저 돌립니다** |
 
