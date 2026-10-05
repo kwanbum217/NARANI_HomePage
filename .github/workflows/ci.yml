@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # 커밋 메시지 검사가 github.event.before 와 HEAD~1 을 참조하므로
+          # 전체 이력을 받습니다(기본 fetch-depth 는 1).
+          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
@@ -32,6 +36,36 @@ jobs:
 
       - name: 저장소 규칙 검사 (이모지 금지)
         run: npm run check:emoji
+
+      - name: 커밋 메시지 형식 검사
+        run: |
+          # push: 이번 푸시 범위 커밋을 검사합니다.
+          # pull_request: PR head 커밋 하나만 검사합니다.
+          # workflow_dispatch: 직전 커밋 1개만 검사합니다.
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            head="${{ github.event.pull_request.head.sha }}"
+            range="${head}^..${head}"
+          else
+            base="${{ github.event.before }}"
+            # 최초 푸시(all-zeros)와 수동 실행은 직전 커밋 1개만 검사합니다.
+            if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+              range="HEAD~1..HEAD"
+            else
+              range="${base}..HEAD"
+            fi
+          fi
+          failed=0
+          while IFS= read -r sha; do
+            msg=$(git log -1 --format=%B "$sha")
+            tmpfile=$(mktemp)
+            printf '%s' "$msg" > "$tmpfile"
+            if ! node scripts/validate-commit-message.mjs "$tmpfile"; then
+              echo "  -> 문제가 있는 커밋: $sha"
+              failed=1
+            fi
+            rm -f "$tmpfile"
+          done < <(git log --format=%H "$range")
+          exit $failed
 
       - name: 타입 체크
         run: npm run check
