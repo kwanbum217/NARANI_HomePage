@@ -142,6 +142,15 @@ node scripts/check-sitemap.mjs "$ROOT/dist"
 # 사각지(같은 리뷰서 6절)는 여기서 막습니다.
 node scripts/check-structured-data.mjs "$ROOT/dist"
 node scripts/check-copy-consistency.mjs "$ROOT"
+# 정본 문서(.md)의 상대 링크 무결성입니다. check-links.mjs 는 dist/ 만 훑으므로
+# docs/ 와 .agents/skills/ 의 깨진 링크는 여기까지 조용히 통과했습니다.
+# 2026-10-05 에 .agents/skills/ 5개 파일의 깨진 링크 13건이 게이트 8단계 전부
+# 통과한 상태에서 수동으로 발견된 사실이 근거입니다.
+node scripts/check-doc-links.mjs
+# verify.sh 의 PAGES / NARROW 배열과 src/pages/ 의 실제 .astro 목록을 대조합니다.
+# 배열을 잊으면 그 페이지는 5~8단계를 전혀 검증받지 못합니다.
+# check-sitemap.mjs 와 같은 이유로, 손으로 관리하는 목록은 기계가 막습니다.
+node scripts/check-pages-listed.mjs
 
 echo "== 5/8 렌더 / 콘솔 오류 / 스타일 실측 =="
 RENDER_OUT="$(swift scripts/audit/render.swift "$BASE" "$OUT" "${PAGES[@]}")"

@@ -14,7 +14,9 @@
     "verify": "bash scripts/verify.sh",
     "links": "node scripts/check-links.mjs",
     "check:sitemap": "node scripts/check-sitemap.mjs",
-    "check:emoji": "node scripts/check-no-emoji.mjs"
+    "check:emoji": "node scripts/check-no-emoji.mjs",
+    "check:doc-links": "node scripts/check-doc-links.mjs",
+    "check:pages-listed": "node scripts/check-pages-listed.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
