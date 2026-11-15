@@ -2,7 +2,7 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-11-15
-> **버전**: v1.6.3
+> **버전**: v1.6.4
 > **상태**: 2026-10-02 리뷰 결함 3건까지 처리 완료. 8단계 게이트에 카피 정합과
 > 구조화 데이터 검사를 추가함. 결제·폼 백엔드 미연결.
 > 2026-10-05 문서·코드 정합 검토에서 실측값이 뒤처진 항목을 갱신했습니다(1·2장, 5장 21번).
@@ -20,7 +20,7 @@
 | Hallmark 섹션 리듬 재구성 | 완료 | [`../design/HALLMARK_REDESIGN.md`](../design/HALLMARK_REDESIGN.md). 8개 라우트가 각기 다른 구조 |
 | 디자인 토큰 | 완료 | `src/styles/global.css` `:root` 단일 소스 |
 | 공통 컴포넌트 | 완료 | `src/components/{Logo,Header,Footer}.astro` |
-| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/enquiry.ts`, `src/data/faq.ts` |
+| 콘텐츠 단일 소스 | 완료 | `src/data/site.ts`, `src/data/pricing.ts`, `src/data/specimen.ts`, `src/data/enquiry.ts`, `src/data/faq.ts` |
 | 문의·데모 접수 API | 본체에 없음 | `src/data/site.ts` 의 `enquiryEndpoint` (빈 값). 이 저장소에서 API 를 만들지 않습니다. 4장을 따릅니다 |
 | 분석 도구 | 연결 | `src/data/site.ts` 의 `gaMeasurementId` = `G-R7CBGGMDFF`. 값이 있을 때만 GA4 태그가 삽입됩니다. 폼 전환 이벤트는 `src/scripts/app.js` 가 `gtag('event', ...)` 로 보냅니다. 일반 객체로 `dataLayer.push` 하면 gtag.js 가 콘솔 오류 없이 조용히 무시하므로 형식이 고정되어 있습니다. 데이터는 24~48시간 뒤부터 쌓입니다 |
 | Tailwind 컴파일 전환 | 완료 | CDN 제거. 콘솔 경고 0 |
@@ -678,6 +678,23 @@ Firefox 본문 대비, 컴포넌트 치수, 인터랙션, 320px 가로 넘침은
     `body` 는 최소 화면 높이의 세로 플렉스이고 `main` 이 남는 높이를 가집니다.
     내용이 화면보다 길면 푸터는 본문 뒤에 있고, 헤더는 스크롤 뒤에도 위쪽에 붙습니다.
     `npm run verify` 종료 코드 0. 본문 대비와 320px 오버플로우는 25번과 같습니다.
+    폰트 서브셋 검사 문자는 350개입니다.
+
+27. **완료.** 2026-11-15 라이트 카드에만 그림자를 주고, 홈과 제품 홈이 같은 예시
+    금액을 쓰게 했습니다. 제품 홈의 기능 세 줄은 서비스 페이지에만 둡니다.
+    회사소개 `.card` 의 계산된 그림자는
+    `rgba(10, 31, 51, 0.06) 0px 1px 2px 0px, rgba(10, 31, 51, 0.28) 0px 12px 28px -18px`
+    입니다. 호버여도 같고 `transform` 은 `none` 입니다. 1440과 390 모두 같습니다.
+    BIDBOX 홈 표, 데모, 문의의 `.card` 는 `box-shadow: none` 이고 배경은
+    `rgb(21, 24, 28)` 입니다. 호버여도 같습니다.
+    홈 BIDBOX 행의 금액은 `₩418,200,000`, 색은 `rgb(0, 48, 102)`, 바로 아래 문구는
+    `예시 예상 낙찰금액` 입니다. 1440에서 그 문단의 오른쪽 끝은 673px 입니다.
+    390에서 문단 상자는 왼쪽 24px, 오른쪽 366px 이고 문서 가로 넘침은 0입니다.
+    390px 회사소개 카드와 BIDBOX 홈 카드는 왼쪽 24px, 오른쪽 366px 입니다.
+    제품 홈의 섹션 제목은 `예측 결과` 하나이고 `BIDBOX가 하는 일` 은 없습니다.
+    `서비스 자세히 보기` 를 누르면 `/bidbox/service/` 로 이동합니다. 서비스 페이지의
+    기능 제목 세 줄은 그대로입니다.
+    `npm run verify` 종료 코드 0. 본문 대비와 320px 오버플로우는 26번과 같습니다.
     폰트 서브셋 검사 문자는 350개입니다.
 
 ---
