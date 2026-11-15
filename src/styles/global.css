@@ -42,7 +42,7 @@
   --bb-text: #f2f7fa;
   --bb-muted: #8fa3b3;
   --bb-border: rgba(184, 221, 240, 0.14);
-  --bb-border-strong: rgba(184, 221, 240, 0.3);
+  --bb-border-strong: rgba(184, 221, 240, 0.46);
 
   /* Shared action colour */
   --primary: #0073e6;
@@ -220,7 +220,7 @@ h2 { font-weight: 700; }
 
 .btn-ghost {
   background: transparent;
-  border-color: var(--nani-border);
+  border-color: var(--nani-muted);
   color: var(--nani-ink);
 }
 .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
@@ -322,6 +322,14 @@ h2 { font-weight: 700; }
   justify-content: flex-start;
 }
 
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* --------------------------------------------------------------- fields -- */
 .field { display: grid; gap: 8px; }
 
@@ -342,7 +350,7 @@ h2 { font-weight: 700; }
   font-family: inherit;
   color: var(--bb-text);
   background: var(--bb-surface-2);
-  border: 1px solid var(--bb-border);
+  border: 1px solid var(--bb-border-strong);
   border-radius: 12px;
   transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
 }
@@ -352,7 +360,7 @@ h2 { font-weight: 700; }
 .field textarea::placeholder { color: var(--bb-muted); }
 
 .field input:hover,
-.field textarea:hover { border-color: var(--bb-border-strong); }
+.field textarea:hover { border-color: var(--bb-accent); }
 
 .field.is-invalid input,
 .field.is-invalid textarea { border-color: var(--danger); }
@@ -367,6 +375,12 @@ h2 { font-weight: 700; }
 
 /* ---------------------------------------------------------- data table -- */
 .data-table { width: 100%; border-collapse: collapse; }
+
+.data-table caption {
+  caption-side: top;
+  padding-bottom: 12px;
+  text-align: left;
+}
 
 .data-table th,
 .data-table td {
