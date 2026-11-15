@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { capabilities, primaryCta } from '../../data/site';
+import { primaryCta } from '../../data/site';
+import { formatWon, specimen, specimenRate } from '../../data/specimen';
 ---
 
 <BaseLayout
@@ -36,6 +37,10 @@ import { capabilities, primaryCta } from '../../data/site';
               예측값은 공고 · 낙찰 이력과 시장 동향을 함께 분석한 결과이며, 산출 근거를 같은 화면에서
               확인할 수 있습니다.
             </p>
+            <a class="mt-8 inline-flex items-center gap-2 font-bold" style="color:var(--bb-accent)" href="/bidbox/service/">
+              서비스 자세히 보기
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
           </div>
 
           <div class="card min-w-0 overflow-x-auto">
@@ -44,51 +49,29 @@ import { capabilities, primaryCta } from '../../data/site';
               <tbody>
                 <tr>
                   <th scope="row">공고</th>
-                  <td>2026년 시설 경비 용역</td>
+                  <td>{specimen.notice}</td>
                 </tr>
                 <tr>
                   <th scope="row">구분</th>
-                  <td>용역 · 서울</td>
+                  <td>{specimen.kind}</td>
                 </tr>
                 <tr>
                   <th scope="row">AI 예상 낙찰금액</th>
                   <td class="num text-[clamp(1.25rem,3vw,1.75rem)]" style="color:var(--bb-accent)">
-                    ₩418,200,000
+                    {formatWon(specimen.predicted)}
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">기초금액</th>
-                  <td class="num">₩452,000,000</td>
+                  <td class="num">{formatWon(specimen.basis)}</td>
                 </tr>
                 <tr>
                   <th scope="row">예상 낙찰률</th>
-                  <td class="num">92.5%</td>
+                  <td class="num">{specimenRate(specimen.predicted, specimen.basis)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
-
-      <section class="section-tight" aria-labelledby="highlights">
-        <div class="wrap">
-          <h2 id="highlights" class="text-[clamp(1.4rem,3vw,2rem)]">BIDBOX가 하는 일</h2>
-
-          <div class="rows mt-8">
-            {capabilities.map((capability) => (
-              <article class="grid min-w-0 gap-3 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)] md:items-baseline">
-                <h3 class="text-[1.25rem] font-bold tracking-[-0.02em]">{capability.title}</h3>
-                <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--bb-muted)">
-                  {capability.body}
-                </p>
-              </article>
-            ))}
-          </div>
-
-          <a class="mt-8 inline-flex items-center gap-2 font-bold" style="color:var(--bb-accent)" href="/bidbox/service/">
-            서비스 자세히 보기
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-          </a>
         </div>
       </section>
 </BaseLayout>

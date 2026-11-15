@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatWon, specimen } from '../data/specimen';
 ---
 
 <BaseLayout
@@ -74,6 +75,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <h2 class="mt-3 text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.25]">
                   공공조달 입찰 데이터를 읽고,<br />AI로 낙찰금액을 예상합니다
                 </h2>
+                <p class="num mt-4 text-[clamp(1.35rem,2.6vw,1.75rem)] font-bold" style="color:var(--nani-navy)">{formatWon(specimen.predicted)}</p>
+                <p class="label mt-1">예시 예상 낙찰금액</p>
               </div>
               <p class="text-[0.9375rem] leading-[1.75]" style="color:var(--nani-muted)">
                 단순한 가격 비교를 넘어, 기존 데이터 분석과 시장 동향을 같은 시간으로
