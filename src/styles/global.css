@@ -93,6 +93,14 @@ body {
   background: var(--nani-bg);
   color: var(--nani-ink);
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 [x-cloak] { display: none !important; }
@@ -370,6 +378,11 @@ h2 { font-weight: 700; }
 
 .reg-dark .data-table th,
 .reg-dark .data-table td { border-bottom-color: var(--bb-border); }
+
+.card > .data-table tr:last-child th,
+.card > .data-table tr:last-child td {
+  border-bottom: 0;
+}
 
 /* -------------------------------------------------------------- motion -- */
 @media (prefers-reduced-motion: reduce) {
