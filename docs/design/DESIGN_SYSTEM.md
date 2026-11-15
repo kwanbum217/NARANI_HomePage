@@ -2,7 +2,7 @@
 
 > **작성일**: 2026-09-23
 > **수정일**: 2026-11-15
-> **버전**: v1.0.3
+> **버전**: v1.0.4
 > **정본 위치**: `src/styles/global.css`
 > 색·간격·반경의 실제 값은 `global.css` 의 `:root` 가 정본입니다. 이 문서는 각 값의
 > 역할과 근거를 설명합니다.
@@ -62,7 +62,7 @@
 | `--bb-text` | `#f2f7fa` | 본문 텍스트 |
 | `--bb-muted` | `#8fa3b3` | 보조 텍스트 |
 | `--bb-border` | `rgba(184, 221, 240, 0.14)` | 경계선 |
-| `--bb-border-strong` | `rgba(184, 221, 240, 0.3)` | 강조 카드 경계, 호버 |
+| `--bb-border-strong` | `rgba(184, 221, 240, 0.46)` | 입력칸, 보조 버튼, 다이얼로그 경계 |
 
 ### 2.3 공통 동작 색
 
@@ -159,16 +159,17 @@ Myeongjo 계열 뒤에 Pretendard 를 두어, 명조가 없는 환경에서도 �
 | --- | --- | --- |
 | `.btn` | 기본 버튼. 최소 높이 48px, 완전 둥근 모서리 | hover, active, disabled |
 | `.btn-primary` | 주요 행동 | 배경 변경 |
-| `.btn-ghost` | 보조 행동 | 경계 강조 |
+| `.btn-ghost` | 보조 행동. 라이트 경계는 `--nani-muted`, 다크 경계는 `--bb-border-strong` | 경계 강조 |
 | `.btn-accent` | 다크 표면 위 주요 행동 | 밝은 배경 |
 | `.btn-block` | 폭 100% | - |
 | `.card` | 표면 컨테이너. 라이트만 `--shadow-soft` | - |
 | `.rows` | 1px 규칙으로 나눈 세로 시트 | - |
 | `.rate-bar` | 왼쪽 막대로 강조한 행 | - |
-| `.data-table` | 라벨/값 수치 표 | - |
+| `.data-table` | 라벨/값 수치 표. 캡션은 표 위에 보인다 | - |
+| `.text-link` | 본문 속 글자 링크. 최소 높이 44px | - |
 | `.tag` | 라벨 칩 | - |
 | `.label` | 작은 라벨. 대문자 변환 없음 | - |
-| `.field` | 라벨 + 입력 + 오류 묶음 | `is-invalid` |
+| `.field` | 라벨 + 입력 + 오류 묶음. 입력 경계는 `--bb-border-strong`, 호버는 `--bb-accent` | `is-invalid` |
 | `.nav-link` | 내비 텍스트 링크. 알약이 아님 | hover, `aria-current="page"` 는 밑줄 |
 | `.nav-link--block` | 모바일 드로어용 전폭 변형 | - |
 | `.site-nav` | 상단 고정 내비 + 블러 배경 | - |
