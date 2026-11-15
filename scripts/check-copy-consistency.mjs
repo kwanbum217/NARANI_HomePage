@@ -18,6 +18,8 @@
  *      있으면 실패
  *   3. POINT_NOTE 문장이 pricing.astro 에 하드코딩으로 반복되면 실패
  *      (정본: src/data/pricing.ts)
+ *   4. "N% 할인" 문장이 pricing.astro 에 적혀 있으면 실패.
+ *      할인 문구는 discountLabel() 이 listPrice 와 price 로 만듭니다.
  *
  * 사용법: node scripts/check-copy-consistency.mjs [프로젝트루트]
  */
@@ -107,6 +109,12 @@ if (pricingPage === null) {
         `src/pages/bidbox/pricing.astro: ${name} 를 문자열로 반복했습니다. src/data/pricing.ts 에서 import 하십시오.`,
       );
     }
+  }
+  const discountLiterals = pricingPage.match(/\d+(?:\.\d+)?% 할인/g);
+  if (discountLiterals) {
+    problems.push(
+      `src/pages/bidbox/pricing.astro: 할인 문구(${discountLiterals.join(', ')})를 직접 적었습니다. discountLabel() 을 쓰십시오.`,
+    );
   }
 }
 

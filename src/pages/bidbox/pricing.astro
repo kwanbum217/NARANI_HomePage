@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { plans, pointRate, POINT_NOTE, POINT_USAGE_RULE } from '../../data/pricing';
+import { discountLabel, plans, pointRate, POINT_NOTE, POINT_USAGE_RULE } from '../../data/pricing';
 import { faqs } from '../../data/faq';
 
 const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
@@ -10,6 +10,10 @@ const won = (n: number) => '₩' + n.toLocaleString('ko-KR');
 // 문의 폼으로 넘길 주소도 여기서 만듭니다. 브라우저에서 조합하면 인코딩 코드가
 // x-data 안에 실려 폰트 서브셋 검사(6단계)의 대상 문자가 되므로 빌드 시점에 끝냅니다.
 const contactPage = '/bidbox/contact/';
+const planRows = plans.map((plan) => ({
+  ...plan,
+  discountText: discountLabel(plan),
+}));
 const dialogPlans = plans.map((plan) => ({
   ...plan,
   priceText: won(plan.price),
@@ -90,14 +94,14 @@ const dialogState = `{
       <h2 id="plans-title" class="text-[clamp(1.4rem,3vw,2rem)]">포인트 구매</h2>
 
       <ul class="rows mt-8 list-none p-0">
-        {plans.map((plan) => (
+        {planRows.map((plan) => (
           <li
             class={`grid min-w-0 gap-4 md:grid-cols-[minmax(0,0.9fr)_minmax(0,0.75fr)_minmax(0,auto)] md:items-center ${plan.featured ? 'rate-bar' : ''}`}
           >
             <div class="min-w-0">
               <div class="flex flex-wrap items-center gap-3">
                 <p class="text-[1.125rem] font-bold tracking-[-0.02em]">{plan.label}</p>
-                {plan.listPrice && <span class="tag">10% 할인</span>}
+                {plan.discountText && <span class="tag">{plan.discountText}</span>}
               </div>
               <p class="mt-2 text-[0.8125rem] font-bold" style="color:var(--bb-muted)">
                 {plan.note}
@@ -111,8 +115,8 @@ const dialogState = `{
             <div class="flex min-w-0 flex-col items-start gap-3 md:items-end">
               <div class="text-left md:text-right">
                 <p class="num text-[clamp(1.35rem,3vw,1.75rem)] font-bold">{won(plan.price)}</p>
-                {plan.listPrice && (
-                  <p class="num mt-1 text-[0.875rem] strike">{won(plan.listPrice)} (10% 할인)</p>
+                {plan.listPrice != null && plan.discountText && (
+                  <p class="num mt-1 text-[0.875rem] strike">{won(plan.listPrice)} ({plan.discountText})</p>
                 )}
               </div>
               <!-- 게이트 검사(dialog.js)가 featured 플랜 버튼의 탐색 기준. 마크업 정리 시 지우지 않습니다 -->
