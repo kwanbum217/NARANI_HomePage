@@ -1,10 +1,12 @@
 # narani_homepage — Agent Guidelines (정본)
 
 > **작성일**: 2026-09-23
-> **수정일**: 2026-09-30
-> **버전**: v1.2.0
+> **수정일**: 2026-11-24
+> **버전**: v1.3.0
 > 본 파일은 모든 AI 코딩 에이전트가 공유하는 **단일 진실 원천(Single Source of Truth)** 입니다.
 > 규칙을 바꿀 때는 이 파일만 수정하고, 상세 절차는 `docs/` 의 해당 문서에 둡니다.
+> v1.3.0 은 세션을 열 때 개발 서버를 확인하는 단계를 부트스트랩에 넣습니다.
+> 절차는 [`.agents/skills/local-server/SKILL.md`](.agents/skills/local-server/SKILL.md) 에만 있습니다.
 > v1.2.0 은 8단계 검사 항목 수를 10개로 확정하고 8장 표의 인터랙션 행에
 > prefill·degrade 를 나열합니다. 2026-09-30 리뷰 반영.
 
@@ -18,8 +20,9 @@
 2. [`docs/context/CURRENT_STATE.md`](docs/context/CURRENT_STATE.md) 에서 현재 상태와 열린 항목을 확인합니다.
 3. 작업 유형에 맞는 문서 1개를 [`SKILLS.md`](SKILLS.md) 의 매핑표에서 고릅니다.
 4. 작업을 마치면 `npm run verify` 를 실행하고 결과를 근거로 보고합니다.
+5. 세션을 열면 [`.agents/skills/local-server/SKILL.md`](.agents/skills/local-server/SKILL.md) 대로 개발 서버를 확인합니다. 절차와 주소 확인은 그 스킬에만 있습니다.
 
-전체 저장소를 먼저 탐색하지 않습니다. 위 4단계로 문맥을 좁힌 뒤 필요한 파일만 엽니다.
+전체 저장소를 먼저 탐색하지 않습니다. 위 단계로 문맥을 좁힌 뒤 필요한 파일만 엽니다.
 
 ---
 
@@ -214,3 +217,4 @@ Linux 러너라 WebKit 을 쓸 수 없습니다. 그래서 8단계 항목이 10�
 | `a11y-audit` | `.agents/skills/a11y-audit/` | `npm run verify` 기반 접근성·반응형 감사와 수정 |
 | `static-deploy` | `.agents/skills/static-deploy/` | `dist/` 배포와 도메인·캐시 설정 |
 | `deck-to-site` | `.agents/skills/deck-to-site/` | Google Slides 구성안을 사이트로 옮기는 반복 절차 |
+| `local-server` | `.agents/skills/local-server/` | 세션을 열 때 개발 서버를 확인하고, 요청 시 빌드 미리보기를 띄움 |
