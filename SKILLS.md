@@ -31,6 +31,7 @@
 | 카피·데이터 수정 | [`docs/spec/CONTENT_MODEL.md`](docs/spec/CONTENT_MODEL.md) |
 | 접근성·반응형 수정 | [`docs/spec/QA_AND_A11Y.md`](docs/spec/QA_AND_A11Y.md), `.agents/skills/a11y-audit/SKILL.md` |
 | 빌드·배포 | [`docs/ops/BUILD_AND_DEPLOY.md`](docs/ops/BUILD_AND_DEPLOY.md) |
+| 세션에서 사이트 보기 | [`.agents/skills/local-server/SKILL.md`](.agents/skills/local-server/SKILL.md) |
 | 브랜치·커밋 | [`docs/ops/GIT_WORKFLOW.md`](docs/ops/GIT_WORKFLOW.md) |
 | Orca 워커 병렬 작업 | [`docs/ops/ORCA_WORKERS.md`](docs/ops/ORCA_WORKERS.md) |
 | 슬라이드 원본 대조 | [`docs/design/DECK_TO_SITE_MAP.md`](docs/design/DECK_TO_SITE_MAP.md) |
@@ -112,6 +113,7 @@
 | `a11y-audit` | `.agents/skills/a11y-audit/` | 검증 도구 실행, 이슈 분류, 최소 수정 |
 | `static-deploy` | `.agents/skills/static-deploy/` | `dist/` 배포, 도메인·캐시·헤더 설정 |
 | `deck-to-site` | `.agents/skills/deck-to-site/` | Google Slides 구성안을 페이지로 옮기는 반복 절차 |
+| `local-server` | `.agents/skills/local-server/` | 세션을 열 때 개발 서버를 확인하고, 요청 시 빌드 미리보기를 띄움 |
 
 ---
 
